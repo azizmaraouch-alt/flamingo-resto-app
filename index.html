@@ -3,136 +3,97 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#761d42">
   <title>Flamingo Resto Café</title>
 
   <style>
     :root {
+      --wine: #761d42;
       --pink: #e86b91;
-      --burgundy: #761d42;
-      --dark: #351421;
       --cream: #fff8f6;
-      --white: #ffffff;
+      --ink: #351421;
       --muted: #786a70;
       --border: #f0dfe5;
-      --gold: #d9aa55;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
       font-family: Arial, Helvetica, sans-serif;
       background: var(--cream);
-      color: var(--dark);
+      color: var(--ink);
     }
 
-    button, input, textarea, select {
-      font: inherit;
-    }
-
-    button {
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
+    button, input, select, textarea { font: inherit; }
+    button { cursor: pointer; }
+    .hidden { display: none !important; }
 
     .brand {
+      color: var(--wine);
+      font-size: 21px;
       font-weight: 900;
-      letter-spacing: 1.5px;
-      color: var(--burgundy);
-      font-size: 22px;
+      letter-spacing: 1px;
     }
 
-    .brand span {
-      color: var(--pink);
-    }
+    .brand span { color: var(--pink); }
 
-    .small-text {
-      font-size: 13px;
+    .muted {
       color: var(--muted);
-      line-height: 1.6;
+      line-height: 1.7;
+      font-size: 14px;
     }
 
     .auth-screen {
       min-height: 100vh;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      background: var(--white);
+      background: white;
     }
 
     .auth-visual {
-      min-height: 100%;
-      padding: 55px;
-      color: white;
-      background:
-        radial-gradient(circle at 80% 15%, #f4b3c8 0, transparent 30%),
-        linear-gradient(145deg, #9c3159, #52132e);
+      padding: 45px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-    }
-
-    .auth-visual .brand {
       color: white;
+      background:
+        radial-gradient(circle at 80% 15%, #f4b3c8, transparent 30%),
+        linear-gradient(145deg, #9c3159, #52132e);
     }
 
-    .auth-visual .brand span {
-      color: #ffd6e2;
-    }
+    .auth-visual .brand { color: white; }
+    .auth-visual .brand span { color: #ffd6e2; }
 
     .visual-content {
-      max-width: 470px;
-      margin: 55px auto;
+      max-width: 460px;
+      margin: 45px auto;
     }
 
     .visual-content h1 {
       font-size: clamp(34px, 4vw, 58px);
       line-height: 1.1;
-      margin: 0 0 20px;
+      margin: 15px 0;
     }
 
     .visual-content p {
       color: #ffe7ef;
       line-height: 1.8;
-      font-size: 16px;
-    }
-
-    .visual-tag {
-      border: 1px solid #ffffff70;
-      padding: 12px 16px;
-      border-radius: 14px;
-      display: inline-block;
-      margin-top: 14px;
-      font-size: 13px;
     }
 
     .auth-side {
-      display: flex;
-      align-items: center;
-      justify-content: center;
       padding: 35px 22px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
 
-    .auth-card {
-      width: 100%;
-      max-width: 430px;
-    }
+    .auth-card { width: 100%; max-width: 420px; }
 
     .auth-card h2 {
-      font-size: 29px;
-      margin: 30px 0 8px;
-    }
-
-    .auth-card > p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 24px;
+      margin: 28px 0 8px;
+      font-size: 28px;
     }
 
     .tabs {
@@ -140,114 +101,87 @@
       grid-template-columns: 1fr 1fr;
       gap: 6px;
       padding: 5px;
-      background: #f8edf1;
       border-radius: 12px;
-      margin-bottom: 24px;
+      background: #f8edf1;
+      margin: 24px 0;
     }
 
     .tab {
-      padding: 12px 8px;
       border: 0;
       border-radius: 9px;
+      padding: 12px 5px;
       background: transparent;
       color: var(--muted);
       font-weight: 700;
     }
 
-    .tab.active {
-      background: white;
-      color: var(--burgundy);
-      box-shadow: 0 2px 8px #0000000d;
-    }
+    .tab.active { background: white; color: var(--wine); }
 
-    .field {
-      margin-bottom: 16px;
-    }
+    .field { margin-bottom: 15px; }
 
     .field label {
       display: block;
-      margin-bottom: 7px;
-      font-size: 13px;
       font-weight: 700;
+      font-size: 13px;
+      margin-bottom: 7px;
     }
 
-    .field input,
-    .field textarea,
-    .field select {
+    .field input, .field select, .field textarea {
+      display: block;
       width: 100%;
-      padding: 14px;
+      padding: 13px;
       border: 1px solid var(--border);
       border-radius: 10px;
       background: white;
+      color: var(--ink);
       outline: none;
-      color: var(--dark);
     }
 
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus {
+    .field input:focus, .field select:focus, .field textarea:focus {
       border-color: var(--pink);
-      box-shadow: 0 0 0 3px #e86b911a;
     }
 
     .primary-btn {
       width: 100%;
-      border: 0;
-      border-radius: 11px;
-      padding: 15px;
+      padding: 14px;
       color: white;
       font-weight: 800;
-      background: linear-gradient(110deg, var(--burgundy), #b83e6b);
-      box-shadow: 0 7px 18px #761d4225;
+      background: linear-gradient(110deg, var(--wine), #b83e6b);
+      border: 0;
+      border-radius: 11px;
     }
 
-    .primary-btn:disabled {
-      opacity: .6;
-      cursor: wait;
-    }
+    .primary-btn:disabled { opacity: .6; cursor: wait; }
 
     .message {
       display: none;
-      margin: 14px 0;
       padding: 12px;
+      margin: 12px 0;
       border-radius: 10px;
-      line-height: 1.5;
       font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
     }
 
-    .message.show {
-      display: block;
-    }
-
-    .message.error {
-      color: #9f1c36;
-      background: #fff0f2;
-      border: 1px solid #f4c4ce;
-    }
-
-    .message.success {
-      color: #17683d;
-      background: #edfff4;
-      border: 1px solid #bce8ce;
-    }
+    .message.show { display: block; }
+    .message.error { background: #fff0f2; color: #9f1c36; }
+    .message.success { background: #edfff4; color: #17683d; }
 
     .auth-footer {
-      margin-top: 22px;
       text-align: center;
-      color: var(--muted);
+      margin-top: 22px;
       font-size: 12px;
+      color: var(--muted);
     }
-
-    /* Application après connexion */
 
     .app-header {
       background: white;
       border-bottom: 1px solid var(--border);
-      padding: 17px 5%;
+      padding: 16px 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
+      gap: 12px;
       position: sticky;
       top: 0;
       z-index: 5;
@@ -256,30 +190,30 @@
     .header-right {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
     }
 
     .user-chip {
-      background: #fff1f5;
-      color: var(--burgundy);
+      background: #fff0f5;
+      color: var(--wine);
       padding: 9px 12px;
-      border-radius: 30px;
+      border-radius: 20px;
       font-size: 13px;
       font-weight: 700;
     }
 
     .logout-btn {
-      border: 1px solid var(--border);
-      color: var(--burgundy);
+      padding: 10px 12px;
       background: white;
-      padding: 10px 13px;
-      border-radius: 10px;
+      color: var(--wine);
+      border: 1px solid var(--border);
+      border-radius: 9px;
       font-weight: 700;
     }
 
     .app-nav {
       display: flex;
-      gap: 8px;
+      gap: 7px;
       padding: 12px 5%;
       background: white;
       border-bottom: 1px solid var(--border);
@@ -289,228 +223,157 @@
     .nav-btn {
       flex: 0 0 auto;
       border: 0;
-      padding: 11px 15px;
       border-radius: 9px;
+      padding: 11px 14px;
       background: transparent;
       color: var(--muted);
       font-weight: 700;
     }
 
-    .nav-btn.active {
-      background: #fce9ef;
-      color: var(--burgundy);
-    }
+    .nav-btn.active { background: #fce9ef; color: var(--wine); }
 
     .app-content {
       max-width: 1100px;
-      margin: 0 auto;
-      padding: 35px 22px 60px;
       min-height: 70vh;
+      padding: 32px 20px 55px;
+      margin: auto;
     }
 
     .welcome-banner {
-      background:
-        radial-gradient(circle at 90% 10%, #ffffff35, transparent 25%),
-        linear-gradient(125deg, #761d42, #c44b76);
+      padding: clamp(25px, 5vw, 48px);
       border-radius: 22px;
       color: white;
-      padding: clamp(25px, 5vw, 50px);
+      background: linear-gradient(125deg, #761d42, #c44b76);
       margin-bottom: 28px;
     }
 
     .welcome-banner .eyebrow {
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      font-size: 11px;
       color: #ffdae6;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-size: 11px;
       font-weight: 800;
     }
 
     .welcome-banner h1 {
       font-size: clamp(28px, 4vw, 43px);
       margin: 12px 0;
+      overflow-wrap: anywhere;
     }
 
     .welcome-banner p {
       color: #ffeaf0;
-      line-height: 1.7;
-      max-width: 570px;
+      line-height: 1.8;
+      max-width: 600px;
     }
 
-    .section-title {
-      font-size: 24px;
-      margin: 0 0 18px;
-    }
+    .section-title { font-size: 24px; margin-bottom: 18px; }
 
     .cards-grid {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 17px;
+      gap: 16px;
     }
 
-    .feature-card {
-      background: white;
-      border: 1px solid var(--border);
-      padding: 22px;
-      border-radius: 17px;
-      box-shadow: 0 5px 20px #50162b08;
-    }
-
-    .feature-icon {
-      width: 46px;
-      height: 46px;
-      display: grid;
-      place-items: center;
-      background: #fff0f5;
-      border-radius: 13px;
-      font-size: 23px;
-      margin-bottom: 15px;
-    }
-
-    .feature-card h3 {
-      margin: 0 0 9px;
-      font-size: 17px;
-    }
-
-    .feature-card p {
-      font-size: 13px;
-      color: var(--muted);
-      line-height: 1.7;
-      margin-bottom: 0;
-    }
-
-    .page-heading {
-      margin-bottom: 24px;
-    }
-
-    .page-heading h1 {
-      margin: 0 0 8px;
-      font-size: 30px;
-    }
-
-    .page-heading p {
-      color: var(--muted);
-      line-height: 1.6;
-      margin: 0;
-    }
-
-    .offer-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      overflow: hidden;
-    }
-
-    .offer-top {
-      padding: 24px;
-      color: white;
-      background: linear-gradient(130deg, #761d42, #d35d87);
-    }
-
-    .offer-top .offer-label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: #ffe0e9;
-    }
-
-    .offer-top h3 {
-      font-size: 23px;
-      margin: 12px 0 5px;
-    }
-
-    .offer-body {
-      padding: 20px 24px;
-    }
-
-    .offer-body p {
-      font-size: 14px;
-      color: var(--muted);
-      line-height: 1.7;
-    }
-
-    .event-card {
+    .feature-card, .event-card, .offer-card, .profile-card, .form-card {
       background: white;
       border: 1px solid var(--border);
       border-radius: 16px;
-      padding: 22px;
+      overflow: hidden;
     }
 
-    .event-date {
-      display: inline-block;
+    .feature-card, .event-card { padding: 22px; }
+
+    .feature-icon {
+      width: 45px;
+      height: 45px;
+      display: grid;
+      place-items: center;
       background: #fff0f5;
-      color: var(--burgundy);
-      padding: 7px 10px;
-      border-radius: 8px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 12px;
+      border-radius: 12px;
+      font-size: 23px;
+      margin-bottom: 14px;
     }
 
-    .event-card h3 {
-      margin: 0 0 9px;
-    }
-
-    .event-card p {
+    .feature-card h3, .event-card h3 { margin: 0 0 9px; }
+    .feature-card p, .event-card p {
       color: var(--muted);
       line-height: 1.7;
       font-size: 14px;
     }
 
-    .form-card,
-    .profile-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: clamp(20px, 4vw, 32px);
-      max-width: 700px;
+    .page-heading { margin-bottom: 22px; }
+    .page-heading h1 { margin: 0 0 8px; font-size: 30px; }
+    .page-heading p { color: var(--muted); line-height: 1.7; }
+
+    .offer-top {
+      color: white;
+      padding: 23px;
+      background: linear-gradient(130deg, #761d42, #d35d87);
     }
 
-    .form-card .primary-btn {
-      margin-top: 6px;
+    .offer-top small {
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: #ffe0e9;
+    }
+
+    .offer-top h3 { font-size: 22px; margin: 12px 0; }
+    .offer-body { padding: 20px; }
+    .offer-body p { color: var(--muted); font-size: 14px; line-height: 1.7; }
+
+    .event-date {
+      display: inline-block;
+      padding: 7px 10px;
+      margin-bottom: 12px;
+      background: #fff0f5;
+      color: var(--wine);
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .form-card, .profile-card {
+      padding: clamp(20px, 4vw, 30px);
+      max-width: 720px;
     }
 
     .profile-top {
       display: flex;
       align-items: center;
       gap: 16px;
-      margin-bottom: 25px;
+      margin-bottom: 24px;
     }
 
     .avatar {
-      width: 65px;
-      height: 65px;
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      flex: 0 0 auto;
       display: grid;
       place-items: center;
-      flex: 0 0 auto;
-      border-radius: 50%;
-      background: linear-gradient(140deg, #f7bdd0, #9c3159);
       color: white;
-      font-size: 25px;
+      font-size: 28px;
       font-weight: 900;
+      background: linear-gradient(140deg, #f7bdd0, #9c3159);
+      border: 3px solid #fff0f5;
     }
 
-    .profile-top h2 {
-      margin: 0 0 5px;
-    }
-
-    .profile-top p {
-      margin: 0;
-      color: var(--muted);
-      overflow-wrap: anywhere;
-    }
+    .profile-top h2 { margin: 0 0 6px; overflow-wrap: anywhere; }
+    .profile-top p { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
 
     .profile-info {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 13px;
     }
 
     .info-box {
+      min-width: 0;
       padding: 16px;
+      border: 1px solid var(--border);
       border-radius: 12px;
       background: #fff8fa;
-      border: 1px solid var(--border);
       overflow-wrap: anywhere;
     }
 
@@ -520,96 +383,50 @@
       margin-bottom: 8px;
     }
 
-    .info-box strong {
-      font-size: 14px;
-    }
-
     .app-footer {
       text-align: center;
-      padding: 25px;
+      padding: 24px;
       color: var(--muted);
       font-size: 12px;
     }
 
     @media (max-width: 800px) {
-      .auth-screen {
-        grid-template-columns: 1fr;
-      }
-
-      .auth-visual {
-        min-height: auto;
-        padding: 28px 25px;
-      }
-
-      .visual-content {
-        margin: 38px 0 20px;
-      }
-
-      .visual-content h1 {
-        font-size: 34px;
-      }
-
-      .auth-visual .small-text {
-        display: none;
-      }
-
-      .auth-side {
-        padding: 30px 22px 40px;
-      }
-
-      .cards-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .app-header {
-        padding: 14px 18px;
-      }
-
-      .brand {
-        font-size: 17px;
-      }
-
-      .user-chip {
-        display: none;
-      }
-
-      .app-content {
-        padding: 25px 17px 45px;
-      }
+      .auth-screen { grid-template-columns: 1fr; }
+      .auth-visual { padding: 25px; }
+      .visual-content { margin: 32px 0 18px; }
+      .visual-content h1 { font-size: 34px; }
+      .auth-visual .visual-footer { display: none; }
+      .cards-grid { grid-template-columns: 1fr; }
+      .app-header { padding: 14px 16px; }
+      .brand { font-size: 16px; }
+      .user-chip { display: none; }
+      .app-content { padding: 24px 16px 40px; }
     }
 
     @media (max-width: 420px) {
-      .profile-info {
-        grid-template-columns: 1fr;
-      }
-
-      .logout-btn {
-        padding: 9px;
-        font-size: 12px;
-      }
+      .profile-info { grid-template-columns: 1fr; }
+      .logout-btn { padding: 9px; font-size: 12px; }
     }
   </style>
 </head>
 
 <body>
 
-  <!-- CONNEXION / INSCRIPTION -->
+  <!-- ÉCRAN DE CONNEXION -->
   <section id="authScreen" class="auth-screen">
     <div class="auth-visual">
       <div class="brand">FLAMINGO <span>RESTO CAFÉ</span></div>
 
       <div class="visual-content">
-        <div class="visual-tag">Votre espace client</div>
+        <p>VOTRE ESPACE CLIENT</p>
         <h1>Bienvenue chez Flamingo.</h1>
         <p>
-          Retrouvez nos offres, nos soirées et vos informations personnelles
-          dans votre espace client Flamingo Resto Café.
+          Retrouvez nos offres, nos soirées et vos informations
+          personnelles dans votre espace client.
         </p>
       </div>
 
-      <p class="small-text" style="color:#ffe7ef">
-        Une belle ambiance, un service au top et une cuisine savoureuse.
-      </p>
+      <p class="visual-footer">Une belle ambiance, un service au top et une cuisine savoureuse.</p>
     </div>
 
     <div class="auth-side">
@@ -617,15 +434,11 @@
         <div class="brand">FLAMINGO <span>♥</span></div>
 
         <h2 id="authTitle">Content de vous revoir !</h2>
-        <p id="authSubtitle">Connectez-vous pour accéder à votre espace client.</p>
+        <p class="muted" id="authSubtitle">Connectez-vous à votre espace client.</p>
 
         <div class="tabs">
-          <button class="tab active" id="loginTab" type="button">
-            Se connecter
-          </button>
-          <button class="tab" id="registerTab" type="button">
-            Créer un compte
-          </button>
+          <button id="loginTab" class="tab active" type="button">Se connecter</button>
+          <button id="registerTab" class="tab" type="button">Créer un compte</button>
         </div>
 
         <div id="authMessage" class="message" role="status"></div>
@@ -633,54 +446,38 @@
         <form id="loginForm">
           <div class="field">
             <label for="loginEmail">Adresse e-mail</label>
-            <input
-              id="loginEmail"
-              type="email"
-              placeholder="exemple@email.com"
-              autocomplete="email"
-              required
-            >
+            <input id="loginEmail" type="email" autocomplete="email" required>
           </div>
 
           <div class="field">
             <label for="loginPassword">Mot de passe</label>
-            <input
-              id="loginPassword"
-              type="password"
-              placeholder="Votre mot de passe"
-              autocomplete="current-password"
-              required
-            >
+            <input id="loginPassword" type="password" autocomplete="current-password" required>
           </div>
 
-          <button class="primary-btn" type="submit" id="loginButton">
-            Se connecter
-          </button>
+          <button id="loginButton" class="primary-btn" type="submit">Se connecter</button>
         </form>
 
         <form id="registerForm" class="hidden">
           <div class="field">
             <label for="registerName">Nom et prénom</label>
+            <input id="registerName" type="text" autocomplete="name" maxlength="80" required>
+          </div>
+
+          <div class="field">
+            <label for="registerPhone">Numéro de téléphone</label>
             <input
-              id="registerName"
-              type="text"
-              placeholder="Votre nom complet"
-              autocomplete="name"
-              minlength="2"
-              maxlength="80"
+              id="registerPhone"
+              type="tel"
+              autocomplete="tel"
+              placeholder="Ex. : 20 123 456"
+              maxlength="20"
               required
             >
           </div>
 
           <div class="field">
             <label for="registerEmail">Adresse e-mail</label>
-            <input
-              id="registerEmail"
-              type="email"
-              placeholder="exemple@email.com"
-              autocomplete="email"
-              required
-            >
+            <input id="registerEmail" type="email" autocomplete="email" required>
           </div>
 
           <div class="field">
@@ -688,7 +485,6 @@
             <input
               id="registerPassword"
               type="password"
-              placeholder="Minimum 6 caractères"
               autocomplete="new-password"
               minlength="6"
               required
@@ -700,39 +496,31 @@
             <input
               id="confirmPassword"
               type="password"
-              placeholder="Retapez votre mot de passe"
               autocomplete="new-password"
               minlength="6"
               required
             >
           </div>
 
-          <button class="primary-btn" type="submit" id="registerButton">
-            Créer mon compte
-          </button>
+          <button id="registerButton" class="primary-btn" type="submit">Créer mon compte</button>
         </form>
 
-        <div class="auth-footer">
-          Flamingo Resto Café · Mahdia, Tunisie
-        </div>
+        <div class="auth-footer">Flamingo Resto Café · Mahdia, Tunisie</div>
       </div>
     </div>
   </section>
 
-  <!-- APPLICATION CLIENT -->
+  <!-- APPLICATION APRÈS CONNEXION -->
   <section id="appScreen" class="hidden">
     <header class="app-header">
       <div class="brand">FLAMINGO <span>RESTO CAFÉ</span></div>
-
       <div class="header-right">
         <span id="headerUserName" class="user-chip">Mon compte</span>
-        <button id="logoutButton" class="logout-btn" type="button">
-          Déconnexion
-        </button>
+        <button id="logoutButton" class="logout-btn" type="button">Déconnexion</button>
       </div>
     </header>
 
-    <nav class="app-nav" aria-label="Navigation principale">
+    <nav class="app-nav">
       <button class="nav-btn active" data-page="home" type="button">Accueil</button>
       <button class="nav-btn" data-page="offers" type="button">Offres</button>
       <button class="nav-btn" data-page="events" type="button">Soirées</button>
@@ -742,14 +530,13 @@
 
     <main class="app-content">
 
-      <!-- ACCUEIL -->
       <section id="page-home" class="page">
         <div class="welcome-banner">
           <div class="eyebrow">Flamingo Resto Café · Mahdia</div>
           <h1>Bienvenue, <span id="welcomeName">cher membre</span> !</h1>
           <p>
-            Heureux de vous retrouver. Découvrez nos offres, préparez votre
-            prochaine visite et restez au courant de nos soirées.
+            Découvrez nos offres, préparez votre prochaine visite et
+            restez au courant de nos soirées.
           </p>
         </div>
 
@@ -759,24 +546,23 @@
           <article class="feature-card">
             <div class="feature-icon">🍕</div>
             <h3>Nos offres</h3>
-            <p>Retrouvez nos promotions et nos idées gourmandes.</p>
+            <p>Découvrez nos promotions et nos idées gourmandes.</p>
           </article>
 
           <article class="feature-card">
             <div class="feature-icon">🎶</div>
             <h3>Nos soirées</h3>
-            <p>Découvrez l'ambiance et les soirées organisées chez Flamingo.</p>
+            <p>Retrouvez l'ambiance et les soirées du restaurant.</p>
           </article>
 
           <article class="feature-card">
             <div class="feature-icon">📅</div>
             <h3>Réservation</h3>
-            <p>Préparez votre demande de réservation pour votre prochaine visite.</p>
+            <p>Préparez votre demande pour votre prochaine visite.</p>
           </article>
         </div>
       </section>
 
-      <!-- OFFRES -->
       <section id="page-offers" class="page hidden">
         <div class="page-heading">
           <h1>Nos offres</h1>
@@ -786,84 +572,60 @@
         <div class="cards-grid">
           <article class="offer-card">
             <div class="offer-top">
-              <div class="offer-label">Offre gourmande</div>
+              <small>Offre gourmande</small>
               <h3>Plateau Terre & Mer</h3>
-              <div>159 DT</div>
+              <strong>159 DT</strong>
             </div>
             <div class="offer-body">
-              <p>
-                Une idée à partager entre amis ou en famille.
-                Offre prévue pour 4 personnes et plus.
-              </p>
+              <p>Une idée à partager entre amis ou en famille, prévue pour 4 personnes et plus.</p>
             </div>
           </article>
 
           <article class="offer-card">
             <div class="offer-top">
-              <div class="offer-label">Spécial étudiants</div>
-              <h3>Votre pause préférée</h3>
-              <div>Offres étudiantes</div>
+              <small>Spécial étudiants</small>
+              <h3>Offres étudiantes</h3>
+              <strong>À découvrir</strong>
             </div>
             <div class="offer-body">
-              <p>
-                Des offres dédiées aux étudiants selon les conditions
-                communiquées par le restaurant.
-              </p>
+              <p>Des promotions étudiantes selon les conditions annoncées par le restaurant.</p>
             </div>
           </article>
 
           <article class="offer-card">
             <div class="offer-top">
-              <div class="offer-label">À découvrir</div>
-              <h3>Pizza & gourmandises</h3>
-              <div>Découvrez la carte</div>
+              <small>Pause gourmande</small>
+              <h3>Pizzas & desserts</h3>
+              <strong>Flamingo</strong>
             </div>
             <div class="offer-body">
-              <p>
-                Passez chez Flamingo pour découvrir les produits et
-                promotions disponibles.
-              </p>
+              <p>Découvrez la carte et les offres disponibles directement au restaurant.</p>
             </div>
           </article>
         </div>
 
-        <p class="small-text" style="margin-top:20px">
-          Les offres affichées ici sont des exemples de présentation.
-          Mets-les à jour selon les promotions réellement disponibles.
-        </p>
+        <p class="muted">Les offres affichées sont des exemples. Actualisez-les selon les promotions réelles.</p>
       </section>
 
-      <!-- SOIRÉES -->
       <section id="page-events" class="page hidden">
         <div class="page-heading">
           <h1>Nos soirées</h1>
-          <p>Une ambiance à partager chez Flamingo Resto Café.</p>
+          <p>Une ambiance à partager chez Flamingo.</p>
         </div>
 
         <div class="cards-grid">
           <article class="event-card">
             <div class="event-date">Chaque samedi</div>
             <h3>🎶 Live Music</h3>
-            <p>
-              Retrouvez nos soirées musicales du samedi. Le thème et le
-              programme peuvent changer chaque semaine.
-            </p>
+            <p>Retrouvez nos soirées musicales. Le thème et le programme peuvent changer chaque semaine.</p>
           </article>
 
           <article class="event-card">
-            <div class="event-date">En famille ou entre amis</div>
-            <h3>✨ Vos moments spéciaux</h3>
-            <p>
-              Pour vos occasions et vos moments à partager, contactez
-              directement le restaurant pour connaître les possibilités.
-            </p>
+            <div class="event-date">Vos moments spéciaux</div>
+            <h3>✨ En famille ou entre amis</h3>
+            <p>Contactez le restaurant pour discuter de vos occasions et des possibilités de réservation.</p>
           </article>
         </div>
-
-        <p class="small-text" style="margin-top:20px">
-          Consultez la page Instagram officielle pour connaître le programme
-          et les horaires de la prochaine soirée.
-        </p>
 
         <p>
           <a
@@ -871,36 +633,28 @@
             target="_blank"
             rel="noopener noreferrer"
             style="color:#9c3159;font-weight:700"
-          >
-            Voir Instagram Flamingo ↗
-          </a>
+          >Voir Instagram Flamingo ↗</a>
         </p>
       </section>
 
-      <!-- RÉSERVATION -->
       <section id="page-reservation" class="page hidden">
         <div class="page-heading">
           <h1>Demande de réservation</h1>
           <p>
-            Préparez votre demande. Pour le moment, ce formulaire est une
-            démonstration et n'envoie pas encore la réservation au restaurant.
+            Cette version est une démonstration : le formulaire ne transmet
+            pas encore de réservation au restaurant.
           </p>
         </div>
 
         <form id="reservationForm" class="form-card">
           <div class="field">
             <label for="reservationName">Nom et prénom</label>
-            <input id="reservationName" type="text" required maxlength="80">
+            <input id="reservationName" type="text" maxlength="80" required>
           </div>
 
           <div class="field">
             <label for="reservationPhone">Numéro de téléphone</label>
-            <input
-              id="reservationPhone"
-              type="tel"
-              placeholder="Votre numéro"
-              required
-            >
+            <input id="reservationPhone" type="tel" maxlength="20" required>
           </div>
 
           <div class="field">
@@ -917,39 +671,30 @@
             <label for="reservationGuests">Nombre de personnes</label>
             <select id="reservationGuests" required>
               <option value="">Choisir</option>
-              <option value="1">1 personne</option>
-              <option value="2">2 personnes</option>
-              <option value="3">3 personnes</option>
-              <option value="4">4 personnes</option>
-              <option value="5">5 personnes</option>
-              <option value="6">6 personnes</option>
-              <option value="7+">7 personnes ou plus</option>
+              <option>1 personne</option>
+              <option>2 personnes</option>
+              <option>3 personnes</option>
+              <option>4 personnes</option>
+              <option>5 personnes</option>
+              <option>6 personnes</option>
+              <option>7 personnes ou plus</option>
             </select>
           </div>
 
           <div class="field">
             <label for="reservationNotes">Précisions (facultatif)</label>
-            <textarea
-              id="reservationNotes"
-              rows="3"
-              placeholder="Anniversaire, espace privé, occasion spéciale..."
-              maxlength="500"
-            ></textarea>
+            <textarea id="reservationNotes" rows="3" maxlength="500"></textarea>
           </div>
 
-          <button class="primary-btn" type="submit">
-            Tester le formulaire
-          </button>
-
+          <button class="primary-btn" type="submit">Tester le formulaire</button>
           <div id="reservationMessage" class="message" role="status"></div>
         </form>
       </section>
 
-      <!-- PROFIL -->
       <section id="page-profile" class="page hidden">
         <div class="page-heading">
           <h1>Mon profil</h1>
-          <p>Les informations liées à votre compte Flamingo.</p>
+          <p>Vos informations personnelles liées à votre compte.</p>
         </div>
 
         <div class="profile-card">
@@ -971,22 +716,26 @@
               <small>Adresse e-mail</small>
               <strong id="profileEmailInfo">—</strong>
             </div>
+
+            <div class="info-box">
+              <small>Numéro de téléphone</small>
+              <strong id="profilePhone">Non renseigné</strong>
+            </div>
           </div>
 
           <div id="profileMessage" class="message" role="status"></div>
 
-          <p class="small-text" style="margin-top:22px">
-            Ceci est la première version du profil. La photo, le numéro de
-            téléphone, la carte de fidélité et le QR code seront ajoutés
+          <p class="muted">
+            L'avatar est temporaire : il affiche la première lettre du nom.
+            La photo personnelle et la carte de fidélité seront ajoutées
             dans les prochaines étapes.
           </p>
         </div>
       </section>
+
     </main>
 
-    <footer class="app-footer">
-      © Flamingo Resto Café · Mahdia, Tunisie
-    </footer>
+    <footer class="app-footer">© Flamingo Resto Café · Mahdia, Tunisie</footer>
   </section>
 
   <script type="module">
@@ -1014,7 +763,6 @@
     } from
       "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
-    // Configuration Firebase de Flamingo Resto Café
     const firebaseConfig = {
       apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
       authDomain: "flamingo-resto-app.firebaseapp.com",
@@ -1029,24 +777,10 @@
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
 
-    const authScreen = document.getElementById("authScreen");
-    const appScreen = document.getElementById("appScreen");
+    const $ = (id) => document.getElementById(id);
 
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-
-    const loginTab = document.getElementById("loginTab");
-    const registerTab = document.getElementById("registerTab");
-
-    const authTitle = document.getElementById("authTitle");
-    const authSubtitle = document.getElementById("authSubtitle");
-    const authMessage = document.getElementById("authMessage");
-
-    const loginButton = document.getElementById("loginButton");
-    const registerButton = document.getElementById("registerButton");
-
-    function showMessage(element, message, type = "error") {
-      element.textContent = message;
+    function showMessage(element, text, type = "error") {
+      element.textContent = text;
       element.className = "message show " + type;
     }
 
@@ -1055,89 +789,73 @@
       element.className = "message";
     }
 
+    function firebaseError(error) {
+      const messages = {
+        "auth/email-already-in-use": "Cette adresse e-mail possède déjà un compte. Connectez-vous.",
+        "auth/invalid-email": "L'adresse e-mail n'est pas valide.",
+        "auth/weak-password": "Le mot de passe doit contenir au moins 6 caractères.",
+        "auth/invalid-credential": "E-mail ou mot de passe incorrect.",
+        "auth/user-not-found": "Aucun compte trouvé avec ces informations.",
+        "auth/wrong-password": "Mot de passe incorrect.",
+        "auth/too-many-requests": "Trop de tentatives. Réessayez plus tard.",
+        "auth/network-request-failed": "Vérifiez votre connexion Internet.",
+        "permission-denied": "Accès refusé par les règles Firestore. Vérifiez la configuration."
+      };
+
+      return messages[error.code] ||
+        "Une erreur est survenue. Vérifiez les informations et réessayez.";
+    }
+
     function setAuthMode(mode) {
-      clearMessage(authMessage);
+      const login = mode === "login";
 
-      const isLogin = mode === "login";
+      $("loginForm").classList.toggle("hidden", !login);
+      $("registerForm").classList.toggle("hidden", login);
+      $("loginTab").classList.toggle("active", login);
+      $("registerTab").classList.toggle("active", !login);
 
-      loginForm.classList.toggle("hidden", !isLogin);
-      registerForm.classList.toggle("hidden", isLogin);
-
-      loginTab.classList.toggle("active", isLogin);
-      registerTab.classList.toggle("active", !isLogin);
-
-      authTitle.textContent = isLogin
+      $("authTitle").textContent = login
         ? "Content de vous revoir !"
         : "Rejoignez Flamingo !";
 
-      authSubtitle.textContent = isLogin
-        ? "Connectez-vous pour accéder à votre espace client."
-        : "Créez votre compte pour accéder à votre espace client.";
+      $("authSubtitle").textContent = login
+        ? "Connectez-vous à votre espace client."
+        : "Créez votre compte Flamingo.";
+
+      clearMessage($("authMessage"));
     }
 
-    loginTab.addEventListener("click", () => setAuthMode("login"));
-    registerTab.addEventListener("click", () => setAuthMode("register"));
+    $("loginTab").addEventListener("click", () => setAuthMode("login"));
+    $("registerTab").addEventListener("click", () => setAuthMode("register"));
 
-    function getFirebaseErrorMessage(error) {
-      const code = error && error.code ? error.code : "";
-
-      const messages = {
-        "auth/email-already-in-use":
-          "Cette adresse e-mail possède déjà un compte. Connectez-vous.",
-        "auth/invalid-email":
-          "L'adresse e-mail n'est pas valide.",
-        "auth/weak-password":
-          "Le mot de passe est trop faible. Utilisez au moins 6 caractères.",
-        "auth/invalid-credential":
-          "E-mail ou mot de passe incorrect.",
-        "auth/user-not-found":
-          "Aucun compte trouvé avec ces informations.",
-        "auth/wrong-password":
-          "Mot de passe incorrect.",
-        "auth/too-many-requests":
-          "Trop de tentatives. Réessayez un peu plus tard.",
-        "auth/network-request-failed":
-          "Problème de connexion Internet. Réessayez."
-      };
-
-      if (messages[code]) {
-        return messages[code];
-      }
-
-      if (code.startsWith("auth/")) {
-        return "Impossible de continuer. Vérifiez vos informations et réessayez.";
-      }
-
-      if (code.startsWith("permission-denied")) {
-        return "Accès Firestore refusé. Vérifiez les règles de sécurité Firebase.";
-      }
-
-      return "Une erreur est survenue. Réessayez dans quelques instants.";
-    }
-
-    // Créer un compte
-    registerForm.addEventListener("submit", async (event) => {
+    // INSCRIPTION
+    $("registerForm").addEventListener("submit", async (event) => {
       event.preventDefault();
-      clearMessage(authMessage);
+      clearMessage($("authMessage"));
 
-      const name = document.getElementById("registerName").value.trim();
-      const email = document.getElementById("registerEmail").value.trim();
-      const password = document.getElementById("registerPassword").value;
-      const confirmPassword =
-        document.getElementById("confirmPassword").value;
+      const name = $("registerName").value.trim();
+      const phone = $("registerPhone").value.trim();
+      const email = $("registerEmail").value.trim();
+      const password = $("registerPassword").value;
+      const confirmPassword = $("confirmPassword").value;
 
       if (name.length < 2) {
-        showMessage(authMessage, "Entrez votre nom complet.");
+        showMessage($("authMessage"), "Entrez votre nom complet.");
+        return;
+      }
+
+      if (!phone) {
+        showMessage($("authMessage"), "Entrez votre numéro de téléphone.");
         return;
       }
 
       if (password !== confirmPassword) {
-        showMessage(authMessage, "Les deux mots de passe ne correspondent pas.");
+        showMessage($("authMessage"), "Les deux mots de passe ne correspondent pas.");
         return;
       }
 
-      registerButton.disabled = true;
-      registerButton.textContent = "Création du compte...";
+      $("registerButton").disabled = true;
+      $("registerButton").textContent = "Création du compte...";
 
       let accountCreated = false;
 
@@ -1150,149 +868,155 @@
 
         accountCreated = true;
 
-        await updateProfile(result.user, {
-          displayName: name
-        });
+        await updateProfile(result.user, { displayName: name });
 
-        // Chaque client possède son document users/{uid}.
-        // Les règles Firestore doivent autoriser uniquement son propre UID.
         await setDoc(doc(db, "users", result.user.uid), {
           uid: result.user.uid,
           name: name,
+          phone: phone,
           email: email,
           createdAt: serverTimestamp()
         });
 
-        registerForm.reset();
+        $("registerForm").reset();
 
         showMessage(
-          authMessage,
-          "Compte créé avec succès ! Bienvenue chez Flamingo.",
+          $("authMessage"),
+          "Compte créé et profil enregistré avec succès !",
           "success"
         );
+
       } catch (error) {
         console.error("Erreur inscription :", error);
 
         if (accountCreated) {
           showMessage(
-            authMessage,
-            "Votre compte a été créé, mais l'enregistrement du profil a échoué. Vérifiez les règles Firestore puis reconnectez-vous.",
+            $("authMessage"),
+            "Le compte est créé, mais l'enregistrement du profil a échoué. Vérifiez les règles Firestore.",
             "error"
           );
         } else {
-          showMessage(authMessage, getFirebaseErrorMessage(error));
+          showMessage($("authMessage"), firebaseError(error));
         }
+
       } finally {
-        registerButton.disabled = false;
-        registerButton.textContent = "Créer mon compte";
+        $("registerButton").disabled = false;
+        $("registerButton").textContent = "Créer mon compte";
       }
     });
 
-    // Connexion
-    loginForm.addEventListener("submit", async (event) => {
+    // CONNEXION
+    $("loginForm").addEventListener("submit", async (event) => {
       event.preventDefault();
-      clearMessage(authMessage);
+      clearMessage($("authMessage"));
 
-      const email = document.getElementById("loginEmail").value.trim();
-      const password = document.getElementById("loginPassword").value;
+      const email = $("loginEmail").value.trim();
+      const password = $("loginPassword").value;
 
-      loginButton.disabled = true;
-      loginButton.textContent = "Connexion...";
+      $("loginButton").disabled = true;
+      $("loginButton").textContent = "Connexion...";
 
       try {
         await signInWithEmailAndPassword(auth, email, password);
-        loginForm.reset();
+        $("loginForm").reset();
       } catch (error) {
         console.error("Erreur connexion :", error);
-        showMessage(authMessage, getFirebaseErrorMessage(error));
+        showMessage($("authMessage"), firebaseError(error));
       } finally {
-        loginButton.disabled = false;
-        loginButton.textContent = "Se connecter";
+        $("loginButton").disabled = false;
+        $("loginButton").textContent = "Se connecter";
       }
     });
 
-    // Navigation entre les pages
-    const navButtons = document.querySelectorAll(".nav-btn");
+    // NAVIGATION
     const pages = document.querySelectorAll(".page");
+    const navButtons = document.querySelectorAll(".nav-btn");
 
-    function openPage(pageName) {
+    function openPage(name) {
       pages.forEach((page) => {
-        page.classList.toggle("hidden", page.id !== "page-" + pageName);
+        page.classList.toggle("hidden", page.id !== "page-" + name);
       });
 
       navButtons.forEach((button) => {
-        button.classList.toggle(
-          "active",
-          button.dataset.page === pageName
-        );
+        button.classList.toggle("active", button.dataset.page === name);
       });
 
       window.scrollTo({ top: 0, behavior: "smooth" });
     }
 
     navButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        openPage(button.dataset.page);
-      });
+      button.addEventListener("click", () => openPage(button.dataset.page));
     });
 
-    // Charger le profil personnel du client depuis Firestore
+    // CHARGEMENT DU PROFIL PERSONNEL
     async function loadClientProfile(user) {
       const fallbackName = user.displayName || "Membre Flamingo";
-      let clientName = fallbackName;
+      const email = user.email || "—";
 
-      document.getElementById("headerUserName").textContent = fallbackName;
-      document.getElementById("welcomeName").textContent = fallbackName;
-      document.getElementById("profileName").textContent = fallbackName;
-      document.getElementById("profileFullName").textContent = fallbackName;
-      document.getElementById("profileEmail").textContent = user.email || "—";
-      document.getElementById("profileEmailInfo").textContent =
-        user.email || "—";
-      document.getElementById("profileAvatar").textContent =
-        fallbackName.charAt(0).toUpperCase();
+      $("headerUserName").textContent = fallbackName;
+      $("welcomeName").textContent = fallbackName;
+      $("profileName").textContent = fallbackName;
+      $("profileFullName").textContent = fallbackName;
+      $("profileEmail").textContent = email;
+      $("profileEmailInfo").textContent = email;
+      $("profilePhone").textContent = "Non renseigné";
+      $("profileAvatar").textContent = fallbackName.charAt(0).toUpperCase();
+      $("reservationName").value = fallbackName;
 
-      document.getElementById("reservationName").value = fallbackName;
+      // Le téléphone est également prérempli dans le formulaire de réservation.
+      $("reservationPhone").value = "";
 
       try {
         const profileRef = doc(db, "users", user.uid);
-        const profileSnapshot = await getDoc(profileRef);
+        const snapshot = await getDoc(profileRef);
 
-        if (profileSnapshot.exists()) {
-          const profile = profileSnapshot.data();
-          clientName = profile.name || fallbackName;
+        if (snapshot.exists()) {
+          const profile = snapshot.data();
+          const name = profile.name || fallbackName;
+
+          $("headerUserName").textContent = name;
+          $("welcomeName").textContent = name;
+          $("profileName").textContent = name;
+          $("profileFullName").textContent = name;
+          $("profileEmail").textContent = profile.email || email;
+          $("profileEmailInfo").textContent = profile.email || email;
+          $("profilePhone").textContent = profile.phone || "Non renseigné";
+          $("profileAvatar").textContent = name.charAt(0).toUpperCase();
+          $("reservationName").value = name;
+          $("reservationPhone").value = profile.phone || "";
         }
-
-        document.getElementById("headerUserName").textContent = clientName;
-        document.getElementById("welcomeName").textContent = clientName;
-        document.getElementById("profileName").textContent = clientName;
-        document.getElementById("profileFullName").textContent = clientName;
-        document.getElementById("profileAvatar").textContent =
-          clientName.charAt(0).toUpperCase();
-        document.getElementById("reservationName").value = clientName;
-
       } catch (error) {
         console.error("Erreur chargement profil :", error);
-        // Le client garde accès à son compte même si le profil ne charge pas.
+        showMessage(
+          $("profileMessage"),
+          "Le profil n'a pas pu être chargé depuis Firestore. Vérifiez les règles de sécurité.",
+          "error"
+        );
       }
     }
 
-    // Garder la session active et protéger l'application par la connexion
+    // SESSION FIREBASE
+    try {
+      await setPersistence(auth, browserLocalPersistence);
+    } catch (error) {
+      console.error("Erreur de persistance :", error);
+    }
+
     onAuthStateChanged(auth, async (user) => {
       if (user) {
-        authScreen.classList.add("hidden");
-        appScreen.classList.remove("hidden");
-
+        $("authScreen").classList.add("hidden");
+        $("appScreen").classList.remove("hidden");
+        clearMessage($("profileMessage"));
         await loadClientProfile(user);
       } else {
-        appScreen.classList.add("hidden");
-        authScreen.classList.remove("hidden");
-
+        $("appScreen").classList.add("hidden");
+        $("authScreen").classList.remove("hidden");
         openPage("home");
       }
     });
 
-    // Déconnexion
-    document.getElementById("logoutButton").addEventListener("click", async () => {
+    // DÉCONNEXION
+    $("logoutButton").addEventListener("click", async () => {
       try {
         await signOut(auth);
         setAuthMode("login");
@@ -1302,20 +1026,15 @@
       }
     });
 
-    // Démonstration du formulaire : aucune réservation n'est envoyée.
-    document.getElementById("reservationForm").addEventListener("submit", (event) => {
+    // FORMULAIRE DE RÉSERVATION : DÉMONSTRATION UNIQUEMENT
+    $("reservationForm").addEventListener("submit", (event) => {
       event.preventDefault();
 
       showMessage(
-        document.getElementById("reservationMessage"),
-        "Le formulaire fonctionne visuellement, mais la réservation n'est pas encore envoyée au restaurant.",
+        $("reservationMessage"),
+        "Le formulaire fonctionne, mais la demande n'est pas encore envoyée au restaurant.",
         "success"
       );
-    });
-
-    // Initialisation de la session Firebase
-    setPersistence(auth, browserLocalPersistence).catch((error) => {
-      console.error("Erreur de session :", error);
     });
   </script>
 </body>
