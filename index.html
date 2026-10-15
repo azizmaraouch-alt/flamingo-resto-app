@@ -1,61 +1,416 @@
 
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Flamingo Resto Café</title>
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+:root{--pink:#ec4899;--dark:#291522;--bg:#fff7fb;--line:#f0dce7;--green:#16865b;--red:#c62845;--muted:#766b79}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#241821;font-family:Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 13px;font-weight:bold;background:var(--pink);color:white}button:hover{filter:brightness(.94)}input,select,textarea{width:100%;padding:11px;border:1px solid #e7d8e2;border-radius:9px;background:white}label{display:block;font-size:13px;font-weight:bold;margin:10px 0 6px}.top{background:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 3px 15px #0000000b;position:sticky;top:0;z-index:5}.brand{font-weight:900}.brand span{color:var(--pink)}.wrap{max-width:1150px;margin:auto;padding:20px 14px 50px}.hero{background:linear-gradient(120deg,#291522,#a31d64,#ec4899);padding:26px;border-radius:20px;color:white;margin-bottom:18px}.hero h1{margin:0 0 8px}.hero p{margin:0;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card,.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;margin-bottom:15px}.card h2,.card h3{margin-top:0}.muted,.small{color:var(--muted);font-size:13px}.small{font-size:11px}.hidden{display:none!important}.btn-dark{background:var(--dark)}.btn-green{background:var(--green)}.btn-red{background:var(--red)}.btn-light{background:#fff0f7;color:#a31d64;border:1px solid #f3c7dc}.btn-small{font-size:12px;padding:7px 9px}.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.notice{padding:12px;border-radius:9px;margin:10px 0;font-size:14px}.success{background:#e6f7ed;color:#126a43}.error{background:#ffeaed;color:#a51c35}.info{background:#f1eaff;color:#5b318b}.section{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:22px 0 12px}.section h2{font-size:21px;margin:0}.pill{display:inline-block;border-radius:20px;padding:5px 9px;background:#f8e7f0;color:#9c215f;font-size:11px;font-weight:bold}.green{background:#e1f6e9;color:#127147}.red{background:#ffeaed;color:#a61f38}.gold{background:#fff3d8;color:#8a5a00}.nav{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.nav button{background:white;color:#4c3948;border:1px solid var(--line);font-size:13px}.nav button.active{background:var(--pink);color:white}.stat{padding:15px;min-width:0;margin:0}.stat .label{font-size:11px;color:var(--muted);font-weight:bold}.stat .value{font-size:29px;font-weight:900;margin:9px 0}.stat .hint{font-size:11px;color:var(--muted)}.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:15px}.chart canvas{width:100%!important;height:240px!important}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:560px;background:white;font-size:13px}th,td{padding:11px;text-align:left;border-bottom:1px solid #f2e6ed;vertical-align:top}th{background:#fff2f8;font-size:11px}.empty{text-align:center;padding:24px;color:var(--muted);border:1px dashed var(--line);border-radius:12px;background:white}.offer{border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:14px;background:white}.offer h3{margin:0 0 8px}.reservation{background:white;border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}.reservation-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.qr-layout{display:grid;grid-template-columns:1fr 200px;gap:15px;align-items:center}.qrbox{text-align:center;padding:15px;border:1px dashed #e9bdd2;border-radius:12px;background:white}.discount{display:inline-block;background:#ffe5f2;color:#a5145a;padding:9px 12px;border-radius:8px;font-weight:900}.footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+@media(max-width:760px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.charts{grid-template-columns:1fr}.hero{padding:20px}.top{padding:12px}.brand{font-size:14px}}
+@media(max-width:540px){.grid,.qr-layout{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:12px 10px 35px}.card{padding:13px}.stat .value{font-size:25px}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">🦩 <span>FLAMINGO</span> RESTO CAFÉ</div>
+  <div><span id="headerUser" class="small"></span> <button id="logoutBtn" class="btn-dark btn-small hidden" onclick="logout()">Déconnexion</button></div>
+</header>
 
-    function signedIn() {
-      return request.auth != null;
-    }
+<main class="wrap">
+  <section class="hero">
+    <h1>Bienvenue chez Flamingo ✨</h1>
+    <p>Votre espace fidélité, vos offres exclusives et vos réservations.</p>
+  </section>
 
-    function isAdmin() {
-      return signedIn()
-        && request.auth.token.email == "azizmaraouch@gmail.com"
-        && exists(/databases/$(database)/documents/admins/$(request.auth.uid))
-        && get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role == "admin";
-    }
+  <section id="authSection" class="grid">
+    <div class="card">
+      <h2>Connexion</h2><div id="authMessage"></div>
+      <form id="loginForm">
+        <label>E-mail</label><input id="loginEmail" type="email" required>
+        <label>Mot de passe</label><input id="loginPassword" type="password" required>
+        <div class="btn-row"><button type="submit">Se connecter</button><button type="button" class="btn-light" onclick="resetPassword()">Mot de passe oublié</button></div>
+      </form>
+    </div>
+    <div class="card">
+      <h2>Créer un compte client</h2>
+      <form id="registerForm">
+        <label>Nom et prénom</label><input id="regName" required maxlength="100">
+        <label>Téléphone</label><input id="regPhone" required maxlength="30">
+        <label>E-mail</label><input id="regEmail" type="email" required>
+        <label>Mot de passe (6 caractères minimum)</label><input id="regPassword" type="password" minlength="6" required>
+        <div class="btn-row"><button type="submit">Créer mon compte</button></div>
+      </form>
+    </div>
+  </section>
 
-    match /admins/{adminId} {
-      allow read: if isAdmin();
-      allow write: if false;
-    }
+  <section id="appSection" class="hidden">
+    <section id="clientSection">
+      <div class="section"><h2>Mon espace client</h2><span class="pill">Fidélité Flamingo</span></div>
+      <div class="card qr-layout">
+        <div><p class="muted">Votre carte personnelle</p><h2 id="profileName">Client Flamingo</h2><p id="profileEmail" class="muted"></p><p id="profilePhone" class="muted"></p><p class="discount">REMISE FIDÉLITÉ -20%</p><p class="small">Présentez votre QR code au personnel. La remise doit être vérifiée par l’équipe.</p></div>
+        <div class="qrbox"><div id="clientQr"></div><span class="small">Votre QR code personnel</span></div>
+      </div>
+      <div class="section"><h2>Offres & promotions</h2></div><div id="clientOffers"></div>
+      <div class="section"><h2>Réserver une table</h2></div>
+      <div class="card">
+        <form id="reservationForm">
+          <div class="grid">
+            <div><label>Date</label><input id="resDate" type="date" required></div>
+            <div><label>Heure</label><input id="resTime" type="time" required></div>
+            <div><label>Nombre de personnes</label><select id="resPeople"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11+</option></select></div>
+            <div><label>Note / occasion (facultatif)</label><input id="resNote" maxlength="300" placeholder="Anniversaire, espace privé..."></div>
+          </div><div class="btn-row"><button type="submit">Envoyer la réservation</button></div>
+        </form><div id="reservationMessage"></div>
+      </div>
+      <div class="section"><h2>Mes réservations</h2><button class="btn-light btn-small" onclick="loadMyReservations()">Actualiser</button></div><div id="myReservations"></div>
+    </section>
 
-    match /users/{userId} {
-      allow read: if signedIn()
-        && (request.auth.uid == userId || isAdmin());
+    <section id="adminSection" class="hidden">
+      <div class="section"><h2>Dashboard Admin</h2><span class="pill">Administrateur</span></div>
+      <nav class="nav" id="adminNav">
+        <button class="active" onclick="showAdminTab('stats',this)">📊 Statistiques</button>
+        <button onclick="showAdminTab('scanner',this)">📷 Scanner QR</button>
+        <button onclick="showAdminTab('history',this)">Historique</button>
+        <button onclick="showAdminTab('customers',this)">Clients</button>
+        <button onclick="showAdminTab('offers',this)">Offres</button>
+        <button onclick="showAdminTab('reservations',this)">Réservations</button>
+      </nav>
+      <div id="adminMessage"></div>
 
-      allow create, update: if signedIn()
-        && request.auth.uid == userId
-        && !exists(/databases/$(database)/documents/bannedClients/$(userId));
+      <section id="admin-stats" class="admin-tab">
+        <div class="grid4">
+          <div class="stat"><div class="label">CLIENTS INSCRITS</div><div id="statClients" class="value">—</div><div class="hint">Tous les comptes</div></div>
+          <div class="stat"><div class="label">CLIENTS BLOQUÉS</div><div id="statBlocked" class="value">—</div><div class="hint">Accès suspendus</div></div>
+          <div class="stat"><div class="label">RÉSERVATIONS EN ATTENTE</div><div id="statPending" class="value">—</div><div class="hint">À traiter</div></div>
+          <div class="stat"><div class="label">RÉSERVATIONS CONFIRMÉES</div><div id="statConfirmed" class="value">—</div><div class="hint">Confirmées</div></div>
+          <div class="stat"><div class="label">OFFRES ACTIVES</div><div id="statOffers" class="value">—</div><div class="hint">Visibles aux clients</div></div>
+          <div class="stat"><div class="label">SCANS AU TOTAL</div><div id="statScans" class="value">—</div><div class="hint">Remises confirmées</div></div>
+          <div class="stat"><div class="label">SCANS CE MOIS</div><div id="statScansMonth" class="value">—</div><div class="hint">Mois en cours</div></div>
+          <div class="stat"><div class="label">RÉSERVATIONS AU TOTAL</div><div id="statReservations" class="value">—</div><div class="hint">Toutes périodes</div></div>
+        </div>
+        <div class="charts">
+          <div class="card chart"><h3>Inscriptions — 6 derniers mois</h3><canvas id="clientsChart"></canvas></div>
+          <div class="card chart"><h3>Statut des réservations</h3><canvas id="reservationsChart"></canvas></div>
+          <div class="card chart"><h3>Scans fidélité — 6 derniers mois</h3><canvas id="scansChart"></canvas></div>
+          <div class="card"><h3>Résumé de l’activité</h3><div id="statsSummary">Chargement…</div><div class="btn-row"><button class="btn-light" onclick="loadStats()">Actualiser</button><button class="btn-light" onclick="exportCustomersCsv()">Exporter CSV clients</button></div></div>
+        </div>
+        <p class="small">Les statistiques sont calculées à partir des données enregistrées dans Firestore. Le chiffre d’affaires n’est pas calculé car les paiements ne sont pas enregistrés dans cette application.</p>
+      </section>
 
-      allow delete: if isAdmin();
-    }
+      <section id="admin-scanner" class="admin-tab hidden">
+        <div class="card"><h3>Scanner QR fidélité</h3><p class="muted">Scannez le QR code du client et vérifiez ses informations avant de confirmer la remise.</p><div id="qr-reader" style="max-width:500px;margin:15px auto"></div><div class="btn-row"><button onclick="startScanner()">Démarrer caméra</button><button class="btn-dark" onclick="stopScanner()">Arrêter</button></div><div id="scanResult"></div></div>
+      </section>
 
-    match /bannedClients/{userId} {
-      allow read: if isAdmin()
-        || (signedIn() && request.auth.uid == userId);
+      <section id="admin-history" class="admin-tab hidden">
+        <div class="card"><div class="section"><h3>Historique des remises</h3><button class="btn-light btn-small" onclick="loadHistory()">Actualiser</button></div><div id="historyList"></div></div>
+      </section>
 
-      allow write: if isAdmin();
-    }
+      <section id="admin-customers" class="admin-tab hidden">
+        <div class="card"><div class="section"><h3>Gestion des clients</h3><button class="btn-light btn-small" onclick="loadCustomers()">Actualiser</button></div><div id="customersList"></div></div>
+      </section>
 
-    match /offers/{offerId} {
-      allow read: if signedIn();
-      allow create, update, delete: if isAdmin();
-    }
+      <section id="admin-offers" class="admin-tab hidden">
+        <div class="card"><h3>Ajouter / modifier une offre</h3>
+          <form id="offerForm">
+            <input id="offerId" type="hidden">
+            <label>Titre de l’offre</label><input id="offerTitle" required maxlength="100" placeholder="Ex. Offre étudiant -20%">
+            <label>Catégorie / badge</label><input id="offerTag" maxlength="40" placeholder="Étudiants, Promo...">
+            <label>Description</label><textarea id="offerDescription" required maxlength="1000"></textarea>
+            <label>Validité (facultatif)</label><input id="offerValidity" maxlength="100" placeholder="Jusqu'au 30/11">
+            <label>Statut</label><select id="offerActive"><option value="true">Active</option><option value="false">Inactive / masquée</option></select>
+            <div class="btn-row"><button type="submit">Enregistrer</button><button type="button" class="btn-light" onclick="resetOfferForm()">Vider</button></div>
+          </form>
+        </div>
+        <div class="card"><h3>Offres enregistrées</h3><div id="offersAdminList"></div></div>
+      </section>
 
-    match /reservations/{reservationId} {
-      allow create: if signedIn()
-        && request.resource.data.userId == request.auth.uid
-        && !exists(/databases/$(database)/documents/bannedClients/$(request.auth.uid));
+      <section id="admin-reservations" class="admin-tab hidden">
+        <div class="card"><div class="section"><h3>Gestion des réservations</h3><button class="btn-light btn-small" onclick="loadReservations()">Actualiser</button></div><div id="reservationsList"></div></div>
+      </section>
+    </section>
+  </section>
+</main>
+<div class="footer">© Flamingo Resto Café · Espace fidélité</div>
 
-      allow read: if isAdmin()
-        || (signedIn() && resource.data.userId == request.auth.uid);
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+import {getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,onAuthStateChanged,sendPasswordResetEmail} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+import {getFirestore,doc,getDoc,setDoc,addDoc,collection,getDocs,updateDoc,deleteDoc,serverTimestamp,query,orderBy,limit,where} from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
-      allow update, delete: if isAdmin();
-    }
+const firebaseConfig={
+  apiKey:"AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
+  authDomain:"flamingo-resto-app.firebaseapp.com",
+  projectId:"flamingo-resto-app",
+  storageBucket:"flamingo-resto-app.firebasestorage.app",
+  messagingSenderId:"373385649809",
+  appId:"1:373385649809:web:43cee235aea16d5e736930",
+  measurementId:"G-F47BM413L7"
+};
+const ADMIN_EMAIL="azizmaraouch@gmail.com";
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+const $=id=>document.getElementById(id);
+let currentUser=null,currentProfile=null,isAdmin=false,scanner=null,scannerRunning=false,lastScannedUid=null;
+let clientsChart=null,reservationsChart=null,scansChart=null;
 
-    match /scanLogs/{scanId} {
-      allow read, create: if isAdmin();
-      allow update, delete: if false;
-    }
-  }
+function safe(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function message(id,text,type="info"){const el=$(id);if(el)el.innerHTML=`<div class="notice ${type}">${safe(text)}</div>`;}
+function clearMessage(id){if($(id))$(id).innerHTML="";}
+function errText(e){
+ const map={"auth/email-already-in-use":"Cette adresse e-mail est déjà utilisée.","auth/invalid-email":"Adresse e-mail invalide.","auth/weak-password":"Mot de passe trop faible.","auth/invalid-credential":"E-mail ou mot de passe incorrect.","auth/too-many-requests":"Trop de tentatives. Réessayez plus tard.","permission-denied":"Accès refusé. Vérifiez les règles Firestore.","unavailable":"Service indisponible, réessayez."};
+ return map[e?.code]||e?.message||"Une erreur est survenue.";
 }
+function asDate(v){if(!v)return null;const d=v.toDate?v.toDate():new Date(v);return Number.isNaN(d.getTime())?null:d;}
+function fmt(v){const d=asDate(v);return d?d.toLocaleString("fr-FR",{dateStyle:"short",timeStyle:"short"}):"—";}
+function monthKey(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;}
+function monthInfo(){let labels=[],keys=[],now=new Date();for(let i=5;i>=0;i--){let d=new Date(now.getFullYear(),now.getMonth()-i,1);labels.push(d.toLocaleDateString("fr-FR",{month:"short",year:"2-digit"}));keys.push(monthKey(d));}return{labels,keys};}
+function makeChart(old,id,config){if(old)old.destroy();return new Chart($(id).getContext("2d"),config);}
+function statusPill(s){const labels={pending:"En attente",confirmed:"Confirmée",refused:"Refusée",waiting:"À rappeler"};const cls=s==="confirmed"?"green":s==="refused"?"red":s==="waiting"?"gold":"";return `<span class="pill ${cls}">${safe(labels[s]||s||"En attente")}</span>`;}
+
+$("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearMessage("authMessage");
+ try{await signInWithEmailAndPassword(auth,$("loginEmail").value.trim(),$("loginPassword").value);}
+ catch(x){message("authMessage",errText(x),"error");}
+});
+$("registerForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearMessage("authMessage");
+ const name=$("regName").value.trim(),phone=$("regPhone").value.trim(),email=$("regEmail").value.trim().toLowerCase(),password=$("regPassword").value;
+ try{
+  const cred=await createUserWithEmailAndPassword(auth,email,password);
+  await setDoc(doc(db,"users",cred.user.uid),{uid:cred.user.uid,name,phone,email,createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+ }catch(x){message("authMessage",errText(x),"error");}
+});
+window.logout=async()=>{try{await signOut(auth);}catch(x){alert(errText(x));}};
+window.resetPassword=async()=>{
+ const email=$("loginEmail").value.trim();if(!email){message("authMessage","Saisissez votre adresse e-mail dans le champ Connexion.","error");return;}
+ try{await sendPasswordResetEmail(auth,email);message("authMessage","Si le compte existe, un e-mail de réinitialisation a été envoyé.","success");}
+ catch(x){message("authMessage",errText(x),"error");}
+};
+
+async function checkAdmin(user){
+ if(!user||(user.email||"").toLowerCase()!==ADMIN_EMAIL)return false;
+ const s=await getDoc(doc(db,"admins",user.uid));return s.exists()&&s.data().role==="admin";
+}
+async function refreshProfile(user){
+ const ref=doc(db,"users",user.uid);let s=await getDoc(ref);
+ if(!s.exists()){
+  await setDoc(ref,{uid:user.uid,name:user.displayName||"Client Flamingo",phone:"",email:user.email||"",createdAt:serverTimestamp(),updatedAt:serverTimestamp()});
+  s=await getDoc(ref);
+ }
+ currentProfile=s.data()||{};
+ $("profileName").textContent=currentProfile.name||"Client Flamingo";
+ $("profileEmail").textContent=currentProfile.email||user.email||"";
+ $("profilePhone").textContent=currentProfile.phone?"Téléphone : "+currentProfile.phone:"";
+ $("clientQr").innerHTML="";
+ if(window.QRCode)new QRCode($("clientQr"),{text:user.uid,width:150,height:150,correctLevel:QRCode.CorrectLevel.M});
+}
+onAuthStateChanged(auth,async user=>{
+ currentUser=user;currentProfile=null;isAdmin=false;
+ if(!user){
+  $("authSection").classList.remove("hidden");$("appSection").classList.add("hidden");$("logoutBtn").classList.add("hidden");$("headerUser").textContent="";$("adminSection").classList.add("hidden");return;
+ }
+ try{
+  const ban=await getDoc(doc(db,"bannedClients",user.uid));
+  if(ban.exists()){message("authMessage","Accès suspendu. Contactez Flamingo Resto Café.","error");await signOut(auth);return;}
+  await refreshProfile(user);isAdmin=await checkAdmin(user);
+  $("authSection").classList.add("hidden");$("appSection").classList.remove("hidden");$("logoutBtn").classList.remove("hidden");
+  $("headerUser").textContent=currentProfile?.name||user.email||"";
+  $("clientSection").classList.toggle("hidden",isAdmin);$("adminSection").classList.toggle("hidden",!isAdmin);
+  await loadClientOffers();
+  if(isAdmin){await loadStats();}else{await loadMyReservations();}
+ }catch(x){console.error(x);message("authMessage",errText(x),"error");$("authSection").classList.remove("hidden");$("appSection").classList.add("hidden");}
+});
+
+async function loadClientOffers(){
+ const el=$("clientOffers");el.innerHTML='<div class="empty">Chargement des offres…</div>';
+ try{
+  const s=await getDocs(collection(db,"offers")),rows=s.docs.map(d=>({id:d.id,...d.data()})).filter(o=>o.active!==false);
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune offre disponible pour le moment.</div>';return;}
+  el.innerHTML=rows.map(o=>`<article class="offer"><h3>${safe(o.title||"Offre Flamingo")}</h3>${o.tag?`<span class="pill">${safe(o.tag)}</span>`:""}<p>${safe(o.description||"")}</p>${o.validity?`<span class="small">Validité : ${safe(o.validity)}</span>`:""}</article>`).join("");
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+$("reservationForm").addEventListener("submit",async e=>{
+ e.preventDefault();clearMessage("reservationMessage");if(!currentUser)return;
+ const date=$("resDate").value,time=$("resTime").value;
+ if(!date||!time){message("reservationMessage","Choisissez une date et une heure.","error");return;}
+ if(new Date(`${date}T${time}`)<new Date()){message("reservationMessage","Choisissez une date et une heure futures.","error");return;}
+ try{
+  await addDoc(collection(db,"reservations"),{userId:currentUser.uid,userName:currentProfile?.name||"",userEmail:currentUser.email||"",userPhone:currentProfile?.phone||"",date,time,people:$("resPeople").value,note:$("resNote").value.trim(),status:"pending",createdAt:serverTimestamp()});
+  $("reservationForm").reset();message("reservationMessage","Votre demande a été envoyée à Flamingo.","success");await loadMyReservations();
+ }catch(x){message("reservationMessage",errText(x),"error");}
+});
+async function loadMyReservations(){
+ if(!currentUser)return;const el=$("myReservations");el.innerHTML='<div class="empty">Chargement…</div>';
+ try{
+  const s=await getDocs(query(collection(db,"reservations"),where("userId","==",currentUser.uid)));
+  const rows=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(asDate(b.createdAt)?.getTime()||0)-(asDate(a.createdAt)?.getTime()||0));
+  if(!rows.length){el.innerHTML='<div class="empty">Vous n’avez pas encore de réservation.</div>';return;}
+  el.innerHTML=rows.map(r=>`<div class="reservation"><div class="reservation-head"><strong>${safe(r.date)} · ${safe(r.time)}</strong>${statusPill(r.status)}</div><p class="muted">${safe(r.people)} personne(s) ${r.note?"· "+safe(r.note):""}</p><span class="small">Demande : ${safe(fmt(r.createdAt))}</span></div>`).join("");
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+
+window.showAdminTab=async(tab,btn)=>{
+ document.querySelectorAll(".admin-tab").forEach(e=>e.classList.add("hidden"));
+ $("admin-"+tab)?.classList.remove("hidden");
+ document.querySelectorAll("#adminNav button").forEach(b=>b.classList.remove("active"));if(btn)btn.classList.add("active");
+ if(tab==="stats")await loadStats();if(tab==="history")await loadHistory();if(tab==="customers")await loadCustomers();if(tab==="offers")await loadOffersAdmin();if(tab==="reservations")await loadReservations();
+};
+
+async function loadStats(){
+ if(!isAdmin)return;const summary=$("statsSummary");summary.textContent="Calcul des statistiques…";
+ try{
+  const [us,bs,rs,os,ss]=await Promise.all([
+   getDocs(collection(db,"users")),getDocs(collection(db,"bannedClients")),getDocs(collection(db,"reservations")),getDocs(collection(db,"offers")),getDocs(collection(db,"scanLogs"))
+  ]);
+  const users=us.docs.map(d=>({id:d.id,...d.data()})),banned=bs.docs.map(d=>d.id);
+  const reservations=rs.docs.map(d=>({id:d.id,...d.data()})),offers=os.docs.map(d=>d.data()).filter(o=>o.active!==false);
+  const scans=ss.docs.map(d=>d.data()).filter(s=>s.action==="discount_confirmed");
+  const pending=reservations.filter(r=>(r.status||"pending")==="pending").length;
+  const confirmed=reservations.filter(r=>r.status==="confirmed").length;
+  const nowKey=monthKey(new Date());
+  const monthScans=scans.filter(s=>{const d=asDate(s.scannedAt);return d&&monthKey(d)===nowKey;}).length;
+  $("statClients").textContent=users.length;$("statBlocked").textContent=banned.length;
+  $("statPending").textContent=pending;$("statConfirmed").textContent=confirmed;
+  $("statOffers").textContent=offers.length;$("statScans").textContent=scans.length;
+  $("statScansMonth").textContent=monthScans;$("statReservations").textContent=reservations.length;
+  const {labels,keys}=monthInfo();
+  const newUsers=keys.map(k=>users.filter(u=>{const d=asDate(u.createdAt);return d&&monthKey(d)===k;}).length);
+  const monthlyScans=keys.map(k=>scans.filter(s=>{const d=asDate(s.scannedAt);return d&&monthKey(d)===k;}).length);
+  clientsChart=makeChart(clientsChart,"clientsChart",{type:"bar",data:{labels,datasets:[{label:"Nouveaux clients",data:newUsers,backgroundColor:"#ec4899",borderRadius:5}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+  scansChart=makeChart(scansChart,"scansChart",{type:"line",data:{labels,datasets:[{label:"Remises confirmées",data:monthlyScans,borderColor:"#be185d",backgroundColor:"#fce7f3",fill:true,tension:.3}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+  const vals=[pending,confirmed,reservations.filter(r=>r.status==="refused").length,reservations.filter(r=>r.status==="waiting").length];
+  reservationsChart=makeChart(reservationsChart,"reservationsChart",{type:"doughnut",data:{labels:["En attente","Confirmées","Refusées","À rappeler"],datasets:[{data:vals,backgroundColor:["#f2b544","#16865b","#c62845","#8b5cf6"]}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}}}});
+  summary.innerHTML=`<p><b>${users.length}</b> comptes clients.</p><p><b>${banned.length}</b> client(s) bloqué(s).</p><p><b>${pending}</b> réservation(s) à traiter.</p><p><b>${monthScans}</b> remise(s) confirmée(s) ce mois-ci.</p><p><b>${offers.length}</b> offre(s) active(s).</p><p class="small">Actualisé : ${safe(new Date().toLocaleString("fr-FR"))}</p>`;
+ }catch(x){console.error(x);summary.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+
+window.startScanner=async()=>{
+ if(!isAdmin)return message("adminMessage","Accès réservé à l’administrateur.","error");
+ if(!window.Html5Qrcode)return message("scanResult","Le scanner n’a pas pu se charger. Rechargez la page.","error");
+ try{
+  if(!scanner)scanner=new Html5Qrcode("qr-reader");
+  const cams=await Html5Qrcode.getCameras();if(!cams.length)return message("scanResult","Aucune caméra détectée.","error");
+  const cam=cams.find(c=>/back|rear|environment|arrière/i.test(c.label))||cams[0];
+  await scanner.start(cam.id,{fps:10,qrbox:{width:230,height:230}},async text=>{
+   if(text===lastScannedUid)return;lastScannedUid=text;await stopScanner();await verifyClient(text);
+  },()=>{});scannerRunning=true;
+ }catch(x){message("scanResult","Impossible de démarrer la caméra : "+errText(x),"error");}
+};
+window.stopScanner=async()=>{if(scanner&&scannerRunning){try{await scanner.stop();}catch{}scannerRunning=false;}};
+async function verifyClient(uid){
+ const el=$("scanResult");el.innerHTML='<div class="notice info">Vérification du client…</div>';
+ try{
+  const [b,u]=await Promise.all([getDoc(doc(db,"bannedClients",uid)),getDoc(doc(db,"users",uid))]);
+  if(b.exists()){el.innerHTML='<div class="notice error">Ce client est bloqué. Aucune remise autorisée.</div>';lastScannedUid=null;return;}
+  if(!u.exists()){el.innerHTML='<div class="notice error">QR code invalide : client introuvable.</div>';lastScannedUid=null;return;}
+  const c=u.data();
+  el.innerHTML=`<div class="card"><h3>Client vérifié</h3><p><b>${safe(c.name||"Client")}</b></p><p class="muted">${safe(c.email||"")} · ${safe(c.phone||"")}</p><p class="discount">Remise : 20%</p><p class="small">Confirmez uniquement si la remise a été appliquée sur l’addition.</p><div class="btn-row"><button class="btn-green" onclick="confirmDiscount('${safe(uid)}')">Confirmer remise 20%</button><button class="btn-light" onclick="clearScan()">Annuler</button></div></div>`;
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+window.clearScan=()=>{$("scanResult").innerHTML="";lastScannedUid=null;};
+window.confirmDiscount=async uid=>{
+ if(!isAdmin||!currentUser)return;
+ try{
+  const [u,b]=await Promise.all([getDoc(doc(db,"users",uid)),getDoc(doc(db,"bannedClients",uid))]);
+  if(!u.exists()||b.exists())return message("scanResult","Client introuvable ou bloqué. Remise non enregistrée.","error");
+  const c=u.data();
+  await addDoc(collection(db,"scanLogs"),{clientUid:uid,clientName:c.name||"",clientEmail:c.email||"",adminUid:currentUser.uid,adminEmail:currentUser.email||"",discountPercent:20,action:"discount_confirmed",scannedAt:serverTimestamp()});
+  $("scanResult").innerHTML=`<div class="notice success">Remise de 20% enregistrée pour ${safe(c.name||"le client")}.</div>`;
+  lastScannedUid=null;await loadHistory();await loadStats();
+ }catch(x){message("scanResult",errText(x),"error");}
+};
+
+async function loadHistory(){
+ if(!isAdmin)return;const el=$("historyList");el.innerHTML='<div class="empty">Chargement…</div>';
+ try{
+  const s=await getDocs(query(collection(db,"scanLogs"),orderBy("scannedAt","desc"),limit(100)));
+  const rows=s.docs.map(d=>({id:d.id,...d.data()}));
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune remise enregistrée.</div>';return;}
+  el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>Client</th><th>Remise</th><th>Admin</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${safe(fmt(r.scannedAt))}</td><td><b>${safe(r.clientName||"Client")}</b><br>${safe(r.clientEmail||"")}</td><td><span class="pill green">${safe(r.discountPercent||20)}%</span></td><td>${safe(r.adminEmail||"")}</td></tr>`).join("")}</tbody></table></div>`;
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+
+async function loadCustomers(){
+ if(!isAdmin)return;const el=$("customersList");el.innerHTML='<div class="empty">Chargement…</div>';
+ try{
+  const [s,b]=await Promise.all([getDocs(collection(db,"users")),getDocs(collection(db,"bannedClients"))]);
+  const blocked=new Set(b.docs.map(d=>d.id)),rows=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.name||"").localeCompare(b.name||""));
+  if(!rows.length){el.innerHTML='<div class="empty">Aucun client inscrit.</div>';return;}
+  el.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Client</th><th>Contact</th><th>Inscription</th><th>Statut</th><th>Action</th></tr></thead><tbody>${rows.map(c=>{const isBlocked=blocked.has(c.id);return `<tr><td><b>${safe(c.name||"Client")}</b><br><span class="small">${safe(c.id)}</span></td><td>${safe(c.email||"")}<br>${safe(c.phone||"—")}</td><td>${safe(fmt(c.createdAt))}</td><td><span class="pill ${isBlocked?"red":"green"}">${isBlocked?"Bloqué":"Actif"}</span></td><td><button class="${isBlocked?"btn-green":"btn-red"} btn-small" onclick="toggleClientBlock('${safe(c.id)}',${isBlocked})">${isBlocked?"Réactiver":"Bloquer"}</button></td></tr>`;}).join("")}</tbody></table></div>`;
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+window.toggleClientBlock=async(uid,blocked)=>{
+ if(!isAdmin||!confirm(`Confirmer : ${blocked?"réactiver":"bloquer"} ce client ?`))return;
+ try{
+  const ref=doc(db,"bannedClients",uid);
+  if(blocked)await deleteDoc(ref);else await setDoc(ref,{userId:uid,blockedAt:serverTimestamp(),blockedBy:currentUser.uid});
+  await loadCustomers();await loadStats();message("adminMessage",blocked?"Client réactivé.":"Client bloqué.","success");
+ }catch(x){message("adminMessage",errText(x),"error");}
+};
+
+$("offerForm").addEventListener("submit",async e=>{
+ e.preventDefault();if(!isAdmin)return;
+ const id=$("offerId").value,data={title:$("offerTitle").value.trim(),tag:$("offerTag").value.trim(),description:$("offerDescription").value.trim(),validity:$("offerValidity").value.trim(),active:$("offerActive").value==="true",updatedAt:serverTimestamp(),updatedBy:currentUser.uid};
+ try{
+  if(id)await updateDoc(doc(db,"offers",id),data);else await addDoc(collection(db,"offers"),{...data,createdAt:serverTimestamp(),createdBy:currentUser.uid});
+  resetOfferForm();await loadOffersAdmin();await loadClientOffers();await loadStats();message("adminMessage","Offre enregistrée.","success");
+ }catch(x){message("adminMessage",errText(x),"error");}
+});
+window.resetOfferForm=()=>{$("offerForm").reset();$("offerId").value="";$("offerActive").value="true";};
+async function loadOffersAdmin(){
+ if(!isAdmin)return;const el=$("offersAdminList");el.innerHTML='<div class="empty">Chargement…</div>';
+ try{
+  const s=await getDocs(collection(db,"offers")),rows=s.docs.map(d=>({id:d.id,...d.data()}));
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune offre enregistrée.</div>';return;}
+  el.innerHTML=rows.map(o=>`<div class="offer"><div class="reservation-head"><h3>${safe(o.title||"Offre")}</h3><span class="pill ${o.active===false?"red":"green"}">${o.active===false?"Inactive":"Active"}</span></div>${o.tag?`<span class="pill">${safe(o.tag)}</span>`:""}<p>${safe(o.description||"")}</p>${o.validity?`<p class="small">Validité : ${safe(o.validity)}</p>`:""}<div class="btn-row"><button class="btn-light btn-small" onclick="editOffer('${safe(o.id)}')">Modifier</button><button class="btn-red btn-small" onclick="deleteOffer('${safe(o.id)}')">Supprimer</button></div></div>`).join("");
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+window.editOffer=async id=>{
+ try{
+  const s=await getDoc(doc(db,"offers",id));if(!s.exists())return;const o=s.data();
+  $("offerId").value=id;$("offerTitle").value=o.title||"";$("offerTag").value=o.tag||"";$("offerDescription").value=o.description||"";$("offerValidity").value=o.validity||"";$("offerActive").value=o.active===false?"false":"true";
+  showAdminTab("offers",document.querySelector("#adminNav button:nth-child(5)"));$("offerTitle").focus();
+ }catch(x){message("adminMessage",errText(x),"error");}
+};
+window.deleteOffer=async id=>{
+ if(!isAdmin||!confirm("Supprimer définitivement cette offre ?"))return;
+ try{await deleteDoc(doc(db,"offers",id));await loadOffersAdmin();await loadClientOffers();await loadStats();message("adminMessage","Offre supprimée.","success");}
+ catch(x){message("adminMessage",errText(x),"error");}
+};
+
+async function loadReservations(){
+ if(!isAdmin)return;const el=$("reservationsList");el.innerHTML='<div class="empty">Chargement…</div>';
+ try{
+  const s=await getDocs(query(collection(db,"reservations"),orderBy("createdAt","desc")));
+  const rows=s.docs.map(d=>({id:d.id,...d.data()}));
+  if(!rows.length){el.innerHTML='<div class="empty">Aucune réservation.</div>';return;}
+  el.innerHTML=rows.map(r=>`<div class="reservation"><div class="reservation-head"><b>${safe(r.userName||"Client")} · ${safe(r.date||"")} ${safe(r.time||"")}</b>${statusPill(r.status||"pending")}</div><p class="muted">${safe(r.people||"—")} personne(s) · ${safe(r.userPhone||"")} · ${safe(r.userEmail||"")}</p>${r.note?`<p>${safe(r.note)}</p>`:""}<div class="small">Reçue : ${safe(fmt(r.createdAt))}</div><div class="btn-row"><button class="btn-green btn-small" onclick="updateReservationStatus('${safe(r.id)}','confirmed')">Confirmer</button><button class="btn-small" onclick="updateReservationStatus('${safe(r.id)}','waiting')">À rappeler</button><button class="btn-red btn-small" onclick="updateReservationStatus('${safe(r.id)}','refused')">Refuser</button><button class="btn-dark btn-small" onclick="deleteReservation('${safe(r.id)}')">Supprimer</button></div></div>`).join("");
+ }catch(x){el.innerHTML=`<div class="notice error">${safe(errText(x))}</div>`;}
+}
+window.updateReservationStatus=async(id,status)=>{
+ if(!isAdmin)return;
+ try{await updateDoc(doc(db,"reservations",id),{status,updatedAt:serverTimestamp(),updatedBy:currentUser.uid});await loadReservations();await loadStats();message("adminMessage","Statut de réservation mis à jour.","success");}
+ catch(x){message("adminMessage",errText(x),"error");}
+};
+window.deleteReservation=async id=>{
+ if(!isAdmin||!confirm("Supprimer définitivement cette réservation ?"))return;
+ try{await deleteDoc(doc(db,"reservations",id));await loadReservations();await loadStats();message("adminMessage","Réservation supprimée.","success");}
+ catch(x){message("adminMessage",errText(x),"error");}
+};
+window.exportCustomersCsv=async()=>{
+ if(!isAdmin)return;
+ try{
+  const s=await getDocs(collection(db,"users")),rows=[["Nom","Email","Téléphone","UID","Date inscription"]];
+  s.docs.forEach(d=>{const x=d.data();rows.push([x.name||"",x.email||"",x.phone||"",d.id,fmt(x.createdAt)]);});
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(";")).join("\r\n");
+  const blob=new Blob(["\ufeff"+csv],{type:"text/csv;charset=utf-8;"}),url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="flamingo-clients.csv";a.click();URL.revokeObjectURL(url);
+ }catch(x){message("adminMessage",errText(x),"error");}
+};
+</script>
+</body>
+</html>
