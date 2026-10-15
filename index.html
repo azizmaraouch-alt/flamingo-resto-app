@@ -9,6 +9,39 @@
   <style>
     * { box-sizing: border-box; }
     body {
+      
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+  import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence
+  } from
+    "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
+    authDomain: "flamingo-resto-app.firebaseapp.com",
+    projectId: "flamingo-resto-app",
+    storageBucket: "flamingo-resto-app.firebasestorage.app",
+    messagingSenderId: "373385649809",
+    appId: "1:373385649809:web:43cee235aea16d5e736930",
+    measurementId: "G-F47BM413L7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+    console.log("Flamingo Firebase connecté !");
+  } catch (error) {
+    console.error("Erreur Firebase :", error.code);
+  }
+</script>
+
       margin: 0;
       font-family: Arial, sans-serif;
       background: #fff9fb;
