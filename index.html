@@ -9,39 +9,6 @@
   <style>
     * { box-sizing: border-box; }
     body {
-      
-<script type="module">
-  import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-
-  import {
-    getAuth,
-    setPersistence,
-    browserLocalPersistence
-  } from
-    "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
-    authDomain: "flamingo-resto-app.firebaseapp.com",
-    projectId: "flamingo-resto-app",
-    storageBucket: "flamingo-resto-app.firebasestorage.app",
-    messagingSenderId: "373385649809",
-    appId: "1:373385649809:web:43cee235aea16d5e736930",
-    measurementId: "G-F47BM413L7"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  try {
-    await setPersistence(auth, browserLocalPersistence);
-    console.log("Flamingo Firebase connecté !");
-  } catch (error) {
-    console.error("Erreur Firebase :", error.code);
-  }
-</script>
-
       margin: 0;
       font-family: Arial, sans-serif;
       background: #fff9fb;
@@ -212,19 +179,72 @@
       </div>
     </section>
 
-    <section id="compte">
-      <h2 class="section-title">💳 Ma carte fidélité</h2>
-      <div class="card">
-        <h3>Votre espace membre</h3>
-        <p>Retrouvez bientôt votre carte digitale et votre QR code personnel.</p>
-        <button class="btn" id="accountBtn">Découvrir ma carte</button>
-        <p id="accountMessage" aria-live="polite"></p>
-        <p class="notice">
-          La création de compte et le QR code seront activés après connexion
-          à une base de données sécurisée.
-        </p>
-      </div>
-    </section>
+    
+<section id="compte">
+  <h2 class="section-title">💳 Ma carte fidélité</h2>
+
+  <div class="card">
+    <h3>Bienvenue chez Flamingo 🩷</h3>
+    <p>Créez votre compte ou connectez-vous pour accéder à votre espace membre.</p>
+
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin:20px 0;">
+      <button type="button" class="btn" id="showRegister">
+        Créer un compte
+      </button>
+      <button type="button" class="btn" id="showLogin">
+        Se connecter
+      </button>
+    </div>
+
+    <form id="registerForm">
+      <h3>Créer mon compte</h3>
+
+      <label for="registerName">Nom complet</label>
+      <input id="registerName" type="text"
+             placeholder="Votre nom complet" required
+             autocomplete="name">
+
+      <label for="registerEmail">Adresse e-mail</label>
+      <input id="registerEmail" type="email"
+             placeholder="exemple@email.com" required
+             autocomplete="email">
+
+      <label for="registerPassword">Mot de passe</label>
+      <input id="registerPassword" type="password"
+             placeholder="6 caractères minimum" required
+             minlength="6" autocomplete="new-password">
+
+      <button class="btn" type="submit">Créer mon compte</button>
+    </form>
+
+    <form id="loginForm" style="display:none; margin-top:20px;">
+      <h3>Connexion</h3>
+
+      <label for="loginEmail">Adresse e-mail</label>
+      <input id="loginEmail" type="email"
+             placeholder="Votre adresse e-mail" required
+             autocomplete="email">
+
+      <label for="loginPassword">Mot de passe</label>
+      <input id="loginPassword" type="password"
+             placeholder="Votre mot de passe" required
+             autocomplete="current-password">
+
+      <button class="btn" type="submit">Se connecter</button>
+    </form>
+
+    <div id="accountArea" style="display:none; margin-top:20px;">
+      <h3>Mon espace membre 🩷</h3>
+      <p id="memberEmail"></p>
+      <button type="button" class="btn" id="logoutBtn">
+        Se déconnecter
+      </button>
+    </div>
+
+    <p id="accountMessage" aria-live="polite"></p>
+  </div>
+</section>
+
 
     <section id="contact">
       <h2 class="section-title">📍 Contact & réclamations</h2>
@@ -242,17 +262,145 @@
     <p>Merci pour votre visite 🩷</p>
   </footer>
 
-  <script>
-    document.getElementById("reservationForm").addEventListener("submit", function(event) {
-      event.preventDefault();
-      alert("Merci ! Cette démo ne transmet pas encore votre réservation. Contactez Flamingo pour confirmer.");
-    });
+ 
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
 
-    document.getElementById("accountBtn").addEventListener("click", function() {
-      document.getElementById("accountMessage").textContent =
-        "Votre espace fidélité sera bientôt disponible après activation du compte.";
-    });
-  </script>
+  import {
+    getAuth,
+    setPersistence,
+    browserLocalPersistence,
+    createUserWithEmailAndPassword,
+    signInWithEmailAndPassword,
+    signOut,
+    onAuthStateChanged,
+    updateProfile
+  } from
+    "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
+    authDomain: "flamingo-resto-app.firebaseapp.com",
+    projectId: "flamingo-resto-app",
+    storageBucket: "flamingo-resto-app.firebasestorage.app",
+    messagingSenderId: "373385649809",
+    appId: "1:373385649809:web:43cee235aea16d5e736930",
+    measurementId: "G-F47BM413L7"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const registerForm = document.getElementById("registerForm");
+  const loginForm = document.getElementById("loginForm");
+  const accountArea = document.getElementById("accountArea");
+  const accountMessage = document.getElementById("accountMessage");
+  const memberEmail = document.getElementById("memberEmail");
+
+  document.getElementById("showRegister").addEventListener("click", () => {
+    registerForm.style.display = "block";
+    loginForm.style.display = "none";
+    accountMessage.textContent = "";
+  });
+
+  document.getElementById("showLogin").addEventListener("click", () => {
+    registerForm.style.display = "none";
+    loginForm.style.display = "block";
+    accountMessage.textContent = "";
+  });
+
+  registerForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    accountMessage.textContent = "Création du compte en cours...";
+
+    const name = document.getElementById("registerName").value.trim();
+    const email = document.getElementById("registerEmail").value.trim();
+    const password = document.getElementById("registerPassword").value;
+
+    try {
+      const result = await createUserWithEmailAndPassword(
+        auth, email, password
+      );
+
+      await updateProfile(result.user, {
+        displayName: name
+      });
+
+      accountMessage.textContent = "Compte créé avec succès ! Bienvenue chez Flamingo 🩷";
+      registerForm.reset();
+    } catch (error) {
+      accountMessage.textContent = firebaseErrorMessage(error.code);
+    }
+  });
+
+  loginForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    accountMessage.textContent = "Connexion en cours...";
+
+    const email = document.getElementById("loginEmail").value.trim();
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+      accountMessage.textContent = "Connexion réussie. Bienvenue !";
+      loginForm.reset();
+    } catch (error) {
+      accountMessage.textContent = firebaseErrorMessage(error.code);
+    }
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    try {
+      await signOut(auth);
+      accountMessage.textContent = "Vous êtes déconnecté.";
+    } catch (error) {
+      accountMessage.textContent = firebaseErrorMessage(error.code);
+    }
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      registerForm.style.display = "none";
+      loginForm.style.display = "none";
+      accountArea.style.display = "block";
+      memberEmail.textContent =
+        "Bienvenue " + (user.displayName || user.email) +
+        " — " + user.email;
+    } else {
+      accountArea.style.display = "none";
+      registerForm.style.display = "block";
+    }
+  });
+
+  function firebaseErrorMessage(code) {
+    const messages = {
+      "auth/email-already-in-use": "Cette adresse e-mail possède déjà un compte.",
+      "auth/invalid-email": "Adresse e-mail invalide.",
+      "auth/weak-password": "Choisissez un mot de passe plus sécurisé.",
+      "auth/invalid-credential": "E-mail ou mot de passe incorrect.",
+      "auth/network-request-failed": "Vérifiez votre connexion Internet.",
+      "auth/too-many-requests": "Trop de tentatives. Réessayez plus tard.",
+      "auth/operation-not-allowed": "Vérifiez que Email/Password est activé dans Firebase.",
+      "auth/unauthorized-domain": "Ajoutez le domaine GitHub Pages dans les domaines autorisés de Firebase."
+    };
+
+    return messages[code] || "Une erreur est survenue : " + code;
+  }
+
+  try {
+    await setPersistence(auth, browserLocalPersistence);
+    console.log("Flamingo Firebase connecté !");
+  } catch (error) {
+    console.error("Erreur Firebase :", error.code);
+  }
+
+  document.getElementById("reservationForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    alert("Merci ! Cette démo ne transmet pas encore votre réservation. Contactez Flamingo pour confirmer.");
+  });
+</script>
+
 
 </body>
 </html>
