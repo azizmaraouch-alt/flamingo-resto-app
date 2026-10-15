@@ -2,204 +2,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Flamingo Resto Café</title>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-:root{--pink:#ec4899;--dark:#291522;--bg:#fff7fb;--line:#f0dce7;--green:#16865b;--red:#c62845;--muted:#766b79}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#241821;font-family:Arial,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:9px;padding:10px 13px;font-weight:bold;background:var(--pink);color:white}button:hover{filter:brightness(.94)}input,select,textarea{width:100%;padding:11px;border:1px solid #e7d8e2;border-radius:9px;background:white}label{display:block;font-size:13px;font-weight:bold;margin:10px 0 6px}.top{background:white;padding:15px 5%;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 3px 15px #0000000b;position:sticky;top:0;z-index:5}.brand{font-weight:900;display:flex;align-items:center;gap:7px}.brand-logo{width:38px;height:38px;object-fit:contain;border-radius:8px}.brand span{color:var(--pink)}.wrap{max-width:1150px;margin:auto;padding:20px 14px 50px}.hero{background:linear-gradient(120deg,#291522,#a31d64,#ec4899);padding:26px;border-radius:20px;color:white;margin-bottom:18px}.hero h1{margin:0 0 8px}.hero p{margin:0;line-height:1.6}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.card,.stat{background:white;border:1px solid var(--line);border-radius:15px;padding:17px;margin-bottom:15px}.card h2,.card h3{margin-top:0}.muted,.small{color:var(--muted);font-size:13px}.small{font-size:11px}.hidden{display:none!important}.btn-dark{background:var(--dark)}.btn-green{background:var(--green)}.btn-red{background:var(--red)}.btn-light{background:#fff0f7;color:#a31d64;border:1px solid #f3c7dc}.btn-small{font-size:12px;padding:7px 9px}.btn-row{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}.notice{padding:12px;border-radius:9px;margin:10px 0;font-size:14px}.success{background:#e6f7ed;color:#126a43}.error{background:#ffeaed;color:#a51c35}.info{background:#f1eaff;color:#5b318b}.section{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:22px 0 12px}.section h2{font-size:21px;margin:0}.pill{display:inline-block;border-radius:20px;padding:5px 9px;background:#f8e7f0;color:#9c215f;font-size:11px;font-weight:bold}.green{background:#e1f6e9;color:#127147}.red{background:#ffeaed;color:#a61f38}.gold{background:#fff3d8;color:#8a5a00}.nav{display:flex;gap:7px;flex-wrap:wrap;margin:15px 0}.nav button{background:white;color:#4c3948;border:1px solid var(--line);font-size:13px}.nav button.active{background:var(--pink);color:white}.stat{padding:15px;min-width:0;margin:0}.stat .label{font-size:11px;color:var(--muted);font-weight:bold}.stat .value{font-size:29px;font-weight:900;margin:9px 0}.stat .hint{font-size:11px;color:var(--muted)}.charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin-top:15px}.chart canvas{width:100%!important;height:240px!important}.table-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}table{border-collapse:collapse;width:100%;min-width:560px;background:white;font-size:13px}th,td{padding:11px;text-align:left;border-bottom:1px solid #f2e6ed;vertical-align:top}th{background:#fff2f8;font-size:11px}.empty{text-align:center;padding:24px;color:var(--muted);border:1px dashed var(--line);border-radius:12px;background:white}.offer{border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:14px;background:white}.offer h3{margin:0 0 8px}.reservation{background:white;border:1px solid var(--line);border-radius:12px;padding:14px;margin:10px 0}.reservation-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.qr-layout{display:grid;grid-template-columns:1fr 200px;gap:15px;align-items:center}.qrbox{text-align:center;padding:15px;border:1px dashed #e9bdd2;border-radius:12px;background:white}.discount{display:inline-block;background:#ffe5f2;color:#a5145a;padding:9px 12px;border-radius:8px;font-weight:900}.footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
-@media(max-width:760px){.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.charts{grid-template-columns:1fr}.hero{padding:20px}.top{padding:12px}.brand{font-size:14px}}
-@media(max-width:540px){.grid,.qr-layout{grid-template-columns:1fr}.grid4{grid-template-columns:repeat(2,minmax(0,1fr))}.wrap{padding:12px 10px 35px}.card{padding:13px}.stat .value{font-size:25px}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Flamingo Resto Café</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      background: #151313;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 24px;
+    }
+    main {
+      width: 100%;
+      max-width: 480px;
+      padding: 32px 24px;
+      border: 1px solid #4c3038;
+      border-radius: 20px;
+      text-align: center;
+      background: #211c1e;
+    }
+    h1 { color: #ff83a4; letter-spacing: 3px; }
+    p { color: #ddd; line-height: 1.6; }
+    #status { margin-top: 24px; font-size: 14px; }
+  </style>
 </head>
 <body>
-<header class="top">
-  <div class="brand"><img id="brandLogo" class="brand-logo hidden" alt="Logo Flamingo"><span id="brandEmoji">🦩</span> <span>FLAMINGO</span> RESTO CAFÉ</div>
-  <div><span id="headerUser" class="small"></span> <button id="logoutBtn" class="btn-dark btn-small hidden" onclick="logout()">Déconnexion</button></div>
-</header>
+  <main>
+    <h1>FLAMINGO</h1>
+    <p>RESTO CAFÉ</p>
+    <p>Bienvenue dans votre espace fidélité.</p>
+    <div id="status">Préparation de la connexion...</div>
+  </main>
 
-<main class="wrap">
-  <section id="heroBg" class="hero">
-    <h1>Bienvenue chez Flamingo ✨</h1>
-    <p>Votre espace fidélité, vos offres exclusives et vos réservations.</p>
-  </section>
+  <script>
+    const SUPABASE_URL =
+      "https://dnbcanwxikpysscslotn.supabase.co";
 
-  <section id="authSection" class="grid">
-    <div class="card">
-      <h2>Connexion</h2><div id="authMessage"></div>
-      <form id="loginForm">
-        <label>E-mail</label><input id="loginEmail" type="email" required>
-        <label>Mot de passe</label><input id="loginPassword" type="password" required>
-        <div class="btn-row"><button type="submit">Se connecter</button><button type="button" class="btn-light" onclick="resetPassword()">Mot de passe oublié</button></div>
-      </form>
-    </div>
-    <div class="card">
-      <h2>Créer un compte client</h2>
-      <form id="registerForm">
-        <label>Nom et prénom</label><input id="regName" required maxlength="100">
-        <label>Téléphone</label><input id="regPhone" required maxlength="30">
-        <label>E-mail</label><input id="regEmail" type="email" required>
-        <label>Mot de passe (6 caractères minimum)</label><input id="regPassword" type="password" minlength="6" required>
-        <div class="btn-row"><button type="submit">Créer mon compte</button></div>
-      </form>
-    </div>
-  </section>
+    const SUPABASE_KEY =
+      "sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT";
 
-  <section id="appSection" class="hidden">
-    <section id="clientSection">
-      <div class="section"><h2>Mon espace client</h2><span class="pill">Fidélité Flamingo</span></div>
-      <div class="card qr-layout">
-        <div><p class="muted">Votre carte personnelle</p><h2 id="profileName">Client Flamingo</h2><p id="profileEmail" class="muted"></p><p id="profilePhone" class="muted"></p><p class="discount">REMISE FIDÉLITÉ -20%</p><p class="small">Présentez votre QR code au personnel. La remise doit être vérifiée par l’équipe.</p></div>
-        <div class="qrbox"><div id="clientQr"></div><span class="small">Votre QR code personnel</span></div>
-      </div>
-      <div class="section"><h2>Offres & promotions</h2></div><div id="clientOffers"></div>
-      <div class="section"><h2>Réserver une table</h2></div>
-      <div class="card">
-        <form id="reservationForm">
-          <div class="grid">
-            <div><label>Date</label><input id="resDate" type="date" required></div>
-            <div><label>Heure</label><input id="resTime" type="time" required></div>
-            <div><label>Nombre de personnes</label><select id="resPeople"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option><option>7</option><option>8</option><option>9</option><option>10</option><option>11+</option></select></div>
-            <div><label>Note / occasion (facultatif)</label><input id="resNote" maxlength="300" placeholder="Anniversaire, espace privé..."></div>
-          </div><div class="btn-row"><button type="submit">Envoyer la réservation</button></div>
-        </form><div id="reservationMessage"></div>
-      </div>
-      <div class="section"><h2>Mes réservations</h2><button class="btn-light btn-small" onclick="loadMyReservations()">Actualiser</button></div><div id="myReservations"></div>
-    </section>
+    const status = document.getElementById("status");
 
-    <section id="adminSection" class="hidden">
-      <div class="section"><h2>Dashboard Admin</h2><span class="pill">Administrateur</span></div>
-      <nav class="nav" id="adminNav">
-        <button class="active" onclick="showAdminTab('stats',this)">📊 Statistiques</button>
-        <button onclick="showAdminTab('scanner',this)">📷 Scanner QR</button>
-        <button onclick="showAdminTab('history',this)">Historique</button>
-        <button onclick="showAdminTab('customers',this)">Clients</button>
-        <button onclick="showAdminTab('offers',this)">Offres</button>
-        <button onclick="showAdminTab('reservations',this)">Réservations</button>
-        <button onclick="showAdminTab('design',this)">🎨 Design & photos</button>
-      </nav>
-      <div id="adminMessage"></div>
+    if (!window.supabase) {
+      status.textContent =
+        "Bibliothèque Supabase indisponible. Réessayez.";
+    } else {
+      const client = window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+      );
 
-      <section id="admin-stats" class="admin-tab">
-        <div class="grid4">
-          <div class="stat"><div class="label">CLIENTS INSCRITS</div><div id="statClients" class="value">—</div><div class="hint">Tous les comptes</div></div>
-          <div class="stat"><div class="label">CLIENTS BLOQUÉS</div><div id="statBlocked" class="value">—</div><div class="hint">Accès suspendus</div></div>
-          <div class="stat"><div class="label">RÉSERVATIONS EN ATTENTE</div><div id="statPending" class="value">—</div><div class="hint">À traiter</div></div>
-          <div class="stat"><div class="label">RÉSERVATIONS CONFIRMÉES</div><div id="statConfirmed" class="value">—</div><div class="hint">Confirmées</div></div>
-          <div class="stat"><div class="label">OFFRES ACTIVES</div><div id="statOffers" class="value">—</div><div class="hint">Visibles aux clients</div></div>
-          <div class="stat"><div class="label">SCANS AU TOTAL</div><div id="statScans" class="value">—</div><div class="hint">Remises confirmées</div></div>
-          <div class="stat"><div class="label">SCANS CE MOIS</div><div id="statScansMonth" class="value">—</div><div class="hint">Mois en cours</div></div>
-          <div class="stat"><div class="label">RÉSERVATIONS AU TOTAL</div><div id="statReservations" class="value">—</div><div class="hint">Toutes périodes</div></div>
-        </div>
-        <div class="charts">
-          <div class="card chart"><h3>Inscriptions — 6 derniers mois</h3><canvas id="clientsChart"></canvas></div>
-          <div class="card chart"><h3>Statut des réservations</h3><canvas id="reservationsChart"></canvas></div>
-          <div class="card chart"><h3>Scans fidélité — 6 derniers mois</h3><canvas id="scansChart"></canvas></div>
-          <div class="card"><h3>Résumé de l’activité</h3><div id="statsSummary">Chargement…</div><div class="btn-row"><button class="btn-light" onclick="loadStats()">Actualiser</button><button class="btn-light" onclick="exportCustomersCsv()">Exporter CSV clients</button></div></div>
-        </div>
-        <p class="small">Les statistiques sont calculées à partir des données enregistrées dans Supabase. Le chiffre d’affaires n’est pas calculé car les paiements ne sont pas enregistrés dans cette application.</p>
-      </section>
-
-      <section id="admin-scanner" class="admin-tab hidden">
-        <div class="card"><h3>Scanner QR fidélité</h3><p class="muted">Scannez le QR code du client et vérifiez ses informations avant de confirmer la remise.</p><div id="qr-reader" style="max-width:500px;margin:15px auto"></div><div class="btn-row"><button onclick="startScanner()">Démarrer caméra</button><button class="btn-dark" onclick="stopScanner()">Arrêter</button></div><div id="scanResult"></div></div>
-      </section>
-
-      <section id="admin-history" class="admin-tab hidden">
-        <div class="card"><div class="section"><h3>Historique des remises</h3><button class="btn-light btn-small" onclick="loadHistory()">Actualiser</button></div><div id="historyList"></div></div>
-      </section>
-
-      <section id="admin-customers" class="admin-tab hidden">
-        <div class="card"><div class="section"><h3>Gestion des clients</h3><button class="btn-light btn-small" onclick="loadCustomers()">Actualiser</button></div><div id="customersList"></div></div>
-      </section>
-
-      <section id="admin-offers" class="admin-tab hidden">
-        <div class="card"><h3>Ajouter / modifier une offre</h3>
-          <form id="offerForm">
-            <input id="offerId" type="hidden">
-            <label>Titre de l’offre</label><input id="offerTitle" required maxlength="100" placeholder="Ex. Offre étudiant -20%">
-            <label>Catégorie / badge</label><input id="offerTag" maxlength="40" placeholder="Étudiants, Promo...">
-            <label>Description</label><textarea id="offerDescription" required maxlength="1000"></textarea>
-            <label>Validité (facultatif)</label><input id="offerValidity" maxlength="100" placeholder="Jusqu'au 30/11">
-            <label>Statut</label><select id="offerActive"><option value="true">Active</option><option value="false">Inactive / masquée</option></select>
-            <div class="btn-row"><button type="submit">Enregistrer</button><button type="button" class="btn-light" onclick="resetOfferForm()">Vider</button></div>
-          </form>
-        </div>
-        <div class="card"><h3>Offres enregistrées</h3><div id="offersAdminList"></div></div>
-      </section>
-
-      <section id="admin-reservations" class="admin-tab hidden">
-        <div class="card"><div class="section"><h3>Gestion des réservations</h3><button class="btn-light btn-small" onclick="loadReservations()">Actualiser</button></div><div id="reservationsList"></div></div>
-      </section>
-
-      <section id="admin-design" class="admin-tab hidden">
-        <div class="card">
-          <h3>Personnaliser l’apparence</h3>
-          <p class="muted">Importez le logo et des images de fond. Les fichiers seront envoyés dans Supabase Storage et les liens enregistrés dans Supabase.</p>
-          <div class="grid">
-            <div><label>Logo du restaurant</label><input id="designLogo" type="file" accept="image/*"><div id="previewLogo" class="small"></div><button type="button" class="btn-small" onclick="uploadDesignImage('logo')">Télécharger le logo</button></div>
-            <div><label>Image de fond — accueil</label><input id="designHero" type="file" accept="image/*"><button type="button" class="btn-small" onclick="uploadDesignImage('heroBg')">Télécharger le fond d’accueil</button></div>
-            <div><label>Image de fond — espace client</label><input id="designClient" type="file" accept="image/*"><button type="button" class="btn-small" onclick="uploadDesignImage('clientBg')">Télécharger le fond client</button></div>
-            <div><label>Image de fond — offres</label><input id="designOffers" type="file" accept="image/*"><button type="button" class="btn-small" onclick="uploadDesignImage('offersBg')">Télécharger le fond des offres</button></div>
-            <div><label>Image de fond — réservations</label><input id="designReservations" type="file" accept="image/*"><button type="button" class="btn-small" onclick="uploadDesignImage('reservationsBg')">Télécharger le fond des réservations</button></div>
-          </div>
-          <div class="btn-row"><button class="btn-dark" onclick="loadDesignSettings()">Actualiser l’apparence</button><button class="btn-light" onclick="clearDesignBackgrounds()">Retirer les fonds personnalisés</button></div>
-          <div id="designMessage"></div>
-        </div>
-      </section>
-    </section>
-  </section>
-</main>
-<div class="footer">© Flamingo Resto Café · Espace fidélité</div>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode"></script>
-<script type="module">
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const SUPABASE_URL='https://dnbcanwxikpysscslotn.supabase.co';
-const SUPABASE_ANON_KEY='sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
-const supabase=createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-const $=id=>document.getElementById(id);let currentUser=null,currentProfile=null,scanner=null,scanUid=null,offersCache=[];
-const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function msg(id,t,type='info'){if($(id))$(id).innerHTML=`<div class="notice ${type}">${esc(t)}</div>`}function clear(id){if($(id))$(id).innerHTML=''}
-function dateFmt(v){if(!v)return '—';let d=new Date(v);return isNaN(d)?'—':d.toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'short'})}
-function err(e){return e?.message||'Une erreur est survenue. Vérifiez les règles Supabase (RLS).'}
-function statusPill(s){const l={pending:'En attente',confirmed:'Confirmée',waiting:'À rappeler',refused:'Refusée',cancelled:'Annulée',completed:'Terminée'};return `<span class="pill">${esc(l[s]||s||'En attente')}</span>`}
-async function getProfile(id=currentUser?.id){const {data,error}=await supabase.from('profiles').select('*').eq('id',id).maybeSingle();if(error)throw error;return data}
-async function refreshProfile(user){let p=await getProfile(user.id);if(!p){const {data,error}=await supabase.from('profiles').insert({id:user.id,full_name:user.user_metadata?.full_name||'Client Flamingo',phone:user.user_metadata?.phone||'',email:user.email,role:'client'}).select().single();if(error)throw error;p=data;}if(!p.email&&user.email){await supabase.from('profiles').update({email:user.email}).eq('id',user.id);p.email=user.email;}return p}
-async function loadOffers(){const {data,error}=await supabase.from('offers').select('*').order('created_at',{ascending:false});if(error)throw error;offersCache=data||[];const active=offersCache.filter(o=>o.active!==false);$('clientOffers').innerHTML=active.length?active.map(o=>`<div class="offer">${o.image_url?`<img src="${esc(o.image_url)}" alt="" style="max-width:100%;border-radius:12px">`:''}<h3>${esc(o.title)}</h3>${o.tag?`<span class="pill">${esc(o.tag)}</span>`:''}<p>${esc(o.description||'')}</p>${o.validity?`<p class="small">Validité : ${esc(o.validity)}</p>`:''}</div>`).join(''):'<p class="muted">Aucune offre disponible.</p>';if(currentProfile?.role==='admin')renderAdminOffers();}
-function renderAdminOffers(){if(!$('offersAdminList'))return;$('offersAdminList').innerHTML=offersCache.length?offersCache.map(o=>`<div class="offer"><div class="reservation-head"><h3>${esc(o.title)}</h3>${statusPill(o.active?'Active':'Inactive')}</div>${o.tag?`<span class="pill">${esc(o.tag)}</span>`:''}<p>${esc(o.description||'')}</p>${o.validity?`<p class="small">Validité : ${esc(o.validity)}</p>`:''}<div class="btn-row"><button class="btn-light btn-small" onclick="editOffer('${o.id}')">Modifier</button><button class="btn-red btn-small" onclick="deleteOffer('${o.id}')">Supprimer</button></div></div>`).join(''):'<p>Aucune offre.</p>';}
-window.editOffer=id=>{const o=offersCache.find(x=>x.id===id);if(!o)return;$('offerId').value=o.id;$('offerTitle').value=o.title||'';$('offerTag').value=o.tag||'';$('offerDescription').value=o.description||'';$('offerValidity').value=o.validity||'';$('offerActive').value=String(o.active!==false);window.showAdminTab('offers');};window.resetOfferForm=()=>{$('offerForm').reset();$('offerId').value='';};
-window.deleteOffer=async id=>{if(!confirm('Supprimer cette offre ?'))return;const {error}=await supabase.from('offers').delete().eq('id',id);if(error)msg('adminMessage',err(error),'error');else{msg('adminMessage','Offre supprimée.','success');await loadOffers();}};
-async function loadMyReservations(){if(!currentUser)return;const {data,error}=await supabase.from('reservations').select('*').eq('user_id',currentUser.id).order('created_at',{ascending:false});if(error)throw error;$('myReservations').innerHTML=data?.length?data.map(r=>`<div class="reservation"><div class="reservation-head"><b>${esc(r.reservation_date)} · ${esc(r.reservation_time)}</b>${statusPill(r.status)}</div><p>${esc(r.guests)} personne(s) · ${esc(r.notes||'')}</p><div class="small">Créée : ${dateFmt(r.created_at)}</div></div>`).join(''):'<p class="muted">Aucune réservation pour le moment.</p>';}
-async function loadReservations(){const {data,error}=await supabase.from('reservations').select('*').order('created_at',{ascending:false});if(error)throw error;$('reservationsList').innerHTML=data?.length?data.map(r=>`<div class="reservation"><div class="reservation-head"><b>${esc(r.user_name||'Client')} · ${esc(r.reservation_date||'')} ${esc(r.reservation_time||'')}</b>${statusPill(r.status)}</div><p>${esc(r.guests||'—')} personne(s) · ${esc(r.user_phone||'')} · ${esc(r.user_email||'')}</p>${r.notes?`<p>${esc(r.notes)}</p>`:''}<div class="small">Reçue : ${dateFmt(r.created_at)}</div><div class="btn-row"><button class="btn-green btn-small" onclick="updateReservationStatus('${r.id}','confirmed')">Confirmer</button><button class="btn-small" onclick="updateReservationStatus('${r.id}','waiting')">À rappeler</button><button class="btn-red btn-small" onclick="updateReservationStatus('${r.id}','refused')">Refuser</button><button class="btn-dark btn-small" onclick="deleteReservation('${r.id}')">Supprimer</button></div></div>`).join(''):'<p>Aucune réservation.</p>';}
-window.updateReservationStatus=async(id,status)=>{const {error}=await supabase.from('reservations').update({status,updated_at:new Date().toISOString(),updated_by:currentUser.id}).eq('id',id);if(error)msg('adminMessage',err(error),'error');else{msg('adminMessage','Statut mis à jour.','success');await loadReservations();await loadStats();}};window.deleteReservation=async id=>{if(!confirm('Supprimer cette réservation ?'))return;const {error}=await supabase.from('reservations').delete().eq('id',id);if(error)msg('adminMessage',err(error),'error');else await loadReservations();};
-async function loadCustomers(){const {data,error}=await supabase.from('profiles').select('*').order('created_at',{ascending:false});if(error)throw error;const {data:blocked}=await supabase.from('banned_clients').select('user_id');const b=new Set((blocked||[]).map(x=>x.user_id));$('customersList').innerHTML=data?.length?data.map(p=>`<div class="reservation"><b>${esc(p.full_name||'Client')}</b><p>${esc(p.email||'')} · ${esc(p.phone||'')} · ${esc(p.role||'client')}</p><div class="btn-row">${b.has(p.id)?`<button class="btn-green btn-small" onclick="unblockClient('${p.id}')">Débloquer</button>`:`<button class="btn-red btn-small" onclick="blockClient('${p.id}')">Bloquer</button>`}</div></div>`).join(''):'<p>Aucun client.</p>';}
-window.blockClient=async id=>{if(!confirm('Bloquer ce client ?'))return;const {error}=await supabase.from('banned_clients').upsert({user_id:id,blocked_by:currentUser.id});if(error)msg('adminMessage',err(error),'error');else loadCustomers();};window.unblockClient=async id=>{const {error}=await supabase.from('banned_clients').delete().eq('user_id',id);if(error)msg('adminMessage',err(error),'error');else loadCustomers();};
-async function loadHistory(){const {data,error}=await supabase.from('scan_logs').select('*').order('scanned_at',{ascending:false}).limit(100);if(error)throw error;$('historyList').innerHTML=data?.length?data.map(s=>`<div class="reservation"><b>${esc(s.client_name||'Client')} · ${esc(s.client_email||'')}</b><p>Remise ${esc(s.discount_percent)}% · ${dateFmt(s.scanned_at)}</p><div class="small">Admin : ${esc(s.admin_email||'')}</div></div>`).join(''):'<p>Aucun scan enregistré.</p>';}
-async function loadStats(){try{const [p,r,o,s,b]=await Promise.all([supabase.from('profiles').select('id,created_at'),supabase.from('reservations').select('id,status'),supabase.from('offers').select('id,active'),supabase.from('scan_logs').select('id,scanned_at'),supabase.from('banned_clients').select('user_id')]);for(const x of [p,r,o,s,b])if(x.error)throw x.error;const set=(id,v)=>{if($(id))$(id).textContent=v};set('statClients',p.data.length);set('statBlocked',b.data.length);set('statPending',r.data.filter(x=>['pending','waiting'].includes(x.status)).length);set('statConfirmed',r.data.filter(x=>x.status==='confirmed').length);set('statOffers',o.data.filter(x=>x.active!==false).length);set('statScans',s.data.length);set('statScansMonth',s.data.filter(x=>new Date(x.scanned_at).getMonth()===new Date().getMonth()&&new Date(x.scanned_at).getFullYear()===new Date().getFullYear()).length);set('statReservations',r.data.length);if($('statsSummary'))$('statsSummary').textContent=`${p.data.length} clients · ${r.data.length} réservations · ${s.data.length} scans enregistrés.`;}catch(e){msg('adminMessage',err(e),'error')}}
-window.exportCustomersCsv=async()=>{const {data,error}=await supabase.from('profiles').select('full_name,email,phone,role,created_at');if(error)return msg('adminMessage',err(error),'error');const csv=['Nom,Email,Téléphone,Rôle,Inscription',...(data||[]).map(p=>[p.full_name,p.email,p.phone,p.role,p.created_at].map(v=>'"'+String(v??'').replaceAll('"','""')+'"').join(','))].join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}));a.download='clients-flamingo.csv';a.click();URL.revokeObjectURL(a.href)};
-window.showAdminTab=(tab,button)=>{document.querySelectorAll('.admin-tab').forEach(x=>x.classList.add('hidden'));$('admin-'+tab)?.classList.remove('hidden');document.querySelectorAll('#adminNav button').forEach(x=>x.classList.remove('active'));if(button)button.classList.add('active');if(tab==='stats')loadStats();if(tab==='history')loadHistory().catch(e=>msg('adminMessage',err(e),'error'));if(tab==='customers')loadCustomers().catch(e=>msg('adminMessage',err(e),'error'));if(tab==='offers')loadOffers().catch(e=>msg('adminMessage',err(e),'error'));if(tab==='reservations')loadReservations().catch(e=>msg('adminMessage',err(e),'error'));if(tab!=='scanner')window.stopScanner();};
-window.logout=async()=>{await supabase.auth.signOut();};window.resetPassword=async()=>{const email=$('loginEmail').value.trim();if(!email)return msg('authMessage','Saisissez votre e-mail.','error');const {error}=await supabase.auth.resetPasswordForEmail(email,{redirectTo:location.href});if(error)msg('authMessage',err(error),'error');else msg('authMessage','E-mail de réinitialisation envoyé si le compte existe.','success');};
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();clear('authMessage');const {error}=await supabase.auth.signInWithPassword({email:$('loginEmail').value.trim(),password:$('loginPassword').value});if(error)msg('authMessage',err(error),'error');});
-$('registerForm').addEventListener('submit',async e=>{e.preventDefault();clear('authMessage');const name=$('regName').value.trim(),phone=$('regPhone').value.trim(),email=$('regEmail').value.trim().toLowerCase(),password=$('regPassword').value;const {data,error}=await supabase.auth.signUp({email,password,options:{data:{full_name:name,phone}}});if(error)msg('authMessage',err(error),'error');else if(!data.session)msg('authMessage','Compte créé. Vérifiez votre e-mail pour confirmer le compte.','success');else msg('authMessage','Compte créé avec succès.','success');});
-$('reservationForm').addEventListener('submit',async e=>{e.preventDefault();if(!currentUser)return;const payload={user_id:currentUser.id,user_name:currentProfile.full_name||'',user_email:currentUser.email||'',user_phone:currentProfile.phone||'',reservation_date:$('resDate').value,reservation_time:$('resTime').value,guests:$('resPeople').value==='11+'?11:Number($('resPeople').value),notes:$('resNote').value.trim(),status:'pending'};const {error}=await supabase.from('reservations').insert(payload);if(error)msg('reservationMessage',err(error),'error');else{msg('reservationMessage','Votre demande de réservation a été envoyée.','success');$('reservationForm').reset();await loadMyReservations();}});
-$('offerForm').addEventListener('submit',async e=>{e.preventDefault();const id=$('offerId').value;const payload={title:$('offerTitle').value.trim(),tag:$('offerTag').value.trim(),description:$('offerDescription').value.trim(),validity:$('offerValidity').value.trim(),active:$('offerActive').value==='true',updated_at:new Date().toISOString(),updated_by:currentUser.id};let q=id?supabase.from('offers').update(payload).eq('id',id):supabase.from('offers').insert({...payload,created_by:currentUser.id});const {error}=await q;if(error)msg('adminMessage',err(error),'error');else{msg('adminMessage','Offre enregistrée.','success');window.resetOfferForm();await loadOffers();}});
-async function showSession(session){currentUser=session?.user||null;const auth=$('authSection'),app=$('appSection'),logout=$('logoutBtn');if(!currentUser){currentProfile=null;auth?.classList.remove('hidden');app?.classList.add('hidden');logout?.classList.add('hidden');$('headerUser').textContent='';return;}try{currentProfile=await refreshProfile(currentUser);const {data:ban}=await supabase.from('banned_clients').select('user_id').eq('user_id',currentUser.id).maybeSingle();if(ban){await supabase.auth.signOut();msg('authMessage','Ce compte est bloqué. Contactez le restaurant.','error');return;}auth?.classList.add('hidden');app?.classList.remove('hidden');logout?.classList.remove('hidden');$('headerUser').textContent=currentProfile.full_name||currentUser.email; $('profileName').textContent=currentProfile.full_name||'Client Flamingo';$('profileEmail').textContent=currentUser.email||'';$('profilePhone').textContent=currentProfile.phone||'';const admin=currentProfile.role==='admin';$('adminSection').classList.toggle('hidden',!admin);$('clientSection').classList.toggle('hidden',admin);if(admin){window.showAdminTab('stats',document.querySelector('#adminNav button'));}else{if(window.QRCode){$('clientQr').innerHTML='';new QRCode($('clientQr'),{text:currentUser.id,width:150,height:150});}await loadMyReservations();}await loadOffers();await loadDesignSettings();}catch(e){msg('authMessage',err(e),'error');}}
-supabase.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>showSession(session),0)});supabase.auth.getSession().then(({data})=>showSession(data.session));
-// QR scanner requires html5-qrcode library loaded by the page.
-window.startScanner=async()=>{if(currentProfile?.role!=='admin')return;try{if(!window.Html5Qrcode)throw Error('Bibliothèque QR scanner indisponible.');if(scanner)await window.stopScanner();scanner=new Html5Qrcode('qr-reader');await scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:230,height:230}},async decoded=>{await window.stopScanner();await processScan(decoded)},()=>{});}catch(e){msg('scanResult',err(e),'error')}};window.stopScanner=async()=>{if(scanner){try{await scanner.stop();await scanner.clear()}catch{}scanner=null;}};
-async function processScan(uid){scanUid=uid;try{const p=await getProfile(uid);if(!p)throw Error('Client introuvable.');const {data:ban}=await supabase.from('banned_clients').select('user_id').eq('user_id',uid).maybeSingle();$('scanResult').innerHTML=`<div class="reservation"><h3>${esc(p.full_name||'Client')}</h3><p>${esc(p.email||'')} · ${esc(p.phone||'')}</p>${ban?'<p class="notice error">Client bloqué</p>':'<p>Remise fidélité : 20%</p><button class="btn-green" onclick="confirmScan()">Confirmer la remise</button>'}</div>`;}catch(e){msg('scanResult',err(e),'error')}}
-window.confirmScan=async()=>{if(!scanUid)return;const {error}=await supabase.from('scan_logs').insert({client_uid:scanUid,client_name:$('scanResult').querySelector('h3')?.textContent||'',client_email:'',admin_uid:currentUser.id,admin_email:currentUser.email,discount_percent:20,action:'discount_confirmed'});if(error)msg('scanResult',err(error),'error');else{msg('scanResult','Remise confirmée et enregistrée.','success');scanUid=null;loadStats();}};
-const designKeys={logo:'logo',heroBg:'heroBg',clientBg:'clientSection',offersBg:'clientOffers',reservationsBg:'reservationForm'};let design={};
-async function loadDesignSettings(){try{const {data,error}=await supabase.from('app_settings').select('design').eq('setting_key','design').maybeSingle();if(error)throw error;design=data?.design||{};applyDesign();}catch(e){if(currentProfile?.role==='admin')msg('designMessage',err(e),'error')}}window.loadDesignSettings=loadDesignSettings;
-function applyDesign(){if(design.logo&&$('previewLogo'))$('previewLogo').innerHTML=`<img src="${esc(design.logo)}" style="max-width:120px;max-height:80px">`;for(const [k,id] of Object.entries({heroBg:'heroBg',clientBg:'clientSection',offersBg:'clientOffers',reservationsBg:'reservationForm'})){const el=$(id);if(el&&design[k])el.style.backgroundImage=`linear-gradient(#0005,#0005),url("${design[k]}")`;}}
-window.uploadDesignImage=async kind=>{if(currentProfile?.role!=='admin')return;const inputMap={logo:'designLogo',heroBg:'designHero',clientBg:'designClient',offersBg:'designOffers',reservationsBg:'designReservations'};const file=$(inputMap[kind])?.files?.[0];if(!file)return msg('designMessage','Choisissez une image.','error');if(file.size>5*1024*1024)return msg('designMessage','Image maximum : 5 Mo.','error');const path=`${kind}/${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const {error}=await supabase.storage.from('site-design').upload(path,file,{upsert:true,contentType:file.type});if(error)return msg('designMessage',err(error),'error');const {data}=supabase.storage.from('site-design').getPublicUrl(path);design[kind]=data.publicUrl;const {error:saveError}=await supabase.from('app_settings').upsert({setting_key:'design',design,updated_at:new Date().toISOString(),updated_by:currentUser.id});if(saveError)return msg('designMessage',err(saveError),'error');applyDesign();msg('designMessage','Image téléchargée.','success');};
-window.clearDesignBackgrounds=async()=>{design={};const {error}=await supabase.from('app_settings').upsert({setting_key:'design',design,updated_at:new Date().toISOString(),updated_by:currentUser.id});if(error)msg('designMessage',err(error),'error');else{document.querySelectorAll('#heroBg,#clientSection,#clientOffers,#reservationForm').forEach(el=>el.style.backgroundImage='');msg('designMessage','Images de fond retirées.','success')}};
-window.loadStats=loadStats;window.loadReservations=()=>loadReservations().catch(e=>msg('adminMessage',err(e),'error'));window.loadCustomers=()=>loadCustomers().catch(e=>msg('adminMessage',err(e),'error'));window.loadHistory=()=>loadHistory().catch(e=>msg('adminMessage',err(e),'error'));window.loadMyReservations=()=>loadMyReservations().catch(e=>msg('reservationMessage',err(e),'error'));
-
-</script>
+      status.textContent =
+        "Interface prête. Prochaine étape : Auth et sécurité RLS.";
+      window.flamingoSupabase = client;
+    }
+  </script>
 </body>
 </html>
