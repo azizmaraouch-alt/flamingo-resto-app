@@ -4,435 +4,1055 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f7e6ec">
+  <meta name="theme-color" content="#711d42">
+  <meta name="description" content="Flamingo Resto Café - Votre espace client.">
   <title>Flamingo Resto Café</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      
-<div id="authGate"></div>
 
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --wine: #711d42;
+      --pink: #e9a5be;
+      --light: #fff7fa;
+      --text: #34232b;
+      --muted: #806b75;
+      --border: #f0dce5;
+      --white: #ffffff;
+    }
+
+    body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #fff9fb;
-      color: #30232a;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--light);
+      color: var(--text);
     }
-    header {
-      background: #f7e6ec;
-      padding: 24px 18px;
-      text-align: center;
-    }
-    .logo { font-size: 38px; }
-    header h1 { margin: 8px 0; font-size: 25px; }
-    header p { margin: 0; color: #715663; }
-    nav {
-      display: flex;
-      justify-content: space-around;
-      gap: 8px;
-      padding: 13px 8px;
-      background: white;
-      position: sticky;
-      top: 0;
-      box-shadow: 0 2px 8px #0000000c;
-    }
-    nav a {
-      color: #8b3659;
-      text-decoration: none;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    main { max-width: 760px; margin: auto; padding: 18px; }
-    .hero {
-      background: linear-gradient(135deg, #8b3659, #d77c9d);
-      color: white;
-      border-radius: 20px;
-      padding: 26px 20px;
-      margin: 8px 0 22px;
-    }
-    .hero h2 { font-size: 27px; margin: 0 0 10px; }
-    .hero p { line-height: 1.6; }
-    .section-title { margin: 26px 0 14px; }
-    .card {
-      background: white;
-      padding: 18px;
-      border-radius: 16px;
-      margin-bottom: 13px;
-      box-shadow: 0 4px 18px #54263b0d;
-      border: 1px solid #f4e7ed;
-    }
-    .card h3 { margin-top: 0; }
-    .price { color: #a33b66; font-weight: bold; }
-    .btn {
-      display: inline-block;
-      background: #8b3659;
-      color: white;
-      border: 0;
-      border-radius: 10px;
-      padding: 12px 16px;
-      text-decoration: none;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .secondary { background: #f7e6ec; color: #782c4a; }
-    .card p { line-height: 1.6; }
-    input, select, textarea {
-      width: 100%;
-      padding: 12px;
-      margin: 7px 0 13px;
-      border: 1px solid #e5ccd7;
-      border-radius: 9px;
+
+    button, input, select, textarea {
       font: inherit;
-      background: white;
     }
-    label { font-size: 14px; font-weight: bold; }
-    footer {
+
+    button, a {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    /* AUTHENTIFICATION */
+
+    #authGate {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      background:
+        radial-gradient(ellipse at top left, #f7dbe6 0%, transparent 55%),
+        linear-gradient(145deg, #fff8fb, #f6e4ec);
+    }
+
+    .auth-shell {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .brand {
       text-align: center;
-      padding: 25px 15px;
-      background: #f7e6ec;
-      margin-top: 30px;
+      margin-bottom: 24px;
+    }
+
+    .brand-icon {
+      font-size: 58px;
+      line-height: 1.3;
+    }
+
+    .brand h1 {
+      font-size: 24px;
+      letter-spacing: 1.5px;
+      color: var(--wine);
+      margin: 8px 0;
+    }
+
+    .brand p {
+      color: var(--muted);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .auth-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 23px;
+      padding: 25px 22px;
+      box-shadow: 0 15px 45px #711d4210;
+    }
+
+    .auth-card h2 {
+      margin: 0 0 8px;
+      font-size: 23px;
+    }
+
+    .auth-subtitle {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+      margin: 0 0 23px;
+    }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px;
+      padding: 5px;
+      border-radius: 12px;
+      background: #f8edf2;
+      margin-bottom: 22px;
+    }
+
+    .tab {
+      border: 0;
+      background: transparent;
+      color: var(--muted);
+      padding: 12px 5px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-weight: bold;
       font-size: 13px;
     }
-    .notice { font-size: 12px; color: #76616b; }
-    
-#authGate {
-  max-width: 760px;
-  margin: auto;
-  padding: 18px;
-}
 
-body:not(.authenticated) > header,
-body:not(.authenticated) > nav,
-body:not(.authenticated) > main,
-body:not(.authenticated) > footer {
-  display: none;
-}
-
-body.authenticated #authGate {
-  display: none;
-}
-
-  </style>
-</head>
-<body>
-
-  <header>
-    <div class="logo">🦩</div>
-    <h1>FLAMINGO RESTO CAFÉ</h1>
-    <p>Votre moment, votre plaisir.</p>
-  </header>
-
-  <nav>
-    <a href="#accueil">Accueil</a>
-    <a href="#offres">Offres</a>
-    <a href="#soirees">Soirées</a>
-    <a href="#reservation">Réservation</a>
-    <a href="#compte">Ma carte</a>
-  </nav>
-
-  <main>
-    <section class="hero" id="accueil">
-      <h2>Bienvenue chez Flamingo ! 🩷</h2>
-      <p>
-        Découvrez nos offres, nos soirées live music
-        et nos espaces pour partager vos plus beaux moments.
-      </p>
-      <a class="btn secondary" href="#offres">Découvrir nos offres</a>
-    </section>
-
-    <section id="offres">
-      <h2 class="section-title">✨ Nos offres</h2>
-      <div class="card">
-        <h3>🍕 Offre Prix Choc</h3>
-        <p>Découvrez nos pizzas et nos offres gourmandes.</p>
-        <p class="price">Offres disponibles chez Flamingo</p>
-      </div>
-      <div class="card">
-        <h3>🎓 Offre spéciale étudiants</h3>
-        <p>Profitez de promotions étudiantes selon les conditions en vigueur.</p>
-      </div>
-      <div class="card">
-        <h3>🍤 Plateau Terre & Mer</h3>
-        <p>Un moment gourmand à partager en famille ou entre amis.</p>
-        <p class="price">159 DT — pour 4 personnes et plus</p>
-      </div>
-    </section>
-
-    <section id="soirees">
-      <h2 class="section-title">🎶 Soirées & événements</h2>
-      <div class="card">
-        <h3>Samedi : Live Music</h3>
-        <p>Chaque semaine, découvrez une nouvelle ambiance chez Flamingo.</p>
-        <p>Suivez nos réseaux sociaux pour connaître le thème et le programme.</p>
-      </div>
-    </section>
-
-    <section id="reservation">
-      <h2 class="section-title">📅 Réserver chez Flamingo</h2>
-      <div class="card">
-        <form id="reservationForm">
-          <label for="nom">Nom complet</label>
-          <input id="nom" name="nom" required placeholder="Votre nom">
-
-          <label for="telephone">Téléphone</label>
-          <input id="telephone" name="telephone" type="tel"
-                 required placeholder="Votre numéro">
-
-          <label for="personnes">Nombre de personnes</label>
-          <select id="personnes" name="personnes">
-            <option>1 à 2 personnes</option>
-            <option>3 à 4 personnes</option>
-            <option>5 à 8 personnes</option>
-            <option>9 personnes et plus</option>
-          </select>
-
-          <label for="date">Date souhaitée</label>
-          <input id="date" name="date" type="date" required>
-
-          <label for="details">Votre demande</label>
-          <textarea id="details" name="details" rows="3"
-                    placeholder="Table, soirée, espace privé..."></textarea>
-
-          <button class="btn" type="submit">Préparer ma réservation</button>
-          <p class="notice">
-            Démonstration : cette réservation n'est pas encore envoyée au restaurant.
-          </p>
-        </form>
-      </div>
-    </section>
-
-    
-<section id="compte">
-  <h2 class="section-title">💳 Ma carte fidélité</h2>
-
-  <div class="card">
-    <h3>Bienvenue chez Flamingo 🩷</h3>
-    <p>Créez votre compte ou connectez-vous pour accéder à votre espace membre.</p>
-
-    <div style="display:flex; gap:10px; flex-wrap:wrap; margin:20px 0;">
-      <button type="button" class="btn" id="showRegister">
-        Créer un compte
-      </button>
-      <button type="button" class="btn" id="showLogin">
-        Se connecter
-      </button>
-    </div>
-
-    <form id="registerForm">
-      <h3>Créer mon compte</h3>
-
-      <label for="registerName">Nom complet</label>
-      <input id="registerName" type="text"
-             placeholder="Votre nom complet" required
-             autocomplete="name">
-
-      <label for="registerEmail">Adresse e-mail</label>
-      <input id="registerEmail" type="email"
-             placeholder="exemple@email.com" required
-             autocomplete="email">
-
-      <label for="registerPassword">Mot de passe</label>
-      <input id="registerPassword" type="password"
-             placeholder="6 caractères minimum" required
-             minlength="6" autocomplete="new-password">
-
-      <button class="btn" type="submit">Créer mon compte</button>
-    </form>
-
-    <form id="loginForm" style="display:none; margin-top:20px;">
-      <h3>Connexion</h3>
-
-      <label for="loginEmail">Adresse e-mail</label>
-      <input id="loginEmail" type="email"
-             placeholder="Votre adresse e-mail" required
-             autocomplete="email">
-
-      <label for="loginPassword">Mot de passe</label>
-      <input id="loginPassword" type="password"
-             placeholder="Votre mot de passe" required
-             autocomplete="current-password">
-
-      <button class="btn" type="submit">Se connecter</button>
-    </form>
-
-    <div id="accountArea" style="display:none; margin-top:20px;">
-      <h3>Mon espace membre 🩷</h3>
-      <p id="memberEmail"></p>
-      <button type="button" class="btn" id="logoutBtn">
-        Se déconnecter
-      </button>
-    </div>
-
-    <p id="accountMessage" aria-live="polite"></p>
-  </div>
-</section>
-
-
-    <section id="contact">
-      <h2 class="section-title">📍 Contact & réclamations</h2>
-      <div class="card">
-        <p>Une question ou une remarque ? Contactez l'équipe Flamingo.</p>
-        <p>📱 Retrouvez nos actualités sur Instagram.</p>
-        <a class="btn" href="https://www.instagram.com/flamingo_restaurant_cafe/"
-           target="_blank" rel="noopener noreferrer">Instagram Flamingo</a>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <strong>Flamingo Resto Café</strong>
-    <p>Merci pour votre visite 🩷</p>
-  </footer>
-
- 
-
-<script type="module">
-  import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-
-  import {
-    getAuth,
-    setPersistence,
-    browserLocalPersistence,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signOut,
-    onAuthStateChanged,
-    updateProfile
-  } from
-    "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
-    authDomain: "flamingo-resto-app.firebaseapp.com",
-    projectId: "flamingo-resto-app",
-    storageBucket: "flamingo-resto-app.firebasestorage.app",
-    messagingSenderId: "373385649809",
-    appId: "1:373385649809:web:43cee235aea16d5e736930",
-    measurementId: "G-F47BM413L7"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-
-  const authGate = document.getElementById("authGate");
-  const accountSection = document.getElementById("compte");
-  const main = document.querySelector("main");
-  const contact = document.getElementById("contact");
-
-  const registerForm = document.getElementById("registerForm");
-  const loginForm = document.getElementById("loginForm");
-  const accountArea = document.getElementById("accountArea");
-  const accountMessage = document.getElementById("accountMessage");
-  const memberEmail = document.getElementById("memberEmail");
-
-  // Au démarrage, afficher uniquement la connexion
-  authGate.appendChild(accountSection);
-
-  document.getElementById("showRegister").addEventListener("click", () => {
-    registerForm.style.display = "block";
-    loginForm.style.display = "none";
-    accountMessage.textContent = "";
-  });
-
-  document.getElementById("showLogin").addEventListener("click", () => {
-    registerForm.style.display = "none";
-    loginForm.style.display = "block";
-    accountMessage.textContent = "";
-  });
-
-  registerForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const name = document.getElementById("registerName").value.trim();
-    const email = document.getElementById("registerEmail").value.trim();
-    const password = document.getElementById("registerPassword").value;
-
-    accountMessage.textContent = "Création du compte...";
-
-    try {
-      const result = await createUserWithEmailAndPassword(
-        auth, email, password
-      );
-
-      await updateProfile(result.user, { displayName: name });
-      accountMessage.textContent = "Compte créé avec succès ! Bienvenue chez Flamingo 🩷";
-      registerForm.reset();
-    } catch (error) {
-      accountMessage.textContent = error.code === "auth/email-already-in-use"
-        ? "Cette adresse e-mail possède déjà un compte."
-        : error.code === "auth/invalid-email"
-        ? "Adresse e-mail invalide."
-        : error.code === "auth/weak-password"
-        ? "Mot de passe trop faible."
-        : error.code === "auth/unauthorized-domain"
-        ? "Ajoutez le domaine GitHub Pages dans Firebase > Authentication > Settings > Authorized domains."
-        : "Erreur : " + error.code;
+    .tab.active {
+      background: var(--wine);
+      color: white;
     }
-  });
 
-  loginForm.addEventListener("submit", async (event) => {
-    event.preventDefault();
-
-    const email = document.getElementById("loginEmail").value.trim();
-    const password = document.getElementById("loginPassword").value;
-
-    accountMessage.textContent = "Connexion en cours...";
-
-    try {
-      await signInWithEmailAndPassword(auth, email, password);
-      accountMessage.textContent = "Connexion réussie !";
-      loginForm.reset();
-    } catch (error) {
-      accountMessage.textContent =
-        error.code === "auth/invalid-credential"
-          ? "E-mail ou mot de passe incorrect."
-          : "Erreur : " + error.code;
+    .field {
+      margin-bottom: 16px;
     }
-  });
 
-  document.getElementById("logoutBtn").addEventListener("click", async () => {
-    await signOut(auth);
-  });
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
-      document.body.classList.add("authenticated");
+    .field input {
+      display: block;
+      width: 100%;
+      min-height: 47px;
+      border: 1px solid #e6d3dc;
+      border-radius: 11px;
+      padding: 12px;
+      outline: none;
+      background: white;
+      color: var(--text);
+    }
 
-      if (accountSection.parentElement !== main) {
-        main.insertBefore(accountSection, contact);
+    .field input:focus {
+      border-color: var(--wine);
+      box-shadow: 0 0 0 3px #711d4210;
+    }
+
+    .primary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      min-height: 48px;
+      padding: 12px 18px;
+      background: var(--wine);
+      color: white;
+      border: 0;
+      border-radius: 11px;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      transition: opacity .2s;
+    }
+
+    .primary-btn:hover {
+      opacity: .9;
+    }
+
+    .primary-btn:disabled {
+      opacity: .55;
+      cursor: wait;
+    }
+
+    .message {
+      font-size: 13px;
+      line-height: 1.6;
+      margin: 14px 0 0;
+      overflow-wrap: anywhere;
+    }
+
+    .message:empty {
+      display: none;
+    }
+
+    .security-note {
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+      margin: 17px 0 0;
+    }
+
+    /* APPLICATION */
+
+    #app {
+      min-height: 100vh;
+    }
+
+    .app-header {
+      background: var(--wine);
+      color: white;
+      padding: 20px 18px;
+    }
+
+    .header-inner {
+      max-width: 850px;
+      margin: auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .mini-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .mini-brand .flamingo {
+      font-size: 32px;
+    }
+
+    .mini-brand h1 {
+      font-size: 17px;
+      margin: 0 0 4px;
+      letter-spacing: .5px;
+    }
+
+    .mini-brand p {
+      margin: 0;
+      color: #f5dbe5;
+      font-size: 12px;
+    }
+
+    .logout-btn {
+      color: white;
+      background: #ffffff18;
+      border: 1px solid #ffffff60;
+      padding: 10px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .app-nav {
+      display: flex;
+      gap: 8px;
+      padding: 12px 16px;
+      overflow-x: auto;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .app-nav button {
+      flex: 0 0 auto;
+      background: #f8edf2;
+      color: var(--wine);
+      border: 0;
+      padding: 10px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      cursor: pointer;
+    }
+
+    .app-nav button.active {
+      background: var(--wine);
+      color: white;
+    }
+
+    .app-main {
+      max-width: 850px;
+      padding: 22px 16px 40px;
+      margin: auto;
+    }
+
+    .welcome {
+      background: linear-gradient(135deg, #711d42, #bd5d83);
+      color: white;
+      border-radius: 20px;
+      padding: 27px 22px;
+      margin-bottom: 25px;
+    }
+
+    .welcome .eyebrow {
+      color: #fbe2ec;
+      font-size: 12px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+    }
+
+    .welcome h2 {
+      font-size: 27px;
+      margin: 10px 0;
+    }
+
+    .welcome p {
+      line-height: 1.7;
+      font-size: 14px;
+      margin-bottom: 0;
+    }
+
+    .section-title {
+      font-size: 21px;
+      margin: 25px 0 14px;
+    }
+
+    .card {
+      background: white;
+      padding: 19px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+      box-shadow: 0 4px 16px #711d4208;
+    }
+
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 17px;
+    }
+
+    .card p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--muted);
+    }
+
+    .price {
+      color: var(--wine) !important;
+      font-weight: bold;
+    }
+
+    .offer-tag {
+      display: inline-block;
+      background: #f9e5ed;
+      color: var(--wine);
+      font-size: 11px;
+      font-weight: bold;
+      padding: 6px 9px;
+      border-radius: 20px;
+      margin-bottom: 10px;
+    }
+
+    .profile-avatar {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: #f6dce7;
+      color: var(--wine);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin-bottom: 15px;
+    }
+
+    .profile-line {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      overflow-wrap: anywhere;
+    }
+
+    .profile-line:last-child {
+      border-bottom: 0;
+    }
+
+    .profile-label {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .profile-value {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .form-field {
+      margin-bottom: 15px;
+    }
+
+    .form-field label {
+      display: block;
+      font-weight: bold;
+      font-size: 13px;
+      margin-bottom: 7px;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      width: 100%;
+      border: 1px solid #e6d3dc;
+      border-radius: 10px;
+      padding: 12px;
+      background: white;
+      color: var(--text);
+    }
+
+    .form-field textarea {
+      min-height: 95px;
+      resize: vertical;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .app-footer {
+      text-align: center;
+      background: #f7e6ec;
+      padding: 24px 16px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    @media (max-width: 480px) {
+      .auth-card {
+        padding: 22px 18px;
       }
 
-      registerForm.style.display = "none";
-      loginForm.style.display = "none";
-      accountArea.style.display = "block";
-      memberEmail.textContent =
-        "Bienvenue " + (user.displayName || user.email) + " — " + user.email;
-    } else {
-      document.body.classList.remove("authenticated");
-      authGate.appendChild(accountSection);
+      .brand h1 {
+        font-size: 21px;
+      }
 
-      accountArea.style.display = "none";
-      registerForm.style.display = "block";
-      loginForm.style.display = "none";
-      accountMessage.textContent = "";
+      .mini-brand h1 {
+        font-size: 14px;
+      }
+
+      .logout-btn {
+        padding: 9px;
+        font-size: 11px;
+      }
+
+      .welcome h2 {
+        font-size: 24px;
+      }
     }
-  });
+  </style>
+</head>
 
-  document.getElementById("reservationForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    alert("Cette réservation est encore une démonstration. Contactez Flamingo pour confirmer.");
-  });
+<body>
 
-  try {
-    await setPersistence(auth, browserLocalPersistence);
-  } catch (error) {
-    console.error("Erreur Firebase :", error.code);
-  }
-</script>
-</body>
-</html>
+  <!-- PAGE DE CONNEXION : seul écran affiché au départ -->
+  <section id="authGate">
+    <div class="auth-shell">
+      <div class="brand">
+        <div class="brand-icon">🦩</div>
+        <h1>FLAMINGO RESTO CAFÉ</h1>
+        <p>Votre moment, votre plaisir.</p>
+      </div>
 
+      <div class="auth-card">
+        <h2 id="authTitle">Bienvenue chez Flamingo</h2>
+        <p class="auth-subtitle" id="authSubtitle">
+          Connectez-vous ou créez votre compte pour accéder à votre espace personnel.
+        </p>
 
+        <div class="tabs">
+          <button type="button" class="tab active" id="loginTab">
+            Se connecter
+          </button>
+          <button type="button" class="tab" id="registerTab">
+            Créer un compte
+          </button>
+        </div>
+
+        <form id="loginForm">
+          <div class="field">
+            <label for="loginEmail">Adresse e-mail</label>
+            <input
+              id="loginEmail"
+              type="email"
+              placeholder="exemple@email.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="loginPassword">Mot de passe</label>
+            <input
+              id="loginPassword"
+              type="password"
+              placeholder="Votre mot de passe"
+              autocomplete="current-password"
+              required
+            >
+          </div>
+
+          <button type="submit" class="primary-btn" id="loginButton">
+            Se connecter
+          </button>
+        </form>
+
+        <form id="registerForm" class="hidden">
+          <div class="field">
+            <label for="registerName">Nom et prénom</label>
+            <input
+              id="registerName"
+              type="text"
+              placeholder="Votre nom complet"
+              autocomplete="name"
+              minlength="2"
+              maxlength="80"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="registerEmail">Adresse e-mail</label>
+            <input
+              id="registerEmail"
+              type="email"
+              placeholder="exemple@email.com"
+              autocomplete="email"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="registerPassword">Mot de passe</label>
+            <input
+              id="registerPassword"
+              type="password"
+              placeholder="6 caractères minimum"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+          </div>
+
+          <div class="field">
+            <label for="confirmPassword">Confirmer le mot de passe</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              placeholder="Retapez votre mot de passe"
+              autocomplete="new-password"
+              minlength="6"
+              required
+            >
+          </div>
+
+          <button type="submit" class="primary-btn" id="registerButton">
+            Créer mon compte
+          </button>
+        </form>
+
+        <p id="authMessage" class="message" role="status" aria-live="polite"></p>
+
+        <p class="security-note">
+          🩷 Votre espace Flamingo vous attend.<br>
+          Vos identifiants restent personnels.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- APPLICATION PRIVÉE -->
+  <div id="app" class="hidden">
+
+    <header class="app-header">
+      <div class="header-inner">
+        <div class="mini-brand">
+          <span class="flamingo">🦩</span>
+          <div>
+            <h1>FLAMINGO RESTO CAFÉ</h1>
+            <p>Votre espace membre</p>
+          </div>
+        </div>
+        <button type="button" class="logout-btn" id="logoutButton">
+          Déconnexion
+        </button>
+      </div>
+    </header>
+
+    <nav class="app-nav" aria-label="Navigation principale">
+      <button type="button" class="active" data-page="home">Accueil</button>
+      <button type="button" data-page="offers">Offres</button>
+      <button type="button" data-page="events">Soirées</button>
+      <button type="button" data-page="reservation">Réservation</button>
+      <button type="button" data-page="profile">Mon profil</button>
+    </nav>
+
+    <main class="app-main">
+
+      <section class="app-page" id="page-home">
+        <div class="welcome">
+          <span class="eyebrow">Bienvenue dans votre espace</span>
+          <h2>Bonjour <span id="welcomeName">cher membre</span> 🩷</h2>
+          <p>
+            Retrouvez l'univers Flamingo, nos offres gourmandes,
+            nos événements et vos prochains moments à partager.
+          </p>
+        </div>
+
+        <h2 class="section-title">✨ À découvrir</h2>
+
+        <div class="card">
+          <span class="offer-tag">OFFRE GOURMANDE</span>
+          <h3>🍤 Plateau Terre & Mer</h3>
+          <p>Un plateau généreux à partager en famille ou entre amis.</p>
+          <p class="price">159 DT — pour 4 personnes et plus</p>
+          <button type="button" class="primary-btn" data-go="reservation">
+            Préparer une réservation
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>🎶 Samedi : Live Music</h3>
+          <p>
+            Chaque semaine, une nouvelle ambiance chez Flamingo.
+            Suivez notre actualité pour découvrir le thème de la soirée.
+          </p>
+          <button type="button" class="primary-btn" data-go="events">
+            Découvrir les soirées
+          </button>
+        </div>
+
+        <div class="card">
+          <h3>💳 Ma fidélité</h3>
+          <p>
+            Votre espace membre est prêt. La carte fidélité et le QR code
+            seront activés après la mise en place de la base de données clients.
+          </p>
+          <button type="button" class="primary-btn" data-go="profile">
+            Voir mon profil
+          </button>
+        </div>
+      </section>
+
+      <section class="app-page hidden" id="page-offers">
+        <h2 class="section-title">✨ Nos offres</h2>
+
+        <div class="card">
+          <span class="offer-tag">OFFRE PRIX CHOC</span>
+          <h3>🍕 Pizzas gourmandes</h3>
+          <p>Découvrez les offres pizzas disponibles chez Flamingo.</p>
+          <p class="price">Renseignez-vous auprès de notre équipe.</p>
+        </div>
+
+        <div class="card">
+          <span class="offer-tag">SPÉCIAL ÉTUDIANTS</span>
+          <h3>🎓 Vos pauses gourmandes</h3>
+          <p>
+            Des promotions étudiantes selon les produits et les conditions
+            en vigueur au restaurant.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>🍤 Plateau Terre & Mer</h3>
+          <p>Un moment gourmand à partager à plusieurs.</p>
+          <p class="price">159 DT — pour 4 personnes et plus</p>
+        </div>
+      </section>
+
+      <section class="app-page hidden" id="page-events">
+        <h2 class="section-title">🎶 Soirées & événements</h2>
+
+        <div class="card">
+          <h3>Samedi : Live Music</h3>
+          <p>
+            Chaque samedi, retrouvez une nouvelle ambiance et un nouveau thème
+            chez Flamingo Resto Café.
+          </p>
+          <p>
+            Consultez notre Instagram pour connaître le programme de la semaine.
+          </p>
+          <a
+            class="primary-btn"
+            href="https://www.instagram.com/flamingo_restaurant_cafe/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Instagram Flamingo
+          </a>
+        </div>
+      </section>
+
+      <section class="app-page hidden" id="page-reservation">
+        <h2 class="section-title">📅 Réserver chez Flamingo</h2>
+
+        <div class="card">
+          <form id="reservationForm">
+            <div class="form-field">
+              <label for="reservationName">Nom complet</label>
+              <input id="reservationName" required maxlength="100">
+            </div>
+
+            <div class="form-field">
+              <label for="reservationPhone">Téléphone</label>
+              <input
+                id="reservationPhone"
+                type="tel"
+                required
+                maxlength="25"
+                placeholder="Votre numéro"
+              >
+            </div>
+
+            <div class="form-field">
+              <label for="reservationPeople">Nombre de personnes</label>
+              <select id="reservationPeople">
+                <option>1 à 2 personnes</option>
+                <option>3 à 4 personnes</option>
+                <option>5 à 8 personnes</option>
+                <option>9 personnes et plus</option>
+              </select>
+            </div>
+
+            <div class="form-field">
+              <label for="reservationDate">Date souhaitée</label>
+              <input id="reservationDate" type="date" required>
+            </div>
+
+            <div class="form-field">
+              <label for="reservationDetails">Votre demande</label>
+              <textarea
+                id="reservationDetails"
+                maxlength="1000"
+                placeholder="Table, anniversaire, soirée, espace privé..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="primary-btn">
+              Préparer ma réservation
+            </button>
+
+            <p id="reservationMessage" class="message" role="status"></p>
+            <p class="small-note">
+              Cette version ne transmet pas encore les réservations au restaurant.
+              Contactez l'équipe pour confirmer votre demande.
+            </p>
+          </form>
+        </div>
+      </section>
+
+      <section class="app-page hidden" id="page-profile">
+        <h2 class="section-title">👤 Mon profil</h2>
+
+        <div class="card">
+          <div class="profile-avatar">🦩</div>
+
+          <h3 id="profileName">Mon compte Flamingo</h3>
+          <p>Votre espace personnel</p>
+
+          <div class="profile-line">
+            <span class="profile-label">Nom complet</span>
+            <span class="profile-value" id="profileFullName">—</span>
+          </div>
+
+          <div class="profile-line">
+            <span class="profile-label">Adresse e-mail</span>
+            <span class="profile-value" id="profileEmail">—</span>
+          </div>
+
+          <div class="profile-line">
+            <span class="profile-label">Compte</span>
+            <span class="profile-value">Membre Flamingo</span>
+          </div>
+
+          <p class="small-note">
+            La photo de profil, le téléphone et la carte fidélité personnalisée
+            seront ajoutés dans la prochaine étape.
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <footer class="app-footer">
+      <strong>Flamingo Resto Café</strong>
+      <p>Merci de faire partie de notre communauté 🩷</p>
+    </footer>
+
+  </div>
+
+  <script type="module">
+    import { initializeApp } from
+      "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
+
+    import {
+      getAuth,
+      setPersistence,
+      browserLocalPersistence,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      signOut,
+      onAuthStateChanged,
+      updateProfile
+    } from
+      "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
+      authDomain: "flamingo-resto-app.firebaseapp.com",
+      projectId: "flamingo-resto-app",
+      storageBucket: "flamingo-resto-app.firebasestorage.app",
+      messagingSenderId: "373385649809",
+      appId: "1:373385649809:web:43cee235aea16d5e736930",
+      measurementId: "G-F47BM413L7"
+    };
+
+    const authGate = document.getElementById("authGate");
+    const appScreen = document.getElementById("app");
+    const authMessage = document.getElementById("authMessage");
+
+    const loginForm = document.getElementById("loginForm");
+    const registerForm = document.getElementById("registerForm");
+    const loginTab = document.getElementById("loginTab");
+    const registerTab = document.getElementById("registerTab");
+
+    let auth = null;
+
+    function showMessage(message, isError = false) {
+      authMessage.textContent = message;
+      authMessage.style.color = isError ? "#b42318" : "#286749";
+    }
+
+    function showLogin() {
+      loginForm.classList.remove("hidden");
+      registerForm.classList.add("hidden");
+
+      loginTab.classList.add("active");
+      registerTab.classList.remove("active");
+
+      document.getElementById("authTitle").textContent =
+        "Bienvenue chez Flamingo";
+      document.getElementById("authSubtitle").textContent =
+        "Connectez-vous pour accéder à votre espace personnel.";
+
+      showMessage("");
+    }
+
+    function showRegister() {
+      loginForm.classList.add("hidden");
+      registerForm.classList.remove("hidden");
+
+      loginTab.classList.remove("active");
+      registerTab.classList.add("active");
+
+      document.getElementById("authTitle").textContent =
+        "Rejoignez Flamingo 🩷";
+      document.getElementById("authSubtitle").textContent =
+        "Créez votre compte pour accéder à votre espace membre.";
+
+      showMessage("");
+    }
+
+    loginTab.addEventListener("click", showLogin);
+    registerTab.addEventListener("click", showRegister);
+
+    function errorMessage(code) {
+      const messages = {
+        "auth/email-already-in-use":
+          "Cette adresse e-mail possède déjà un compte. Connectez-vous.",
+        "auth/invalid-email":
+          "L'adresse e-mail n'est pas valide.",
+        "auth/weak-password":
+          "Choisissez un mot de passe plus sécurisé.",
+        "auth/invalid-credential":
+          "Adresse e-mail ou mot de passe incorrect.",
+        "auth/user-disabled":
+          "Ce compte a été désactivé.",
+        "auth/too-many-requests":
+          "Trop de tentatives. Réessayez plus tard.",
+        "auth/network-request-failed":
+          "Vérifiez votre connexion Internet.",
+        "auth/operation-not-allowed":
+          "Activez Email/Password dans Firebase Authentication.",
+        "auth/unauthorized-domain":
+          "Ajoutez le domaine GitHub Pages dans Firebase Authentication > Settings > Authorized domains."
+      };
+
+      return messages[code] || "Erreur : " + code;
+    }
+
+    function setLoading(form, loading, buttonText) {
+      const button = form.querySelector('button[type="submit"]');
+      button.disabled = loading;
+      button.textContent = loading ? "Veuillez patienter..." : buttonText;
+    }
+
+    async function startApp() {
+      try {
+        const firebaseApp = initializeApp(firebaseConfig);
+        auth = getAuth(firebaseApp);
+
+        await setPersistence(auth, browserLocalPersistence);
+
+        registerForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const name = document.getElementById("registerName").value.trim();
+          const email = document.getElementById("registerEmail").value.trim();
+          const password =
+            document.getElementById("registerPassword").value;
+          const confirmation =
+            document.getElementById("confirmPassword").value;
+
+          if (name.length < 2) {
+            showMessage("Entrez votre nom complet.", true);
+            return;
+          }
+
+          if (password !== confirmation) {
+            showMessage("Les deux mots de passe ne correspondent pas.", true);
+            return;
+          }
+
+          setLoading(registerForm, true, "Créer mon compte");
+          showMessage("Création du compte en cours...");
+
+          try {
+            const result = await createUserWithEmailAndPassword(
+              auth, email, password
+            );
+
+            await updateProfile(result.user, {
+              displayName: name
+            });
+
+            registerForm.reset();
+            showMessage("Compte créé avec succès ! Bienvenue chez Flamingo 🩷");
+          } catch (error) {
+            showMessage(errorMessage(error.code), true);
+          } finally {
+            setLoading(registerForm, false, "Créer mon compte");
+          }
+        });
+
+        loginForm.addEventListener("submit", async (event) => {
+          event.preventDefault();
+
+          const email = document.getElementById("loginEmail").value.trim();
+          const password =
+            document.getElementById("loginPassword").value;
+
+          setLoading(loginForm, true, "Se connecter");
+          showMessage("Connexion en cours...");
+
+          try {
+            await signInWithEmailAndPassword(auth, email, password);
+            loginForm.reset();
+            showMessage("");
+          } catch (error) {
+            showMessage(errorMessage(error.code), true);
+          } finally {
+            setLoading(loginForm, false, "Se connecter");
+          }
+        });
+
+        document.getElementById("logoutButton")
+          .addEventListener("click", async () => {
+            try {
+              await signOut(auth);
+              showLogin();
+            } catch (error) {
+              console.error("Erreur de déconnexion :", error.code);
+            }
+          });
+
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            authGate.classList.add("hidden");
+            appScreen.classList.remove("hidden");
+
+            const name = user.displayName || "cher membre";
+
+            document.getElementById("welcomeName").textContent = name;
+            document.getElementById("profileName").textContent = name;
+            document.getElementById("profileFullName").textContent =
+              user.displayName || "Non renseigné";
+            document.getElementById("profileEmail").textContent =
+              user.email || "Non renseigné";
+
+            showPage("home");
+          } else {
+            appScreen.classList.add("hidden");
+            authGate.classList.remove("hidden");
+            showLogin();
+          }
+        });
+
+      } catch (error) {
+        console.error("Firebase initialization error:", error);
+        authGate.classList.remove("hidden");
+        showMessage(
+          "Impossible de connecter Firebase. Vérifiez la configuration et rechargez la page.",
+          true
+        );
+      }
+    }
+
+    function showPage(pageName) {
+      document.querySelectorAll(".app-page").forEach((page) => {
+        page.classList.add("hidden");
+      });
+
+      const selectedPage = document.getElementById("page-" + pageName);
+
+      if (selectedPage) {
+        selectedPage.classList.remove("hidden");
+      }
+
+      document.querySelectorAll(".app-nav button").forEach((button) => {
+        button.classList.toggle(
+          "active",
+          button.dataset.page === pageName
+        );
+      });
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    document.querySelectorAll(".app-nav button").forEach((button) => {
+      button.addEventListener("click", () => {
+        showPage(button.dataset.page);
+      });
+    });
+
+    document.querySelectorAll("[data-go]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showPage(button.dataset.go);
+      });
+    });
+
+    document.getElementById("reservationForm")
+      .addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        document.getElementById("reservationMessage").textContent =
+          "Cette demande n'est pas encore envoyée au restaurant. Contactez Flamingo pour confirmer votre réservation.";
+      });
+
+    startApp();
+  </script>
 
 </body>
 </html>
