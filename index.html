@@ -9,6 +9,9 @@
   <style>
     * { box-sizing: border-box; }
     body {
+      
+<div id="authGate"></div>
+
       margin: 0;
       font-family: Arial, sans-serif;
       background: #fff9fb;
@@ -90,6 +93,24 @@
       font-size: 13px;
     }
     .notice { font-size: 12px; color: #76616b; }
+    
+#authGate {
+  max-width: 760px;
+  margin: auto;
+  padding: 18px;
+}
+
+body:not(.authenticated) > header,
+body:not(.authenticated) > nav,
+body:not(.authenticated) > main,
+body:not(.authenticated) > footer {
+  display: none;
+}
+
+body.authenticated #authGate {
+  display: none;
+}
+
   </style>
 </head>
 <body>
@@ -263,6 +284,7 @@
   </footer>
 
  
+
 <script type="module">
   import { initializeApp } from
     "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
@@ -292,11 +314,19 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
+  const authGate = document.getElementById("authGate");
+  const accountSection = document.getElementById("compte");
+  const main = document.querySelector("main");
+  const contact = document.getElementById("contact");
+
   const registerForm = document.getElementById("registerForm");
   const loginForm = document.getElementById("loginForm");
   const accountArea = document.getElementById("accountArea");
   const accountMessage = document.getElementById("accountMessage");
   const memberEmail = document.getElementById("memberEmail");
+
+  // Au démarrage, afficher uniquement la connexion
+  authGate.appendChild(accountSection);
 
   document.getElementById("showRegister").addEventListener("click", () => {
     registerForm.style.display = "block";
@@ -312,94 +342,96 @@
 
   registerForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    accountMessage.textContent = "Création du compte en cours...";
 
     const name = document.getElementById("registerName").value.trim();
     const email = document.getElementById("registerEmail").value.trim();
     const password = document.getElementById("registerPassword").value;
+
+    accountMessage.textContent = "Création du compte...";
 
     try {
       const result = await createUserWithEmailAndPassword(
         auth, email, password
       );
 
-      await updateProfile(result.user, {
-        displayName: name
-      });
-
+      await updateProfile(result.user, { displayName: name });
       accountMessage.textContent = "Compte créé avec succès ! Bienvenue chez Flamingo 🩷";
       registerForm.reset();
     } catch (error) {
-      accountMessage.textContent = firebaseErrorMessage(error.code);
+      accountMessage.textContent = error.code === "auth/email-already-in-use"
+        ? "Cette adresse e-mail possède déjà un compte."
+        : error.code === "auth/invalid-email"
+        ? "Adresse e-mail invalide."
+        : error.code === "auth/weak-password"
+        ? "Mot de passe trop faible."
+        : error.code === "auth/unauthorized-domain"
+        ? "Ajoutez le domaine GitHub Pages dans Firebase > Authentication > Settings > Authorized domains."
+        : "Erreur : " + error.code;
     }
   });
 
   loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
-    accountMessage.textContent = "Connexion en cours...";
 
     const email = document.getElementById("loginEmail").value.trim();
     const password = document.getElementById("loginPassword").value;
 
+    accountMessage.textContent = "Connexion en cours...";
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      accountMessage.textContent = "Connexion réussie. Bienvenue !";
+      accountMessage.textContent = "Connexion réussie !";
       loginForm.reset();
     } catch (error) {
-      accountMessage.textContent = firebaseErrorMessage(error.code);
+      accountMessage.textContent =
+        error.code === "auth/invalid-credential"
+          ? "E-mail ou mot de passe incorrect."
+          : "Erreur : " + error.code;
     }
   });
 
   document.getElementById("logoutBtn").addEventListener("click", async () => {
-    try {
-      await signOut(auth);
-      accountMessage.textContent = "Vous êtes déconnecté.";
-    } catch (error) {
-      accountMessage.textContent = firebaseErrorMessage(error.code);
-    }
+    await signOut(auth);
   });
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
+      document.body.classList.add("authenticated");
+
+      if (accountSection.parentElement !== main) {
+        main.insertBefore(accountSection, contact);
+      }
+
       registerForm.style.display = "none";
       loginForm.style.display = "none";
       accountArea.style.display = "block";
       memberEmail.textContent =
-        "Bienvenue " + (user.displayName || user.email) +
-        " — " + user.email;
+        "Bienvenue " + (user.displayName || user.email) + " — " + user.email;
     } else {
+      document.body.classList.remove("authenticated");
+      authGate.appendChild(accountSection);
+
       accountArea.style.display = "none";
       registerForm.style.display = "block";
+      loginForm.style.display = "none";
+      accountMessage.textContent = "";
     }
   });
 
-  function firebaseErrorMessage(code) {
-    const messages = {
-      "auth/email-already-in-use": "Cette adresse e-mail possède déjà un compte.",
-      "auth/invalid-email": "Adresse e-mail invalide.",
-      "auth/weak-password": "Choisissez un mot de passe plus sécurisé.",
-      "auth/invalid-credential": "E-mail ou mot de passe incorrect.",
-      "auth/network-request-failed": "Vérifiez votre connexion Internet.",
-      "auth/too-many-requests": "Trop de tentatives. Réessayez plus tard.",
-      "auth/operation-not-allowed": "Vérifiez que Email/Password est activé dans Firebase.",
-      "auth/unauthorized-domain": "Ajoutez le domaine GitHub Pages dans les domaines autorisés de Firebase."
-    };
-
-    return messages[code] || "Une erreur est survenue : " + code;
-  }
+  document.getElementById("reservationForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    alert("Cette réservation est encore une démonstration. Contactez Flamingo pour confirmer.");
+  });
 
   try {
     await setPersistence(auth, browserLocalPersistence);
-    console.log("Flamingo Firebase connecté !");
   } catch (error) {
     console.error("Erreur Firebase :", error.code);
   }
-
-  document.getElementById("reservationForm").addEventListener("submit", (event) => {
-    event.preventDefault();
-    alert("Merci ! Cette démo ne transmet pas encore votre réservation. Contactez Flamingo pour confirmer.");
-  });
 </script>
+</body>
+</html>
+
 
 
 </body>
