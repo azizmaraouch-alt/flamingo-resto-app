@@ -3,765 +3,554 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#761d42">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flamingo Resto Café</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
     :root {
-      --wine: #761d42;
-      --pink: #e86b91;
-      --cream: #fff8f6;
-      --ink: #351421;
-      --muted: #786a70;
-      --border: #f0dfe5;
+      --pink: #ed8da9;
+      --dark: #3a1728;
+      --cream: #fff8f5;
+      --muted: #826c76;
+      --border: #f0dce3;
+      --green: #247b55;
+      --red: #a72d46;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
       background: var(--cream);
-      color: var(--ink);
+      color: var(--dark);
+      font-family: Arial, Helvetica, sans-serif;
     }
 
-    button, input, select, textarea { font: inherit; }
+    button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
+
     .hidden { display: none !important; }
 
-    .brand {
-      color: var(--wine);
-      font-size: 21px;
-      font-weight: 900;
-      letter-spacing: 1px;
-    }
-
-    .brand span { color: var(--pink); }
-
-    .muted {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .auth-screen {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+    header {
       background: white;
-    }
-
-    .auth-visual {
-      padding: 45px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      color: white;
-      background:
-        radial-gradient(circle at 80% 15%, #f4b3c8, transparent 30%),
-        linear-gradient(145deg, #9c3159, #52132e);
-    }
-
-    .auth-visual .brand { color: white; }
-    .auth-visual .brand span { color: #ffd6e2; }
-
-    .visual-content {
-      max-width: 460px;
-      margin: 45px auto;
-    }
-
-    .visual-content h1 {
-      font-size: clamp(34px, 4vw, 58px);
-      line-height: 1.1;
-      margin: 15px 0;
-    }
-
-    .visual-content p {
-      color: #ffe7ef;
-      line-height: 1.8;
-    }
-
-    .auth-side {
-      padding: 35px 22px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .auth-card { width: 100%; max-width: 420px; }
-
-    .auth-card h2 {
-      margin: 28px 0 8px;
-      font-size: 28px;
-    }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 6px;
-      padding: 5px;
-      border-radius: 12px;
-      background: #f8edf1;
-      margin: 24px 0;
-    }
-
-    .tab {
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 5px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .tab.active { background: white; color: var(--wine); }
-
-    .field { margin-bottom: 15px; }
-
-    .field label {
-      display: block;
-      font-weight: 700;
-      font-size: 13px;
-      margin-bottom: 7px;
-    }
-
-    .field input, .field select, .field textarea {
-      display: block;
-      width: 100%;
-      padding: 13px;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      background: white;
-      color: var(--ink);
-      outline: none;
-    }
-
-    .field input:focus, .field select:focus, .field textarea:focus {
-      border-color: var(--pink);
-    }
-
-    .primary-btn {
-      width: 100%;
-      padding: 14px;
-      color: white;
-      font-weight: 800;
-      background: linear-gradient(110deg, var(--wine), #b83e6b);
-      border: 0;
-      border-radius: 11px;
-    }
-
-    .primary-btn:disabled { opacity: .6; cursor: wait; }
-
-    .message {
-      display: none;
-      padding: 12px;
-      margin: 12px 0;
-      border-radius: 10px;
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
-    .message.show { display: block; }
-    .message.error { background: #fff0f2; color: #9f1c36; }
-    .message.success { background: #edfff4; color: #17683d; }
-
-    .auth-footer {
-      text-align: center;
-      margin-top: 22px;
-      font-size: 12px;
-      color: var(--muted);
-    }
-
-    .app-header {
-      background: white;
+      padding: 17px 5%;
       border-bottom: 1px solid var(--border);
-      padding: 16px 5%;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      position: sticky;
-      top: 0;
-      z-index: 5;
+      flex-wrap: wrap;
     }
 
-    .header-right {
-      display: flex;
+    .brand {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: .4px;
+    }
+
+    .brand span { color: #d65e88; }
+
+    .container {
+      width: min(1100px, 94%);
+      margin: 24px auto 60px;
+    }
+
+    .hero {
+      padding: 30px 22px;
+      background: linear-gradient(130deg, #3a1728, #7e3555);
+      color: white;
+      border-radius: 22px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 { margin: 0 0 9px; font-size: clamp(25px, 5vw, 38px); }
+    .hero p { line-height: 1.6; margin-bottom: 0; }
+
+    .card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 17px;
+      box-shadow: 0 5px 22px #45152a08;
+      min-width: 0;
+    }
+
+    h2 { font-size: 21px; margin: 0 0 15px; }
+    h3 { margin: 0 0 9px; }
+
+    .muted { color: var(--muted); font-size: 14px; line-height: 1.6; }
+    .small { font-size: 12px; color: var(--muted); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+      gap: 15px;
+    }
+
+    .field { margin-bottom: 13px; }
+    label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 7px; }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 13px;
+      border: 1px solid #e7d5dd;
+      border-radius: 11px;
+      background: white;
+      color: var(--dark);
+      outline-color: var(--pink);
+    }
+
+    textarea { min-height: 85px; resize: vertical; }
+
+    .btn {
+      border: 0;
+      background: var(--dark);
+      color: white;
+      border-radius: 11px;
+      padding: 12px 16px;
+      font-weight: 700;
+      display: inline-flex;
+      justify-content: center;
       align-items: center;
-      gap: 10px;
+      gap: 7px;
     }
 
-    .user-chip {
-      background: #fff0f5;
-      color: var(--wine);
-      padding: 9px 12px;
-      border-radius: 20px;
+    .btn:hover { opacity: .9; }
+    .btn-pink { background: #d65e88; }
+    .btn-light { background: #f8eaf0; color: var(--dark); }
+    .btn-green { background: var(--green); }
+    .btn-red { background: var(--red); }
+    .btn-small { padding: 8px 11px; font-size: 12px; }
+    .full { width: 100%; }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 15px 0 22px;
+    }
+
+    .nav button {
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--dark);
+      border-radius: 999px;
+      padding: 10px 13px;
       font-size: 13px;
       font-weight: 700;
     }
 
-    .logout-btn {
-      padding: 10px 12px;
-      background: white;
-      color: var(--wine);
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      font-weight: 700;
-    }
+    .nav button.active { background: var(--dark); color: white; }
 
-    .app-nav {
-      display: flex;
-      gap: 7px;
-      padding: 12px 5%;
-      background: white;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-    }
-
-    .nav-btn {
-      flex: 0 0 auto;
-      border: 0;
-      border-radius: 9px;
-      padding: 11px 14px;
-      background: transparent;
-      color: var(--muted);
-      font-weight: 700;
-    }
-
-    .nav-btn.active { background: #fce9ef; color: var(--wine); }
-
-    .app-content {
-      max-width: 1100px;
-      min-height: 70vh;
-      padding: 32px 20px 55px;
-      margin: auto;
-    }
-
-    .welcome-banner {
-      padding: clamp(25px, 5vw, 48px);
-      border-radius: 22px;
-      color: white;
-      background: linear-gradient(125deg, #761d42, #c44b76);
-      margin-bottom: 28px;
-    }
-
-    .welcome-banner .eyebrow {
-      color: #ffdae6;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .welcome-banner h1 {
-      font-size: clamp(28px, 4vw, 43px);
-      margin: 12px 0;
-      overflow-wrap: anywhere;
-    }
-
-    .welcome-banner p {
-      color: #ffeaf0;
-      line-height: 1.8;
-      max-width: 600px;
-    }
-
-    .section-title { font-size: 24px; margin-bottom: 18px; }
-
-    .cards-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-
-    .feature-card, .event-card, .offer-card, .profile-card, .form-card {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      overflow: hidden;
-    }
-
-    .feature-card, .event-card { padding: 22px; }
-
-    .feature-icon {
-      width: 45px;
-      height: 45px;
-      display: grid;
-      place-items: center;
-      background: #fff0f5;
-      border-radius: 12px;
-      font-size: 23px;
-      margin-bottom: 14px;
-    }
-
-    .feature-card h3, .event-card h3 { margin: 0 0 9px; }
-    .feature-card p, .event-card p {
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .page-heading { margin-bottom: 22px; }
-    .page-heading h1 { margin: 0 0 8px; font-size: 30px; }
-    .page-heading p { color: var(--muted); line-height: 1.7; }
-
-    .offer-top {
-      color: white;
-      padding: 23px;
-      background: linear-gradient(130deg, #761d42, #d35d87);
-    }
-
-    .offer-top small {
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: #ffe0e9;
-    }
-
-    .offer-top h3 { font-size: 22px; margin: 12px 0; }
-    .offer-body { padding: 20px; }
-    .offer-body p { color: var(--muted); font-size: 14px; line-height: 1.7; }
-
-    .event-date {
+    .pill {
       display: inline-block;
-      padding: 7px 10px;
-      margin-bottom: 12px;
-      background: #fff0f5;
-      color: var(--wine);
-      border-radius: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f8e7ee;
+      color: #8d3658;
       font-size: 12px;
       font-weight: 800;
     }
 
-    .form-card, .profile-card {
-      padding: clamp(20px, 4vw, 30px);
-      max-width: 720px;
+    .discount {
+      font-size: 39px;
+      font-weight: 900;
+      color: #d65e88;
+      margin: 10px 0;
     }
 
-    .profile-top {
+    .profile-head {
       display: flex;
       align-items: center;
-      gap: 16px;
-      margin-bottom: 24px;
+      gap: 15px;
+      margin-bottom: 15px;
     }
 
     .avatar {
-      width: 72px;
-      height: 72px;
+      width: 58px;
+      height: 58px;
+      flex: 0 0 58px;
       border-radius: 50%;
-      flex: 0 0 auto;
       display: grid;
       place-items: center;
-      color: white;
-      font-size: 28px;
+      background: #f6d8e4;
+      color: #7e294a;
+      font-size: 24px;
       font-weight: 900;
-      background: linear-gradient(140deg, #f7bdd0, #9c3159);
-      border: 3px solid #fff0f5;
     }
 
-    .profile-top h2 { margin: 0 0 6px; overflow-wrap: anywhere; }
-    .profile-top p { margin: 0; color: var(--muted); overflow-wrap: anywhere; }
-
-    .profile-info {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 13px;
+    #qrcode {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 17px auto;
+      min-height: 20px;
     }
 
-    .info-box {
-      min-width: 0;
-      padding: 16px;
+    #qrcode img, #qrcode canvas {
+      margin: auto;
+      max-width: 100%;
+    }
+
+    .offer-card {
       border: 1px solid var(--border);
-      border-radius: 12px;
-      background: #fff8fa;
-      overflow-wrap: anywhere;
+      border-radius: 15px;
+      padding: 16px;
+      margin-bottom: 12px;
     }
 
-    .info-box small {
-      display: block;
-      color: var(--muted);
-      margin-bottom: 8px;
+    .offer-price {
+      color: #c34876;
+      font-size: 21px;
+      font-weight: 900;
+      margin: 8px 0;
     }
 
-    .app-footer {
+    .notice {
+      padding: 12px 14px;
+      border-radius: 11px;
+      background: #fff1e9;
+      color: #824323;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+
+    .success { background: #e8f7ee; color: #216744; }
+    .error { background: #fff0f0; color: #982e3d; }
+
+    .row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { text-align: left; padding: 11px 9px; border-bottom: 1px solid var(--border); }
+    th { background: #fff6f9; }
+
+    .empty {
       text-align: center;
-      padding: 24px;
+      padding: 24px 10px;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 14px;
     }
 
-    @media (max-width: 800px) {
-      .auth-screen { grid-template-columns: 1fr; }
-      .auth-visual { padding: 25px; }
-      .visual-content { margin: 32px 0 18px; }
-      .visual-content h1 { font-size: 34px; }
-      .auth-visual .visual-footer { display: none; }
-      .cards-grid { grid-template-columns: 1fr; }
-      .app-header { padding: 14px 16px; }
-      .brand { font-size: 16px; }
-      .user-chip { display: none; }
-      .app-content { padding: 24px 16px 40px; }
-    }
+    #reader { width: 100%; max-width: 480px; margin: 15px auto; }
+    #reader video { border-radius: 14px; }
+    footer { text-align: center; padding: 20px; color: var(--muted); font-size: 12px; }
 
-    @media (max-width: 420px) {
-      .profile-info { grid-template-columns: 1fr; }
-      .logout-btn { padding: 9px; font-size: 12px; }
+    @media (max-width: 600px) {
+      header { padding: 15px 4%; }
+      .container { width: 92%; margin-top: 16px; }
+      .card { padding: 16px; }
+      .nav button { flex: 1 1 40%; }
+      th, td { padding: 9px 7px; }
     }
   </style>
 </head>
 
 <body>
+  <header>
+    <div class="brand">FLAMINGO <span>RESTO CAFÉ</span></div>
+    <div id="headerActions"></div>
+  </header>
 
-  <!-- ÉCRAN DE CONNEXION -->
-  <section id="authScreen" class="auth-screen">
-    <div class="auth-visual">
-      <div class="brand">FLAMINGO <span>RESTO CAFÉ</span></div>
+  <main class="container">
 
-      <div class="visual-content">
-        <p>VOTRE ESPACE CLIENT</p>
-        <h1>Bienvenue chez Flamingo.</h1>
-        <p>
-          Retrouvez nos offres, nos soirées et vos informations
-          personnelles dans votre espace client.
-        </p>
+    <!-- LOGIN / REGISTER -->
+    <section id="authSection">
+      <div class="hero">
+        <h1>Bienvenue chez Flamingo ❤️</h1>
+        <p>Crée ton compte pour découvrir nos offres, tes avantages fidélité et les événements du restaurant.</p>
       </div>
 
-      <p class="visual-footer">Une belle ambiance, un service au top et une cuisine savoureuse.</p>
-    </div>
-
-    <div class="auth-side">
-      <div class="auth-card">
-        <div class="brand">FLAMINGO <span>♥</span></div>
-
-        <h2 id="authTitle">Content de vous revoir !</h2>
-        <p class="muted" id="authSubtitle">Connectez-vous à votre espace client.</p>
-
-        <div class="tabs">
-          <button id="loginTab" class="tab active" type="button">Se connecter</button>
-          <button id="registerTab" class="tab" type="button">Créer un compte</button>
+      <div class="card">
+        <div class="nav">
+          <button id="loginTab" class="active" onclick="showAuthMode('login')">Connexion</button>
+          <button id="registerTab" onclick="showAuthMode('register')">Créer un compte</button>
         </div>
 
-        <div id="authMessage" class="message" role="status"></div>
+        <div id="authMessage" class="notice hidden"></div>
 
-        <form id="loginForm">
-          <div class="field">
-            <label for="loginEmail">Adresse e-mail</label>
-            <input id="loginEmail" type="email" autocomplete="email" required>
+        <form id="authForm">
+          <div id="registerFields" class="hidden">
+            <div class="field">
+              <label>Nom et prénom</label>
+              <input id="fullName" autocomplete="name" placeholder="Ton nom complet">
+            </div>
+            <div class="field">
+              <label>Téléphone</label>
+              <input id="phone" autocomplete="tel" type="tel" placeholder="Ex. 20 000 000">
+            </div>
+            <div class="field">
+              <label>Confirmer le mot de passe</label>
+              <input id="confirmPassword" type="password" autocomplete="new-password" placeholder="Confirme ton mot de passe">
+            </div>
           </div>
 
           <div class="field">
-            <label for="loginPassword">Mot de passe</label>
-            <input id="loginPassword" type="password" autocomplete="current-password" required>
+            <label>Email</label>
+            <input id="email" type="email" autocomplete="email" required placeholder="ton@email.com">
           </div>
-
-          <button id="loginButton" class="primary-btn" type="submit">Se connecter</button>
+          <div class="field">
+            <label>Mot de passe</label>
+            <input id="password" type="password" autocomplete="current-password" required minlength="6" placeholder="6 caractères minimum">
+          </div>
+          <button id="authSubmit" class="btn btn-pink full" type="submit">Se connecter</button>
         </form>
-
-        <form id="registerForm" class="hidden">
-          <div class="field">
-            <label for="registerName">Nom et prénom</label>
-            <input id="registerName" type="text" autocomplete="name" maxlength="80" required>
-          </div>
-
-          <div class="field">
-            <label for="registerPhone">Numéro de téléphone</label>
-            <input
-              id="registerPhone"
-              type="tel"
-              autocomplete="tel"
-              placeholder="Ex. : 20 123 456"
-              maxlength="20"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label for="registerEmail">Adresse e-mail</label>
-            <input id="registerEmail" type="email" autocomplete="email" required>
-          </div>
-
-          <div class="field">
-            <label for="registerPassword">Mot de passe</label>
-            <input
-              id="registerPassword"
-              type="password"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            >
-          </div>
-
-          <div class="field">
-            <label for="confirmPassword">Confirmer le mot de passe</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              autocomplete="new-password"
-              minlength="6"
-              required
-            >
-          </div>
-
-          <button id="registerButton" class="primary-btn" type="submit">Créer mon compte</button>
-        </form>
-
-        <div class="auth-footer">Flamingo Resto Café · Mahdia, Tunisie</div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- APPLICATION APRÈS CONNEXION -->
-  <section id="appScreen" class="hidden">
-    <header class="app-header">
-      <div class="brand">FLAMINGO <span>RESTO CAFÉ</span></div>
-      <div class="header-right">
-        <span id="headerUserName" class="user-chip">Mon compte</span>
-        <button id="logoutButton" class="logout-btn" type="button">Déconnexion</button>
+    <!-- APP -->
+    <section id="appSection" class="hidden">
+      <div class="hero">
+        <div class="pill">FLAMINGO RESTO CAFÉ</div>
+        <h1>Ahla bik, <span id="welcomeName">Client</span> ❤️</h1>
+        <p>Ton espace personnel : offres, soirées, réservation et carte fidélité.</p>
       </div>
-    </header>
 
-    <nav class="app-nav">
-      <button class="nav-btn active" data-page="home" type="button">Accueil</button>
-      <button class="nav-btn" data-page="offers" type="button">Offres</button>
-      <button class="nav-btn" data-page="events" type="button">Soirées</button>
-      <button class="nav-btn" data-page="reservation" type="button">Réservation</button>
-      <button class="nav-btn" data-page="profile" type="button">Mon profil</button>
-    </nav>
+      <div class="nav" id="mainNav">
+        <button data-page="home" class="active" onclick="showPage('home')">Accueil</button>
+        <button data-page="offers" onclick="showPage('offers')">Offres</button>
+        <button data-page="events" onclick="showPage('events')">Soirées</button>
+        <button data-page="reservation" onclick="showPage('reservation')">Réservation</button>
+        <button data-page="profile" onclick="showPage('profile')">Ma carte QR</button>
+        <button id="adminNavButton" data-page="admin" class="hidden" onclick="showPage('admin')">⚙️ Admin</button>
+      </div>
 
-    <main class="app-content">
-
-      <section id="page-home" class="page">
-        <div class="welcome-banner">
-          <div class="eyebrow">Flamingo Resto Café · Mahdia</div>
-          <h1>Bienvenue, <span id="welcomeName">cher membre</span> !</h1>
-          <p>
-            Découvrez nos offres, préparez votre prochaine visite et
-            restez au courant de nos soirées.
-          </p>
-        </div>
-
-        <h2 class="section-title">Votre espace Flamingo</h2>
-
-        <div class="cards-grid">
-          <article class="feature-card">
-            <div class="feature-icon">🍕</div>
-            <h3>Nos offres</h3>
-            <p>Découvrez nos promotions et nos idées gourmandes.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon">🎶</div>
-            <h3>Nos soirées</h3>
-            <p>Retrouvez l'ambiance et les soirées du restaurant.</p>
-          </article>
-
-          <article class="feature-card">
-            <div class="feature-icon">📅</div>
-            <h3>Réservation</h3>
-            <p>Préparez votre demande pour votre prochaine visite.</p>
-          </article>
+      <section id="page-home" class="app-page">
+        <div class="grid">
+          <div class="card">
+            <h2>Ta carte fidélité</h2>
+            <div class="discount">-20%</div>
+            <p class="muted">Présente ton QR au personnel et confirme ton identité pour profiter de l'offre, selon les conditions de Flamingo.</p>
+            <button class="btn btn-pink" onclick="showPage('profile')">Afficher ma carte</button>
+          </div>
+          <div class="card">
+            <h2>Nos offres</h2>
+            <p class="muted">Découvre les promotions et les nouveautés de Flamingo Resto Café.</p>
+            <button class="btn" onclick="showPage('offers')">Voir les offres</button>
+          </div>
+          <div class="card">
+            <h2>Nos soirées</h2>
+            <p class="muted">Retrouve les événements et les soirées live music du samedi.</p>
+            <button class="btn" onclick="showPage('events')">Découvrir</button>
+          </div>
         </div>
       </section>
 
-      <section id="page-offers" class="page hidden">
-        <div class="page-heading">
-          <h1>Nos offres</h1>
-          <p>Les bons plans Flamingo Resto Café.</p>
+      <section id="page-offers" class="app-page hidden">
+        <div class="card">
+          <h2>🎁 Les offres Flamingo</h2>
+          <p class="muted">Les offres disponibles seront affichées ici.</p>
+          <div id="offersList"><div class="empty">Chargement des offres…</div></div>
         </div>
-
-        <div class="cards-grid">
-          <article class="offer-card">
-            <div class="offer-top">
-              <small>Offre gourmande</small>
-              <h3>Plateau Terre & Mer</h3>
-              <strong>159 DT</strong>
-            </div>
-            <div class="offer-body">
-              <p>Une idée à partager entre amis ou en famille, prévue pour 4 personnes et plus.</p>
-            </div>
-          </article>
-
-          <article class="offer-card">
-            <div class="offer-top">
-              <small>Spécial étudiants</small>
-              <h3>Offres étudiantes</h3>
-              <strong>À découvrir</strong>
-            </div>
-            <div class="offer-body">
-              <p>Des promotions étudiantes selon les conditions annoncées par le restaurant.</p>
-            </div>
-          </article>
-
-          <article class="offer-card">
-            <div class="offer-top">
-              <small>Pause gourmande</small>
-              <h3>Pizzas & desserts</h3>
-              <strong>Flamingo</strong>
-            </div>
-            <div class="offer-body">
-              <p>Découvrez la carte et les offres disponibles directement au restaurant.</p>
-            </div>
-          </article>
-        </div>
-
-        <p class="muted">Les offres affichées sont des exemples. Actualisez-les selon les promotions réelles.</p>
       </section>
 
-      <section id="page-events" class="page hidden">
-        <div class="page-heading">
-          <h1>Nos soirées</h1>
-          <p>Une ambiance à partager chez Flamingo.</p>
+      <section id="page-events" class="app-page hidden">
+        <div class="card">
+          <h2>🎶 Soirées & événements</h2>
+          <div class="offer-card">
+            <h3>Saturday Live Music</h3>
+            <p class="muted">Chaque samedi, retrouve l'ambiance Flamingo. Le thème et le programme peuvent changer chaque semaine.</p>
+            <button class="btn btn-pink" onclick="showPage('reservation')">Réserver une table</button>
+          </div>
+          <p class="muted">Le programme exact sera ajouté ici par l'administration.</p>
         </div>
-
-        <div class="cards-grid">
-          <article class="event-card">
-            <div class="event-date">Chaque samedi</div>
-            <h3>🎶 Live Music</h3>
-            <p>Retrouvez nos soirées musicales. Le thème et le programme peuvent changer chaque semaine.</p>
-          </article>
-
-          <article class="event-card">
-            <div class="event-date">Vos moments spéciaux</div>
-            <h3>✨ En famille ou entre amis</h3>
-            <p>Contactez le restaurant pour discuter de vos occasions et des possibilités de réservation.</p>
-          </article>
-        </div>
-
-        <p>
-          <a
-            href="https://www.instagram.com/flamingo_restaurant_cafe"
-            target="_blank"
-            rel="noopener noreferrer"
-            style="color:#9c3159;font-weight:700"
-          >Voir Instagram Flamingo ↗</a>
-        </p>
       </section>
 
-      <section id="page-reservation" class="page hidden">
-        <div class="page-heading">
-          <h1>Demande de réservation</h1>
-          <p>
-            Cette version est une démonstration : le formulaire ne transmet
-            pas encore de réservation au restaurant.
-          </p>
+      <section id="page-reservation" class="app-page hidden">
+        <div class="card">
+          <h2>📅 Réserver une table</h2>
+          <p class="muted">Envoie ta demande. Le restaurant devra confirmer la réservation.</p>
+          <div id="reservationMessage" class="notice hidden"></div>
+
+          <form id="reservationForm">
+            <div class="grid">
+              <div class="field">
+                <label>Date souhaitée</label>
+                <input type="date" id="reservationDate" required>
+              </div>
+              <div class="field">
+                <label>Heure souhaitée</label>
+                <input type="time" id="reservationTime" required>
+              </div>
+              <div class="field">
+                <label>Nombre de personnes</label>
+                <input type="number" id="reservationGuests" min="1" max="100" value="2" required>
+              </div>
+              <div class="field">
+                <label>Téléphone</label>
+                <input type="tel" id="reservationPhone" required placeholder="Ton numéro">
+              </div>
+            </div>
+            <div class="field">
+              <label>Message (optionnel)</label>
+              <textarea id="reservationNote" placeholder="Occasion spéciale, espace privé, etc."></textarea>
+            </div>
+            <button class="btn btn-pink full" type="submit">Envoyer ma demande</button>
+          </form>
         </div>
-
-        <form id="reservationForm" class="form-card">
-          <div class="field">
-            <label for="reservationName">Nom et prénom</label>
-            <input id="reservationName" type="text" maxlength="80" required>
-          </div>
-
-          <div class="field">
-            <label for="reservationPhone">Numéro de téléphone</label>
-            <input id="reservationPhone" type="tel" maxlength="20" required>
-          </div>
-
-          <div class="field">
-            <label for="reservationDate">Date souhaitée</label>
-            <input id="reservationDate" type="date" required>
-          </div>
-
-          <div class="field">
-            <label for="reservationTime">Heure souhaitée</label>
-            <input id="reservationTime" type="time" required>
-          </div>
-
-          <div class="field">
-            <label for="reservationGuests">Nombre de personnes</label>
-            <select id="reservationGuests" required>
-              <option value="">Choisir</option>
-              <option>1 personne</option>
-              <option>2 personnes</option>
-              <option>3 personnes</option>
-              <option>4 personnes</option>
-              <option>5 personnes</option>
-              <option>6 personnes</option>
-              <option>7 personnes ou plus</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label for="reservationNotes">Précisions (facultatif)</label>
-            <textarea id="reservationNotes" rows="3" maxlength="500"></textarea>
-          </div>
-
-          <button class="primary-btn" type="submit">Tester le formulaire</button>
-          <div id="reservationMessage" class="message" role="status"></div>
-        </form>
       </section>
 
-      <section id="page-profile" class="page hidden">
-        <div class="page-heading">
-          <h1>Mon profil</h1>
-          <p>Vos informations personnelles liées à votre compte.</p>
-        </div>
-
-        <div class="profile-card">
-          <div class="profile-top">
+      <section id="page-profile" class="app-page hidden">
+        <div class="card">
+          <h2>👤 Mon profil</h2>
+          <div class="profile-head">
             <div class="avatar" id="profileAvatar">F</div>
             <div>
-              <h2 id="profileName">Mon profil</h2>
-              <p id="profileEmail">Chargement...</p>
+              <h3 id="profileName">Client</h3>
+              <div id="profileEmail" class="muted"></div>
+              <div id="profilePhone" class="muted"></div>
             </div>
           </div>
+        </div>
 
-          <div class="profile-info">
-            <div class="info-box">
-              <small>Nom complet</small>
-              <strong id="profileFullName">—</strong>
-            </div>
-
-            <div class="info-box">
-              <small>Adresse e-mail</small>
-              <strong id="profileEmailInfo">—</strong>
-            </div>
-
-            <div class="info-box">
-              <small>Numéro de téléphone</small>
-              <strong id="profilePhone">Non renseigné</strong>
-            </div>
+        <div class="card">
+          <div class="row-between">
+            <h2>💗 Ma carte fidélité</h2>
+            <span class="pill">-20%</span>
           </div>
-
-          <div id="profileMessage" class="message" role="status"></div>
-
-          <p class="muted">
-            L'avatar est temporaire : il affiche la première lettre du nom.
-            La photo personnelle et la carte de fidélité seront ajoutées
-            dans les prochaines étapes.
-          </p>
+          <p class="muted">Présente ce QR au personnel de Flamingo. Le scan seul ne valide pas un discount : le personnel doit confirmer son utilisation.</p>
+          <div id="qrcode"></div>
+          <p class="small" style="text-align:center">Carte personnelle · Ne partage pas ton QR avec d'autres personnes.</p>
+          <button class="btn btn-light full" onclick="printCard()">Imprimer ma carte</button>
         </div>
       </section>
 
-    </main>
+      <!-- ADMIN DASHBOARD -->
+      <section id="page-admin" class="app-page hidden">
+        <div class="hero">
+          <h1>Admin Dashboard ⚙️</h1>
+          <p>Gestion privée de Flamingo Resto Café.</p>
+        </div>
 
-    <footer class="app-footer">© Flamingo Resto Café · Mahdia, Tunisie</footer>
-  </section>
+        <div id="adminMessage" class="notice hidden"></div>
+
+        <div class="nav">
+          <button onclick="showAdminTab('scanner')">📷 Scanner QR</button>
+          <button onclick="showAdminTab('history')">Historique</button>
+          <button onclick="showAdminTab('customers')">Clients</button>
+          <button onclick="showAdminTab('offers')">Gérer les offres</button>
+          <button onclick="showAdminTab('reservations')">Réservations</button>
+        </div>
+
+        <div id="admin-scanner" class="admin-tab">
+          <div class="card">
+            <h2>📷 Scanner la carte d'un client</h2>
+            <p class="muted">Autorise l'accès à la caméra. Scanne le QR personnel du client.</p>
+            <div id="scannerMessage" class="notice hidden"></div>
+            <div id="reader"></div>
+            <div class="grid">
+              <button class="btn btn-pink" onclick="startScanner()">Démarrer le scanner</button>
+              <button class="btn btn-light" onclick="stopScanner()">Arrêter le scanner</button>
+            </div>
+            <div class="field" style="margin-top:15px">
+              <label>Ou saisir le UID du client manuellement</label>
+              <input id="manualUid" placeholder="UID du client">
+              <button class="btn btn-light full" style="margin-top:8px" onclick="lookupManualUid()">Rechercher le client</button>
+            </div>
+          </div>
+
+          <div id="scannedClientCard" class="card hidden">
+            <h2>Carte client détectée</h2>
+            <div class="profile-head">
+              <div class="avatar" id="scannedAvatar">C</div>
+              <div>
+                <h3 id="scannedName">Client</h3>
+                <div class="muted" id="scannedEmail"></div>
+                <div class="muted" id="scannedPhone"></div>
+              </div>
+            </div>
+            <div class="discount">-20%</div>
+            <p class="muted">Vérifie que le client est bien présent et que le discount est réellement utilisé avant de confirmer.</p>
+            <button class="btn btn-green full" onclick="confirmDiscount()">Confirmer l'utilisation du discount</button>
+            <button class="btn btn-light full" style="margin-top:8px" onclick="clearScannedClient()">Annuler</button>
+          </div>
+        </div>
+
+        <div id="admin-history" class="admin-tab hidden">
+          <div class="card">
+            <div class="row-between">
+              <h2>Historique des scans</h2>
+              <button class="btn btn-light btn-small" onclick="loadScanHistory()">Actualiser</button>
+            </div>
+            <div id="scanHistoryList"><div class="empty">Chargement…</div></div>
+          </div>
+        </div>
+
+        <div id="admin-customers" class="admin-tab hidden">
+          <div class="card">
+            <div class="row-between">
+              <h2>Clients inscrits</h2>
+              <button class="btn btn-light btn-small" onclick="loadCustomers()">Actualiser</button>
+            </div>
+            <div id="customersList"><div class="empty">Chargement…</div></div>
+          </div>
+        </div>
+
+        <div id="admin-offers" class="admin-tab hidden">
+          <div class="card">
+            <h2>Ajouter une offre</h2>
+            <form id="offerForm">
+              <div class="field">
+                <label>Titre</label>
+                <input id="offerTitle" required placeholder="Ex. Offre Prix Choc">
+              </div>
+              <div class="field">
+                <label>Description</label>
+                <textarea id="offerDescription" required placeholder="Détails de l'offre"></textarea>
+              </div>
+              <div class="field">
+                <label>Prix affiché (optionnel)</label>
+                <input id="offerPrice" placeholder="Ex. 39 DT">
+              </div>
+              <button class="btn btn-pink full" type="submit">Ajouter l'offre</button>
+            </form>
+          </div>
+          <div class="card">
+            <h2>Offres actuelles</h2>
+            <div id="adminOffersList"><div class="empty">Chargement…</div></div>
+          </div>
+        </div>
+
+        <div id="admin-reservations" class="admin-tab hidden">
+          <div class="card">
+            <div class="row-between">
+              <h2>Demandes de réservation</h2>
+              <button class="btn btn-light btn-small" onclick="loadReservations()">Actualiser</button>
+            </div>
+            <div id="reservationsList"><div class="empty">Chargement…</div></div>
+          </div>
+        </div>
+      </section>
+
+      <div class="card">
+        <button class="btn btn-light full" onclick="logout()">Se déconnecter</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>Flamingo Resto Café · Mahdia ❤️</footer>
 
   <script type="module">
-    import { initializeApp } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
     import {
-      getAuth,
-      setPersistence,
-      browserLocalPersistence,
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      signOut,
-      onAuthStateChanged,
-      updateProfile
-    } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
+      getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword,
+      onAuthStateChanged, signOut
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
     import {
-      getFirestore,
-      doc,
-      setDoc,
-      getDoc,
-      serverTimestamp
-    } from
-      "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
+      getFirestore, doc, getDoc, setDoc, addDoc, collection, getDocs,
+      updateDoc, deleteDoc, serverTimestamp, query, orderBy, limit
+    } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyD-An21UMfQu-ov16V3YItWM2bjHu5OzmM",
@@ -773,269 +562,614 @@
       measurementId: "G-F47BM413L7"
     };
 
-    const firebaseApp = initializeApp(firebaseConfig);
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
+    const ADMIN_EMAIL = "azizmaraouch@gmail.com";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
 
-    const $ = (id) => document.getElementById(id);
+    let currentUser = null;
+    let currentProfile = null;
+    let isAdmin = false;
+    let authMode = "login";
+    let html5Scanner = null;
+    let scannerRunning = false;
+    let scannedClient = null;
+    let currentOffers = [];
 
-    function showMessage(element, text, type = "error") {
-      element.textContent = text;
-      element.className = "message show " + type;
+    const $ = id => document.getElementById(id);
+
+    function safe(value) {
+      return String(value ?? "").replace(/[&<>"']/g, c => ({
+        "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;"
+      }[c]));
     }
 
-    function clearMessage(element) {
-      element.textContent = "";
-      element.className = "message";
+    function showMessage(id, message, type = "") {
+      const el = $(id);
+      if (!el) return;
+      el.textContent = message;
+      el.className = "notice" + (type ? " " + type : "");
+      el.classList.remove("hidden");
     }
 
-    function firebaseError(error) {
+    function hideMessage(id) {
+      const el = $(id);
+      if (el) el.classList.add("hidden");
+    }
+
+    function friendlyError(error) {
+      const code = error?.code || "";
       const messages = {
-        "auth/email-already-in-use": "Cette adresse e-mail possède déjà un compte. Connectez-vous.",
-        "auth/invalid-email": "L'adresse e-mail n'est pas valide.",
+        "auth/email-already-in-use": "Cet email possède déjà un compte. Connecte-toi.",
+        "auth/invalid-credential": "Email ou mot de passe incorrect.",
+        "auth/invalid-email": "Adresse email invalide.",
         "auth/weak-password": "Le mot de passe doit contenir au moins 6 caractères.",
-        "auth/invalid-credential": "E-mail ou mot de passe incorrect.",
-        "auth/user-not-found": "Aucun compte trouvé avec ces informations.",
-        "auth/wrong-password": "Mot de passe incorrect.",
-        "auth/too-many-requests": "Trop de tentatives. Réessayez plus tard.",
-        "auth/network-request-failed": "Vérifiez votre connexion Internet.",
-        "permission-denied": "Accès refusé par les règles Firestore. Vérifiez la configuration."
+        "auth/too-many-requests": "Trop de tentatives. Réessaie plus tard.",
+        "permission-denied": "Accès refusé par Firestore Rules. Vérifie les règles et les permissions.",
+        "unavailable": "Service temporairement indisponible. Réessaie."
       };
-
-      return messages[error.code] ||
-        "Une erreur est survenue. Vérifiez les informations et réessayez.";
+      return messages[code] || error?.message || "Une erreur est survenue.";
     }
 
-    function setAuthMode(mode) {
-      const login = mode === "login";
+    window.showAuthMode = function(mode) {
+      authMode = mode;
+      $("registerFields").classList.toggle("hidden", mode !== "register");
+      $("confirmPassword").required = mode === "register";
+      $("fullName").required = mode === "register";
+      $("phone").required = mode === "register";
+      $("authSubmit").textContent = mode === "login" ? "Se connecter" : "Créer mon compte";
+      $("loginTab").classList.toggle("active", mode === "login");
+      $("registerTab").classList.toggle("active", mode === "register");
+      hideMessage("authMessage");
+    };
 
-      $("loginForm").classList.toggle("hidden", !login);
-      $("registerForm").classList.toggle("hidden", login);
-      $("loginTab").classList.toggle("active", login);
-      $("registerTab").classList.toggle("active", !login);
-
-      $("authTitle").textContent = login
-        ? "Content de vous revoir !"
-        : "Rejoignez Flamingo !";
-
-      $("authSubtitle").textContent = login
-        ? "Connectez-vous à votre espace client."
-        : "Créez votre compte Flamingo.";
-
-      clearMessage($("authMessage"));
-    }
-
-    $("loginTab").addEventListener("click", () => setAuthMode("login"));
-    $("registerTab").addEventListener("click", () => setAuthMode("register"));
-
-    // INSCRIPTION
-    $("registerForm").addEventListener("submit", async (event) => {
+    $("authForm").addEventListener("submit", async event => {
       event.preventDefault();
-      clearMessage($("authMessage"));
+      hideMessage("authMessage");
 
-      const name = $("registerName").value.trim();
-      const phone = $("registerPhone").value.trim();
-      const email = $("registerEmail").value.trim();
-      const password = $("registerPassword").value;
-      const confirmPassword = $("confirmPassword").value;
+      const email = $("email").value.trim().toLowerCase();
+      const password = $("password").value;
 
-      if (name.length < 2) {
-        showMessage($("authMessage"), "Entrez votre nom complet.");
-        return;
-      }
-
-      if (!phone) {
-        showMessage($("authMessage"), "Entrez votre numéro de téléphone.");
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        showMessage($("authMessage"), "Les deux mots de passe ne correspondent pas.");
-        return;
-      }
-
-      $("registerButton").disabled = true;
-      $("registerButton").textContent = "Création du compte...";
-
-      let accountCreated = false;
+      $("authSubmit").disabled = true;
+      $("authSubmit").textContent = "Chargement…";
 
       try {
-        const result = await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
+        if (authMode === "register") {
+          const name = $("fullName").value.trim();
+          const phone = $("phone").value.trim();
+          if (password !== $("confirmPassword").value) {
+            throw new Error("Les mots de passe ne correspondent pas.");
+          }
+          const credential = await createUserWithEmailAndPassword(auth, email, password);
+          await setDoc(doc(db, "users", credential.user.uid), {
+            uid: credential.user.uid,
+            name,
+            phone,
+            email,
+            createdAt: serverTimestamp()
+          });
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+      } catch (error) {
+        showMessage("authMessage", friendlyError(error), "error");
+      } finally {
+        $("authSubmit").disabled = false;
+        $("authSubmit").textContent = authMode === "login" ? "Se connecter" : "Créer mon compte";
+      }
+    });
 
-        accountCreated = true;
+    async function refreshProfile(user) {
+      const userRef = doc(db, "users", user.uid);
+      const snapshot = await getDoc(userRef);
 
-        await updateProfile(result.user, { displayName: name });
+      if (snapshot.exists()) {
+        currentProfile = snapshot.data();
+      } else {
+        // This creates a basic profile if the account predates the profile form.
+        currentProfile = {
+          uid: user.uid,
+          name: user.displayName || "Client Flamingo",
+          phone: "",
+          email: user.email || ""
+        };
+        await setDoc(userRef, {
+          ...currentProfile,
+          createdAt: serverTimestamp()
+        }, { merge: true });
+      }
 
-        await setDoc(doc(db, "users", result.user.uid), {
-          uid: result.user.uid,
-          name: name,
-          phone: phone,
-          email: email,
+      $("welcomeName").textContent = currentProfile.name || "Client";
+      $("profileName").textContent = currentProfile.name || "Client";
+      $("profileEmail").textContent = currentProfile.email || user.email || "";
+      $("profilePhone").textContent = currentProfile.phone ? "Tél. : " + currentProfile.phone : "Téléphone non renseigné";
+      $("profileAvatar").textContent = (currentProfile.name || "F").trim().charAt(0).toUpperCase();
+      $("reservationPhone").value = currentProfile.phone || "";
+
+      $("qrcode").innerHTML = "";
+      if (window.QRCode) {
+        new window.QRCode($("qrcode"), {
+          text: user.uid,
+          width: 210,
+          height: 210,
+          colorDark: "#3a1728",
+          colorLight: "#ffffff",
+          correctLevel: window.QRCode.CorrectLevel.M
+        });
+      } else {
+        $("qrcode").textContent = "QR code indisponible. Recharge la page.";
+      }
+    }
+
+    async function checkAdmin(user) {
+      if (!user || (user.email || "").toLowerCase() !== ADMIN_EMAIL) return false;
+      const adminSnap = await getDoc(doc(db, "admins", user.uid));
+      return adminSnap.exists() && adminSnap.data().role === "admin";
+    }
+
+    onAuthStateChanged(auth, async user => {
+      currentUser = user;
+
+      if (!user) {
+        currentProfile = null;
+        isAdmin = false;
+        $("authSection").classList.remove("hidden");
+        $("appSection").classList.add("hidden");
+        $("headerActions").innerHTML = "";
+        return;
+      }
+
+      try {
+        await refreshProfile(user);
+        isAdmin = await checkAdmin(user);
+
+        $("authSection").classList.add("hidden");
+        $("appSection").classList.remove("hidden");
+        $("headerActions").innerHTML = isAdmin
+          ? '<span class="pill">ADMIN</span>'
+          : '<span class="pill">MEMBRE FLAMINGO</span>';
+
+        $("adminNavButton").classList.toggle("hidden", !isAdmin);
+        showPage("home");
+        await loadOffers();
+
+        if (isAdmin) {
+          await loadAdminOffers();
+        }
+      } catch (error) {
+        console.error(error);
+        $("authSection").classList.remove("hidden");
+        $("appSection").classList.add("hidden");
+        showMessage("authMessage", "Impossible de charger ton profil : " + friendlyError(error), "error");
+      }
+    });
+
+    window.logout = async function() {
+      try {
+        await stopScanner();
+        await signOut(auth);
+      } catch (error) {
+        alert(friendlyError(error));
+      }
+    };
+
+    window.showPage = function(page) {
+      if (page === "admin" && !isAdmin) {
+        alert("Accès réservé à l'administration.");
+        return;
+      }
+      document.querySelectorAll(".app-page").forEach(el => el.classList.add("hidden"));
+      $("page-" + page)?.classList.remove("hidden");
+      document.querySelectorAll("#mainNav button").forEach(btn => {
+        btn.classList.toggle("active", btn.dataset.page === page);
+      });
+
+      if (page === "admin" && isAdmin) showAdminTab("scanner");
+      if (page === "offers") loadOffers();
+    };
+
+    window.showAdminTab = async function(tab) {
+      if (!isAdmin) return;
+      document.querySelectorAll(".admin-tab").forEach(el => el.classList.add("hidden"));
+      $("admin-" + tab)?.classList.remove("hidden");
+
+      if (tab === "history") await loadScanHistory();
+      if (tab === "customers") await loadCustomers();
+      if (tab === "offers") await loadAdminOffers();
+      if (tab === "reservations") await loadReservations();
+    };
+
+    async function loadOffers() {
+      const target = $("offersList");
+      try {
+        const snapshot = await getDocs(collection(db, "offers"));
+        currentOffers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+          .filter(o => o.active !== false);
+
+        if (!currentOffers.length) {
+          target.innerHTML = '<div class="empty">Aucune offre disponible pour le moment. Reviens bientôt ❤️</div>';
+          return;
+        }
+
+        target.innerHTML = currentOffers.map(o => `
+          <div class="offer-card">
+            <h3>${safe(o.title || "Offre Flamingo")}</h3>
+            <p class="muted">${safe(o.description || "")}</p>
+            ${o.price ? `<div class="offer-price">${safe(o.price)}</div>` : ""}
+          </div>
+        `).join("");
+      } catch (error) {
+        target.innerHTML = `<div class="notice error">${safe(friendlyError(error))}</div>`;
+      }
+    }
+
+    $("reservationForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!currentUser) return;
+
+      const date = $("reservationDate").value;
+      const time = $("reservationTime").value;
+      if (!date || !time) {
+        showMessage("reservationMessage", "Choisis une date et une heure.", "error");
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "reservations"), {
+          userId: currentUser.uid,
+          name: currentProfile?.name || "",
+          email: currentUser.email || "",
+          phone: $("reservationPhone").value.trim(),
+          date,
+          time,
+          guests: Number($("reservationGuests").value),
+          note: $("reservationNote").value.trim(),
+          status: "En attente",
           createdAt: serverTimestamp()
         });
-
-        $("registerForm").reset();
-
-        showMessage(
-          $("authMessage"),
-          "Compte créé et profil enregistré avec succès !",
-          "success"
-        );
-
+        $("reservationForm").reset();
+        $("reservationPhone").value = currentProfile?.phone || "";
+        showMessage("reservationMessage", "Demande envoyée ! Le restaurant doit confirmer ta réservation.", "success");
       } catch (error) {
-        console.error("Erreur inscription :", error);
+        showMessage("reservationMessage", friendlyError(error), "error");
+      }
+    });
 
-        if (accountCreated) {
-          showMessage(
-            $("authMessage"),
-            "Le compte est créé, mais l'enregistrement du profil a échoué. Vérifiez les règles Firestore.",
-            "error"
-          );
-        } else {
-          showMessage($("authMessage"), firebaseError(error));
+    // Admin QR scanner
+    window.startScanner = async function() {
+      if (!isAdmin) return;
+      hideMessage("scannerMessage");
+
+      if (!window.Html5Qrcode) {
+        showMessage("scannerMessage", "Le scanner ne s'est pas chargé. Recharge la page.", "error");
+        return;
+      }
+
+      try {
+        if (!html5Scanner) html5Scanner = new window.Html5Qrcode("reader");
+        if (scannerRunning) return;
+
+        await html5Scanner.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 240, height: 240 } },
+          async decodedText => {
+            await stopScanner();
+            $("manualUid").value = decodedText;
+            await lookupClient(decodedText);
+          },
+          () => {}
+        );
+        scannerRunning = true;
+        showMessage("scannerMessage", "Scanner actif. Place le QR devant la caméra.", "success");
+      } catch (error) {
+        showMessage("scannerMessage", "Impossible d'ouvrir la caméra. Autorise l'accès dans ton navigateur et vérifie que le site est en HTTPS. " + (error.message || ""), "error");
+      }
+    };
+
+    window.stopScanner = async function() {
+      if (html5Scanner && scannerRunning) {
+        try { await html5Scanner.stop(); } catch (e) { console.warn(e); }
+        scannerRunning = false;
+      }
+    };
+
+    window.lookupManualUid = async function() {
+      await lookupClient($("manualUid").value.trim());
+    };
+
+    async function lookupClient(rawUid) {
+      if (!isAdmin) return;
+      const uid = String(rawUid || "").trim();
+
+      if (!uid || uid.length > 150 || /[\/\s]/.test(uid)) {
+        showMessage("scannerMessage", "QR invalide. Le code doit contenir uniquement le UID du client.", "error");
+        return;
+      }
+
+      try {
+        const snapshot = await getDoc(doc(db, "users", uid));
+        if (!snapshot.exists()) {
+          scannedClient = null;
+          $("scannedClientCard").classList.add("hidden");
+          showMessage("scannerMessage", "Aucun compte client trouvé pour ce QR.", "error");
+          return;
         }
 
-      } finally {
-        $("registerButton").disabled = false;
-        $("registerButton").textContent = "Créer mon compte";
-      }
-    });
-
-    // CONNEXION
-    $("loginForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      clearMessage($("authMessage"));
-
-      const email = $("loginEmail").value.trim();
-      const password = $("loginPassword").value;
-
-      $("loginButton").disabled = true;
-      $("loginButton").textContent = "Connexion...";
-
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-        $("loginForm").reset();
+        scannedClient = { uid, ...snapshot.data() };
+        $("scannedName").textContent = scannedClient.name || "Client Flamingo";
+        $("scannedEmail").textContent = scannedClient.email || "";
+        $("scannedPhone").textContent = scannedClient.phone ? "Tél. : " + scannedClient.phone : "Téléphone non renseigné";
+        $("scannedAvatar").textContent = (scannedClient.name || "C").trim().charAt(0).toUpperCase();
+        $("scannedClientCard").classList.remove("hidden");
+        showMessage("scannerMessage", "Client trouvé. Vérifie sa présence avant de confirmer.", "success");
       } catch (error) {
-        console.error("Erreur connexion :", error);
-        showMessage($("authMessage"), firebaseError(error));
-      } finally {
-        $("loginButton").disabled = false;
-        $("loginButton").textContent = "Se connecter";
-      }
-    });
-
-    // NAVIGATION
-    const pages = document.querySelectorAll(".page");
-    const navButtons = document.querySelectorAll(".nav-btn");
-
-    function openPage(name) {
-      pages.forEach((page) => {
-        page.classList.toggle("hidden", page.id !== "page-" + name);
-      });
-
-      navButtons.forEach((button) => {
-        button.classList.toggle("active", button.dataset.page === name);
-      });
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    navButtons.forEach((button) => {
-      button.addEventListener("click", () => openPage(button.dataset.page));
-    });
-
-    // CHARGEMENT DU PROFIL PERSONNEL
-    async function loadClientProfile(user) {
-      const fallbackName = user.displayName || "Membre Flamingo";
-      const email = user.email || "—";
-
-      $("headerUserName").textContent = fallbackName;
-      $("welcomeName").textContent = fallbackName;
-      $("profileName").textContent = fallbackName;
-      $("profileFullName").textContent = fallbackName;
-      $("profileEmail").textContent = email;
-      $("profileEmailInfo").textContent = email;
-      $("profilePhone").textContent = "Non renseigné";
-      $("profileAvatar").textContent = fallbackName.charAt(0).toUpperCase();
-      $("reservationName").value = fallbackName;
-
-      // Le téléphone est également prérempli dans le formulaire de réservation.
-      $("reservationPhone").value = "";
-
-      try {
-        const profileRef = doc(db, "users", user.uid);
-        const snapshot = await getDoc(profileRef);
-
-        if (snapshot.exists()) {
-          const profile = snapshot.data();
-          const name = profile.name || fallbackName;
-
-          $("headerUserName").textContent = name;
-          $("welcomeName").textContent = name;
-          $("profileName").textContent = name;
-          $("profileFullName").textContent = name;
-          $("profileEmail").textContent = profile.email || email;
-          $("profileEmailInfo").textContent = profile.email || email;
-          $("profilePhone").textContent = profile.phone || "Non renseigné";
-          $("profileAvatar").textContent = name.charAt(0).toUpperCase();
-          $("reservationName").value = name;
-          $("reservationPhone").value = profile.phone || "";
-        }
-      } catch (error) {
-        console.error("Erreur chargement profil :", error);
-        showMessage(
-          $("profileMessage"),
-          "Le profil n'a pas pu être chargé depuis Firestore. Vérifiez les règles de sécurité.",
-          "error"
-        );
+        showMessage("scannerMessage", friendlyError(error), "error");
       }
     }
 
-    // SESSION FIREBASE
-    try {
-      await setPersistence(auth, browserLocalPersistence);
-    } catch (error) {
-      console.error("Erreur de persistance :", error);
-    }
+    window.clearScannedClient = function() {
+      scannedClient = null;
+      $("scannedClientCard").classList.add("hidden");
+    };
 
-    onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        $("authScreen").classList.add("hidden");
-        $("appScreen").classList.remove("hidden");
-        clearMessage($("profileMessage"));
-        await loadClientProfile(user);
-      } else {
-        $("appScreen").classList.add("hidden");
-        $("authScreen").classList.remove("hidden");
-        openPage("home");
-      }
-    });
+    window.confirmDiscount = async function() {
+      if (!isAdmin || !currentUser || !scannedClient) return;
 
-    // DÉCONNEXION
-    $("logoutButton").addEventListener("click", async () => {
-      try {
-        await signOut(auth);
-        setAuthMode("login");
-      } catch (error) {
-        console.error("Erreur déconnexion :", error);
-        alert("La déconnexion a échoué. Réessayez.");
-      }
-    });
-
-    // FORMULAIRE DE RÉSERVATION : DÉMONSTRATION UNIQUEMENT
-    $("reservationForm").addEventListener("submit", (event) => {
-      event.preventDefault();
-
-      showMessage(
-        $("reservationMessage"),
-        "Le formulaire fonctionne, mais la demande n'est pas encore envoyée au restaurant.",
-        "success"
+      const ok = confirm(
+        "Confirmer l'utilisation du discount de 20% pour " +
+        (scannedClient.name || "ce client") + " ?\n\nCette action sera enregistrée dans l'historique."
       );
+      if (!ok) return;
+
+      try {
+        await addDoc(collection(db, "scanLogs"), {
+          clientUid: scannedClient.uid,
+          clientName: scannedClient.name || "Client Flamingo",
+          clientEmail: scannedClient.email || "",
+          adminUid: currentUser.uid,
+          adminEmail: currentUser.email || "",
+          discount: "20%",
+          action: "discount_confirmed",
+          scannedAt: serverTimestamp()
+        });
+
+        showMessage("scannerMessage", "Discount confirmé et enregistré dans l'historique.", "success");
+        clearScannedClient();
+      } catch (error) {
+        showMessage("scannerMessage", "Impossible d'enregistrer le scan : " + friendlyError(error), "error");
+      }
+    };
+
+    function formatDate(value) {
+      if (!value) return "—";
+      const date = typeof value.toDate === "function" ? value.toDate() : new Date(value);
+      return Number.isNaN(date.getTime()) ? "—" : date.toLocaleString("fr-FR");
+    }
+
+    async function loadScanHistory() {
+      if (!isAdmin) return;
+      const target = $("scanHistoryList");
+      target.innerHTML = '<div class="empty">Chargement…</div>';
+
+      try {
+        const q = query(collection(db, "scanLogs"), orderBy("scannedAt", "desc"), limit(100));
+        const snapshot = await getDocs(q);
+        if (snapshot.empty) {
+          target.innerHTML = '<div class="empty">Aucun discount confirmé pour le moment.</div>';
+          return;
+        }
+
+        target.innerHTML = `<div class="table-wrap"><table>
+          <thead><tr><th>Client</th><th>Discount</th><th>Admin</th><th>Date et heure</th></tr></thead>
+          <tbody>${snapshot.docs.map(d => {
+            const x = d.data();
+            return `<tr>
+              <td>${safe(x.clientName)}<br><span class="small">${safe(x.clientEmail)}</span></td>
+              <td>${safe(x.discount || "20%")}</td>
+              <td>${safe(x.adminEmail)}</td>
+              <td>${safe(formatDate(x.scannedAt))}</td>
+            </tr>`;
+          }).join("")}</tbody></table></div>`;
+      } catch (error) {
+        target.innerHTML = `<div class="notice error">${safe(friendlyError(error))}</div>`;
+      }
+    }
+
+    async function loadCustomers() {
+      if (!isAdmin) return;
+      const target = $("customersList");
+      target.innerHTML = '<div class="empty">Chargement…</div>';
+
+      try {
+        const snapshot = await getDocs(collection(db, "users"));
+        if (snapshot.empty) {
+          target.innerHTML = '<div class="empty">Aucun client inscrit.</div>';
+          return;
+        }
+
+        target.innerHTML = `<div class="table-wrap"><table>
+          <thead><tr><th>Nom</th><th>Email</th><th>Téléphone</th></tr></thead>
+          <tbody>${snapshot.docs.map(d => {
+            const x = d.data();
+            return `<tr>
+              <td>${safe(x.name || "Client")}</td>
+              <td>${safe(x.email || "")}</td>
+              <td>${safe(x.phone || "—")}</td>
+            </tr>`;
+          }).join("")}</tbody></table></div>`;
+      } catch (error) {
+        target.innerHTML = `<div class="notice error">${safe(friendlyError(error))}</div>`;
+      }
+    }
+
+    $("offerForm").addEventListener("submit", async event => {
+      event.preventDefault();
+      if (!isAdmin) return;
+
+      try {
+        await addDoc(collection(db, "offers"), {
+          title: $("offerTitle").value.trim(),
+          description: $("offerDescription").value.trim(),
+          price: $("offerPrice").value.trim(),
+          active: true,
+          createdAt: serverTimestamp(),
+          createdBy: currentUser.uid
+        });
+
+        $("offerForm").reset();
+        showMessage("adminMessage", "Offre ajoutée avec succès.", "success");
+        await loadAdminOffers();
+        await loadOffers();
+      } catch (error) {
+        showMessage("adminMessage", friendlyError(error), "error");
+      }
     });
+
+    async function loadAdminOffers() {
+      if (!isAdmin) return;
+      const target = $("adminOffersList");
+
+      try {
+        const snapshot = await getDocs(collection(db, "offers"));
+        const offers = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+        if (!offers.length) {
+          target.innerHTML = '<div class="empty">Aucune offre ajoutée pour le moment.</div>';
+          return;
+        }
+
+        target.innerHTML = offers.map(o => `
+          <div class="offer-card">
+            <div class="row-between">
+              <h3>${safe(o.title || "Offre")}</h3>
+              <span class="pill">${o.active === false ? "Masquée" : "Active"}</span>
+            </div>
+            <p class="muted">${safe(o.description || "")}</p>
+            ${o.price ? `<div class="offer-price">${safe(o.price)}</div>` : ""}
+            <div class="grid">
+              <button class="btn btn-light btn-small" onclick="editOffer('${o.id}')">Modifier</button>
+              <button class="btn btn-light btn-small" onclick="toggleOffer('${o.id}', ${o.active !== false})">${o.active === false ? "Activer" : "Masquer"}</button>
+              <button class="btn btn-red btn-small" onclick="deleteOffer('${o.id}')">Supprimer</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (error) {
+        target.innerHTML = `<div class="notice error">${safe(friendlyError(error))}</div>`;
+      }
+    }
+
+    window.editOffer = async function(id) {
+      if (!isAdmin) return;
+      const snapshot = await getDoc(doc(db, "offers", id));
+      if (!snapshot.exists()) return alert("Offre introuvable.");
+      const offer = snapshot.data();
+
+      const title = prompt("Titre de l'offre :", offer.title || "");
+      if (title === null) return;
+      const description = prompt("Description :", offer.description || "");
+      if (description === null) return;
+      const price = prompt("Prix affiché (optionnel) :", offer.price || "");
+      if (price === null) return;
+
+      try {
+        await updateDoc(doc(db, "offers", id), {
+          title: title.trim(),
+          description: description.trim(),
+          price: price.trim(),
+          updatedAt: serverTimestamp()
+        });
+        await loadAdminOffers();
+        await loadOffers();
+        showMessage("adminMessage", "Offre modifiée.", "success");
+      } catch (error) {
+        showMessage("adminMessage", friendlyError(error), "error");
+      }
+    };
+
+    window.toggleOffer = async function(id, currentlyActive) {
+      if (!isAdmin) return;
+      try {
+        await updateDoc(doc(db, "offers", id), {
+          active: !currentlyActive,
+          updatedAt: serverTimestamp()
+        });
+        await loadAdminOffers();
+        await loadOffers();
+      } catch (error) {
+        showMessage("adminMessage", friendlyError(error), "error");
+      }
+    };
+
+    window.deleteOffer = async function(id) {
+      if (!isAdmin || !confirm("Supprimer définitivement cette offre ?")) return;
+      try {
+        await deleteDoc(doc(db, "offers", id));
+        await loadAdminOffers();
+        await loadOffers();
+        showMessage("adminMessage", "Offre supprimée.", "success");
+      } catch (error) {
+        showMessage("adminMessage", friendlyError(error), "error");
+      }
+    };
+
+    async function loadReservations() {
+      if (!isAdmin) return;
+      const target = $("reservationsList");
+      target.innerHTML = '<div class="empty">Chargement…</div>';
+
+      try {
+        const snapshot = await getDocs(collection(db, "reservations"));
+        const items = snapshot.docs.map(d => ({ id: d.id, ...d.data() }))
+          .sort((a, b) => String(a.date || "").localeCompare(String(b.date || "")));
+
+        if (!items.length) {
+          target.innerHTML = '<div class="empty">Aucune demande de réservation.</div>';
+          return;
+        }
+
+        target.innerHTML = items.map(r => `
+          <div class="offer-card">
+            <div class="row-between">
+              <h3>${safe(r.name || "Client")}</h3>
+              <span class="pill">${safe(r.status || "En attente")}</span>
+            </div>
+            <p class="muted">
+              📅 ${safe(r.date || "")} à ${safe(r.time || "")}<br>
+              👥 ${safe(r.guests || "—")} personne(s)<br>
+              ☎ ${safe(r.phone || "—")}<br>
+              ✉ ${safe(r.email || "")}<br>
+              ${r.note ? "Note : " + safe(r.note) : ""}
+            </p>
+            <div class="grid">
+              <button class="btn btn-green btn-small" onclick="setReservationStatus('${r.id}', 'Confirmée')">Confirmer</button>
+              <button class="btn btn-light btn-small" onclick="setReservationStatus('${r.id}', 'Refusée')">Refuser</button>
+              <button class="btn btn-light btn-small" onclick="setReservationStatus('${r.id}', 'En attente')">En attente</button>
+            </div>
+          </div>
+        `).join("");
+      } catch (error) {
+        target.innerHTML = `<div class="notice error">${safe(friendlyError(error))}</div>`;
+      }
+    }
+
+    window.setReservationStatus = async function(id, status) {
+      if (!isAdmin) return;
+      try {
+        await updateDoc(doc(db, "reservations", id), {
+          status,
+          updatedAt: serverTimestamp(),
+          updatedBy: currentUser.uid
+        });
+        await loadReservations();
+        showMessage("adminMessage", "Statut de réservation mis à jour.", "success");
+      } catch (error) {
+        showMessage("adminMessage", friendlyError(error), "error");
+      }
+    };
+
+    window.printCard = function() {
+      window.print();
+    };
   </script>
 </body>
 </html>
