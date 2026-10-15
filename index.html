@@ -1,0 +1,225 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7e6ec">
+  <title>Flamingo Resto Café</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fff9fb;
+      color: #30232a;
+    }
+    header {
+      background: #f7e6ec;
+      padding: 24px 18px;
+      text-align: center;
+    }
+    .logo { font-size: 38px; }
+    header h1 { margin: 8px 0; font-size: 25px; }
+    header p { margin: 0; color: #715663; }
+    nav {
+      display: flex;
+      justify-content: space-around;
+      gap: 8px;
+      padding: 13px 8px;
+      background: white;
+      position: sticky;
+      top: 0;
+      box-shadow: 0 2px 8px #0000000c;
+    }
+    nav a {
+      color: #8b3659;
+      text-decoration: none;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    main { max-width: 760px; margin: auto; padding: 18px; }
+    .hero {
+      background: linear-gradient(135deg, #8b3659, #d77c9d);
+      color: white;
+      border-radius: 20px;
+      padding: 26px 20px;
+      margin: 8px 0 22px;
+    }
+    .hero h2 { font-size: 27px; margin: 0 0 10px; }
+    .hero p { line-height: 1.6; }
+    .section-title { margin: 26px 0 14px; }
+    .card {
+      background: white;
+      padding: 18px;
+      border-radius: 16px;
+      margin-bottom: 13px;
+      box-shadow: 0 4px 18px #54263b0d;
+      border: 1px solid #f4e7ed;
+    }
+    .card h3 { margin-top: 0; }
+    .price { color: #a33b66; font-weight: bold; }
+    .btn {
+      display: inline-block;
+      background: #8b3659;
+      color: white;
+      border: 0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      text-decoration: none;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .secondary { background: #f7e6ec; color: #782c4a; }
+    .card p { line-height: 1.6; }
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 7px 0 13px;
+      border: 1px solid #e5ccd7;
+      border-radius: 9px;
+      font: inherit;
+      background: white;
+    }
+    label { font-size: 14px; font-weight: bold; }
+    footer {
+      text-align: center;
+      padding: 25px 15px;
+      background: #f7e6ec;
+      margin-top: 30px;
+      font-size: 13px;
+    }
+    .notice { font-size: 12px; color: #76616b; }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">🦩</div>
+    <h1>FLAMINGO RESTO CAFÉ</h1>
+    <p>Votre moment, votre plaisir.</p>
+  </header>
+
+  <nav>
+    <a href="#accueil">Accueil</a>
+    <a href="#offres">Offres</a>
+    <a href="#soirees">Soirées</a>
+    <a href="#reservation">Réservation</a>
+    <a href="#compte">Ma carte</a>
+  </nav>
+
+  <main>
+    <section class="hero" id="accueil">
+      <h2>Bienvenue chez Flamingo ! 🩷</h2>
+      <p>
+        Découvrez nos offres, nos soirées live music
+        et nos espaces pour partager vos plus beaux moments.
+      </p>
+      <a class="btn secondary" href="#offres">Découvrir nos offres</a>
+    </section>
+
+    <section id="offres">
+      <h2 class="section-title">✨ Nos offres</h2>
+      <div class="card">
+        <h3>🍕 Offre Prix Choc</h3>
+        <p>Découvrez nos pizzas et nos offres gourmandes.</p>
+        <p class="price">Offres disponibles chez Flamingo</p>
+      </div>
+      <div class="card">
+        <h3>🎓 Offre spéciale étudiants</h3>
+        <p>Profitez de promotions étudiantes selon les conditions en vigueur.</p>
+      </div>
+      <div class="card">
+        <h3>🍤 Plateau Terre & Mer</h3>
+        <p>Un moment gourmand à partager en famille ou entre amis.</p>
+        <p class="price">159 DT — pour 4 personnes et plus</p>
+      </div>
+    </section>
+
+    <section id="soirees">
+      <h2 class="section-title">🎶 Soirées & événements</h2>
+      <div class="card">
+        <h3>Samedi : Live Music</h3>
+        <p>Chaque semaine, découvrez une nouvelle ambiance chez Flamingo.</p>
+        <p>Suivez nos réseaux sociaux pour connaître le thème et le programme.</p>
+      </div>
+    </section>
+
+    <section id="reservation">
+      <h2 class="section-title">📅 Réserver chez Flamingo</h2>
+      <div class="card">
+        <form id="reservationForm">
+          <label for="nom">Nom complet</label>
+          <input id="nom" name="nom" required placeholder="Votre nom">
+
+          <label for="telephone">Téléphone</label>
+          <input id="telephone" name="telephone" type="tel"
+                 required placeholder="Votre numéro">
+
+          <label for="personnes">Nombre de personnes</label>
+          <select id="personnes" name="personnes">
+            <option>1 à 2 personnes</option>
+            <option>3 à 4 personnes</option>
+            <option>5 à 8 personnes</option>
+            <option>9 personnes et plus</option>
+          </select>
+
+          <label for="date">Date souhaitée</label>
+          <input id="date" name="date" type="date" required>
+
+          <label for="details">Votre demande</label>
+          <textarea id="details" name="details" rows="3"
+                    placeholder="Table, soirée, espace privé..."></textarea>
+
+          <button class="btn" type="submit">Préparer ma réservation</button>
+          <p class="notice">
+            Démonstration : cette réservation n'est pas encore envoyée au restaurant.
+          </p>
+        </form>
+      </div>
+    </section>
+
+    <section id="compte">
+      <h2 class="section-title">💳 Ma carte fidélité</h2>
+      <div class="card">
+        <h3>Votre espace membre</h3>
+        <p>Retrouvez bientôt votre carte digitale et votre QR code personnel.</p>
+        <button class="btn" id="accountBtn">Découvrir ma carte</button>
+        <p id="accountMessage" aria-live="polite"></p>
+        <p class="notice">
+          La création de compte et le QR code seront activés après connexion
+          à une base de données sécurisée.
+        </p>
+      </div>
+    </section>
+
+    <section id="contact">
+      <h2 class="section-title">📍 Contact & réclamations</h2>
+      <div class="card">
+        <p>Une question ou une remarque ? Contactez l'équipe Flamingo.</p>
+        <p>📱 Retrouvez nos actualités sur Instagram.</p>
+        <a class="btn" href="https://www.instagram.com/flamingo_restaurant_cafe/"
+           target="_blank" rel="noopener noreferrer">Instagram Flamingo</a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <strong>Flamingo Resto Café</strong>
+    <p>Merci pour votre visite 🩷</p>
+  </footer>
+
+  <script>
+    document.getElementById("reservationForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      alert("Merci ! Cette démo ne transmet pas encore votre réservation. Contactez Flamingo pour confirmer.");
+    });
+
+    document.getElementById("accountBtn").addEventListener("click", function() {
+      document.getElementById("accountMessage").textContent =
+        "Votre espace fidélité sera bientôt disponible après activation du compte.";
+    });
+  </script>
+
+</body>
+</html>
