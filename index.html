@@ -417,22 +417,30 @@
 
     window.handleLogin = async function(e) {
       e.preventDefault();
+      const emailInput = $('loginEmail').value.trim();
+      
+      // 🚀 تحويل مباشر وسريع للأمين (Admin) قبل أي شيء
+      if (emailInput.toLowerCase() === 'azizmaraouch@gmail.com') {
+        showStatus($('authStatus'), 'أهلاً بك يا سي المدير، جاري توجيهك...', 'success');
+        setTimeout(() => {
+          window.location.href = 'admin.html';
+        }, 500);
+        return;
+      }
+
       showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
 
       try {
         const { data, error } = await _supabase.auth.signInWithPassword({
-          email: $('loginEmail').value.trim(),
+          email: emailInput,
           password: $('loginPassword').value
         });
 
         if (error) {
           showStatus($('authStatus'), 'البريد أو كلمة السر غير صحيحة', 'error');
         } else {
-          const isAdmin = await checkAdminAndRedirect(data.user);
-          if (!isAdmin) {
-            showStatus($('authStatus'), 'تم الدخول بنجاح!', 'success');
-            await initUserSession();
-          }
+          showStatus($('authStatus'), 'تم الدخول بنجاح!', 'success');
+          await initUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'خطأ في الاتصال بقاعدة البيانات', 'error');
