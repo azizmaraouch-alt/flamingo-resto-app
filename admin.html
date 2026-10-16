@@ -4,20 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#35151f">
-  <meta name="description" content="Flamingo Resto Café - Admin Dashboard">
-  <title>Flamingo - Admin Control Center</title>
+  <title>Flamingo Resto Café - Admin Control Center</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- مكتبة قراءة الـ QR Code عبر الكاميرا -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
     :root {
       --wine: #35151f;
-      --wine-dark: #220c13;
       --terracotta: #a86d60;
       --gold: #d5ad70;
       --cream: #faf5ed;
@@ -34,6 +31,7 @@
     button { cursor: pointer; border: none; outline: none; }
     .hidden { display: none !important; }
 
+    /* Admin Shell Layout */
     .admin-shell { display: flex; min-height: 100vh; }
     .admin-sidebar { width: 280px; background: var(--wine); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; border-left: 1px solid rgba(213,173,112,0.2); }
     .admin-brand { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
@@ -58,39 +56,26 @@
     .btn-admin { padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; background: var(--wine); color: white; transition: 0.2s; }
     .btn-admin:hover { background: var(--terracotta); }
     .btn-gold { background: var(--gold); color: var(--wine); }
-    .btn-gold:hover { background: #c2995b; }
 
     .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
     .data-table th, .data-table td { padding: 14px 18px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--border); }
     .data-table th { background: #f7f0ed; color: var(--wine); font-weight: 800; }
-    .data-table tr:last-child td { border-bottom: none; }
 
     .status-alert { padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-top: 15px; display: none; text-align: center; }
     .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; }
     .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; }
 
-    .admin-login-overlay { position: fixed; inset: 0; background: var(--wine); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
-    .admin-login-card { background: white; width: min(400px, 100%); border-radius: 28px; padding: 35px; text-align: center; }
+    @media (max-width: 768px) {
+      .admin-shell { flex-direction: column; }
+      .admin-sidebar { width: 100%; height: auto; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- ADMIN LOGIN GATEWAY -->
-  <div id="adminLoginModal" class="admin-login-overlay">
-    <div class="admin-login-card">
-      <h2 style="color:var(--wine); font-weight:900; margin-bottom:6px;">Flamingo Admin</h2>
-      <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">تسجيل الدخول لوحة التحكم المركزية</p>
-      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display:flex; flex-direction:column; gap:14px; text-align:right;">
-        <div class="field"><label>البريد الإلكتروني</label><input type="email" id="adminEmail" required placeholder="admin@flamingo.tn"></div>
-        <div class="field"><label>كلمة السر</label><input type="password" id="adminPassword" required placeholder="••••••••"></div>
-        <button type="submit" class="btn-admin" style="width:100%; margin-top:10px;">دخول</button>
-      </form>
-      <div id="adminLoginStatus" class="status-alert"></div>
-    </div>
-  </div>
-
   <!-- ADMIN DASHBOARD SHELL -->
-  <div id="adminShell" class="admin-shell hidden">
+  <div class="admin-shell">
     <aside class="admin-sidebar">
       <div>
         <div class="admin-brand">🦩 Flamingo Admin</div>
@@ -108,12 +93,9 @@
 
     <main class="admin-main">
       
-      <!-- 1. SCANNER SECTION & CAMERA -->
+      <!-- 1. SCANNER SECTION -->
       <section id="scannerSection">
-        <div class="admin-header">
-          <h2 class="admin-title">مسح QR Code الزبون وإسناد النقاط</h2>
-        </div>
-
+        <div class="admin-header"><h2 class="admin-title">مسح QR Code الزبون وإسناد النقاط</h2></div>
         <div class="panel-box">
           <h3>كاميرا مسح الـ QR (Scan Cam)</h3>
           <div id="reader" style="width: 100%; max-width: 400px; margin: 0 auto 20px; border-radius: 16px; overflow: hidden;"></div>
@@ -137,7 +119,6 @@
               <button type="button" class="btn-admin" onclick="addPointsToClient()">قبول وإضافة النقاط للزبون ✅</button>
             </div>
           </div>
-          <div id="scanStatus" class="status-alert"></div>
         </div>
       </section>
 
@@ -216,26 +197,23 @@
       el.className = `status-alert ${type}`;
     }
 
-    window.handleAdminLogin = async function(e) {
-      e.preventDefault();
-      showStatus($('adminLoginStatus'), 'جاري التحقق...', 'info');
-      const { data, error } = await _supabase.auth.signInWithPassword({
-        email: $('adminEmail').value.trim(),
-        password: $('adminPassword').value
-      });
-      if (error) {
-        showStatus($('adminLoginStatus'), 'خطأ في البياتات', 'error');
-      } else {
-        $('adminLoginModal').classList.add('hidden');$('adminShell').classList.remove('hidden');
-        loadHistory();
-        loadReservations();
-        initQrScanner();
+    // التحقق المباشر عند فتح الـ admin.html أن المستخدم هو المدير
+    async function verifyAdminAccess() {
+      const { data: { user } } = await _supabase.auth.getUser();
+      if (!user || user.email.toLowerCase() !== 'azizmaraouch@gmail.com') {
+        alert('غير مسموح بالدخول، يجيب تسجيل الدخول بحساب المدير أولاً!');
+        window.location.href = 'index.html';
+        return;
       }
-    };
+      loadHistory();
+      loadReservations();
+      initQrScanner();
+    }
+    verifyAdminAccess();
 
     window.handleAdminLogout = async function() {
       await _supabase.auth.signOut();
-      location.reload();
+      window.location.href = 'index.html';
     };
 
     window.switchAdminTab = function(sectionId, btn) {
@@ -244,73 +222,62 @@
       if (btn) btn.classList.add('active');
     };
 
-    // --- QR SCANNER CAMERA INTEGRATION ---
     function initQrScanner() {
-      const html5QrCode = new Html5Qrcode("reader");
-      html5QrCode.start(
-        { facingMode: "environment" },
-        { fps: 10, qrbox: { width: 250, height: 250 } },
-        async (decodedText) => {
-          // Format attendu: FLAMINGO-VIP:UUID ou l'UUID directement
-          let userId = decodedText;
-          if (decodedText.includes('FLAMINGO-VIP:')) {
-            userId = decodedText.split('FLAMINGO-VIP:')[1];
-          }
-          await fetchClientDetails(userId);
-        },
-        (errorMessage) => { /* Ignore scan errors en continu */ }
-      ).catch(err => {
-        console.error("Camera error:", err);
-      });
+      try {
+        const html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+          { facingMode: "environment" },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          async (decodedText) => {
+            let userId = decodedText;
+            if (decodedText.includes('FLAMINGO-VIP:')) {
+              userId = decodedText.split('FLAMINGO-VIP:')[1];
+            }
+            await fetchClientDetails(userId);
+          },
+          (err) => {}
+        ).catch(err => console.log(err));
+      } catch(e) {}
     }
 
     window.searchClientManually = async function() {
       const query = $('clientSearchInput').value.trim();
       if (!query) return;
-      
-      // Si c'est un format de QR code complet
       let userId = query;
       if (query.includes('FLAMINGO-VIP:')) {
         userId = query.split('FLAMINGO-VIP:')[1];
       }
 
-      const { data, error } = await _supabase
+      const { data } = await _supabase
         .from('profiles')
         .select('*')
         .or(`id.eq.${userId},email.eq.${query}`)
         .maybeSingle();
 
-      if (error || !data) {
+      if (!data) {
         alert('لم يتم العثور على هذا الزبون!');
-        $('clientResultBox').classList.add('hidden');
-        activeSearchedUser = null;
         return;
       }
       await fetchClientDetails(data.id);
     };
 
     async function fetchClientDetails(userId) {
-      // 1. Récupérer le profil
-      const { data: profile, error } = await _supabase
+      const { data: profile } = await _supabase
         .from('profiles')
         .select('*')
         .eq('id', userId)
         .maybeSingle();
 
-      if (error || !profile) {
-        alert('الزبون غير موجود في القاعدة!');
-        return;
-      }
+      if (!profile) return;
 
       activeSearchedUser = profile;
       $('resClientName').textContent = profile.full_name || 'زبون VIP';
       $('resClientEmail').textContent = profile.email \vert{}\vert{} '—';$('resClientPoints').textContent = profile.loyalty_points ?? 0;
 
-      // 2. Calculer le nombre de visites (scans) d'aujourd'hui
       const todayStart = new Date();
       todayStart.setHours(0,0,0,0);
 
-      const { count, error: countErr } = await _supabase
+      const { count } = await _supabase
         .from('loyalty_history')
         .select('*', { count: 'exact', head: true })
         .eq('user_id', userId)
@@ -320,37 +287,23 @@
       $('clientResultBox').classList.remove('hidden');
     }
 
-    // Ajouter les points et enregistrer le scan
     window.addPointsToClient = async function() {
       if (!activeSearchedUser) return;
       const pts = parseInt($('pointsToAdd').value) || 10;
       const newPoints = (activeSearchedUser.loyalty_points || 0) + pts;
 
-      const { error } = await _supabase
-        .from('profiles')
-        .update({ loyalty_points: newPoints })
-        .eq('id', activeSearchedUser.id);
+      await _supabase.from('profiles').update({ loyalty_points: newPoints }).eq('id', activeSearchedUser.id);
+      
+      await _supabase.from('loyalty_history').insert([{
+        user_id: activeSearchedUser.id,
+        points_added: pts,
+        admin_email: 'Azizmaraouch@gmail.com'
+      }]);
 
-      if (error) {
-        alert('فشل إضافة النقاط: ' + error.message);
-      } else {
-        // Enregistrer dans l'historique des scans
-        const adminEmail = (await _supabase.auth.getUser()).data.user?.email || 'Admin';
-        await _supabase.from('loyalty_history').insert([{
-          user_id: activeSearchedUser.id,
-          points_added: pts,
-          admin_email: adminEmail
-        }]);
-
-        alert(`تم قبول الـ Scan بنجاح وإضافة ${pts} نقطة للزبون!`);
-        $('resClientPoints').textContent = newPoints;
-        activeSearchedUser.loyalty_points = newPoints;
-        
-        // Mettre à jour le compteur du jour
-        let currentVisits = parseInt($('resClientVisitsToday').textContent) || 0;
-        $('resClientVisitsToday').textContent = currentVisits + 1;
-        loadHistory();
-      }
+      alert(`تمت إضافة ${pts} نقطة بنجاح للزبون!`);
+      $('resClientPoints').textContent = newPoints;
+      activeSearchedUser.loyalty_points = newPoints;
+      loadHistory();
     };
 
     window.handleCreateOffer = async function(e) {
@@ -374,48 +327,22 @@
 
     async function loadHistory() {
       const tbody = $('historyTableBody');
-      const { data } = await _supabase
-        .from('loyalty_history')
-        .select('*, profiles(full_name)')
-        .order('created_at', { ascending: false })
-        .limit(20);
-
+      const { data } = await _supabase.from('loyalty_history').select('*, profiles(full_name)').order('created_at', { ascending: false }).limit(20);
       if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted);">لا توجد عمليات مسجلة.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا توجد عمليات.</td></tr>';
         return;
       }
-
-      tbody.innerHTML = data.map(item => `
-        <tr>
-          <td>${new Date(item.created_at).toLocaleString('fr-FR')}</td>
-          <td><strong>${item.profiles?.full_name || 'زبون VIP'}</strong></td>
-          <td><span style="color:var(--terracotta); font-weight:800;">+${item.points_added} نقطة</span></td>
-          <td>${item.admin_email || 'Admin'}</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = data.map(i => `<tr><td>${new Date(i.created_at).toLocaleString('fr-FR')}</td><td><strong>${i.profiles?.full_name || 'VIP'}</strong></td><td style="color:var(--terracotta); font-weight:800;">+${i.points_added}</td><td>${i.admin_email}</td></tr>`).join('');
     }
 
     async function loadReservations() {
       const tbody = $('reservationsTableBody');
-      const { data } = await _supabase
-        .from('reservations')
-        .select('*')
-        .order('created_at', { ascending: false });
-
+      const { data } = await _supabase.from('reservations').select('*').order('created_at', { ascending: false });
       if (!data || data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted);">لا توجد حجوزات.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد حجوزات.</td></tr>';
         return;
       }
-
-      tbody.innerHTML = data.map(item => `
-        <tr>
-          <td><strong>${item.full_name}</strong></td>
-          <td>${item.phone}</td>
-          <td>${item.reservation_date} (${item.reservation_time})</td>
-          <td>${item.guests} أشخاص</td>
-          <td>${item.notes || '—'}</td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = data.map(r => `<tr><td><strong>${r.full_name}</strong></td><td>${r.phone}</td><td>${r.reservation_date} (${r.reservation_time})</td><td>${r.guests} أشخاص</td><td>${r.notes || '—'}</td></tr>`).join('');
     }
   </script>
 </body>
