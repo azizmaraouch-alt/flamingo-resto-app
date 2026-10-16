@@ -45,7 +45,7 @@
       z-index: 1;
     }
 
-    /* Sidebar Gauche / Bas */
+    /* Sidebar */
     .sidebar {
       width: 140px;
       background: rgba(252, 238, 237, 0.95);
@@ -217,7 +217,6 @@
 
     .hidden { display: none !important; }
 
-    /* Espace client / Profile style */
     .profile-box {
       background: white;
       border: 1px solid var(--border);
@@ -229,7 +228,6 @@
     .profile-box h3 { color: var(--raspberry); margin: 0 0 8px; font-size: 18px; }
     .profile-box p { font-size: 13px; color: var(--muted); margin: 6px 0; }
 
-    /* Offers grid inside app */
     .offers-app-grid {
       display: flex;
       flex-direction: column;
@@ -312,8 +310,8 @@
 
           <!-- Choix -->
           <div id="authChoice">
-            <button class="btn-action btn-raspberry" id="showLoginBtn">ندخل لحسابي ➔</button>
-            <button class="btn-action btn-outline-raspberry" id="showSignupBtn">نعمل حساب جديد ➔</button>
+            <button type="button" class="btn-action btn-raspberry" id="showLoginBtn">ندخل لحسابي ➔</button>
+            <button type="button" class="btn-action btn-outline-raspberry" id="showSignupBtn">نعمل حساب جديد ➔</button>
           </div>
 
           <!-- Login Form -->
@@ -329,7 +327,7 @@
               </div>
             </div>
             <button type="submit" class="btn-action btn-raspberry">تسجيل الدخول</button>
-            <button type="button" class="btn-action btn-outline-raspberry backToChoice">رجوع</button>
+            <button type="button" class="btn-action btn-outline-raspberry backToChoice" style="margin-top:8px;">رجوع</button>
           </form>
 
           <!-- Signup Form -->
@@ -353,7 +351,7 @@
               </div>
             </div>
             <button type="submit" class="btn-action btn-raspberry">إنشاء الحساب</button>
-            <button type="button" class="btn-action btn-outline-raspberry backToChoice">رجوع</button>
+            <button type="button" class="btn-action btn-outline-raspberry backToChoice" style="margin-top:8px;">رجوع</button>
           </form>
 
           <!-- Espace Client Connecté -->
@@ -364,7 +362,7 @@
               <p id="userPhone"></p>
               <p id="userPoints" style="color:var(--gold); font-weight:bold; margin-top:10px;"></p>
             </div>
-            <button class="btn-action btn-outline-raspberry" id="logoutBtn" style="margin-top: 15px;">تسجيل الخروج</button>
+            <button type="button" class="btn-action btn-outline-raspberry" id="logoutBtn" style="margin-top: 15px;">تسجيل الخروج</button>
           </div>
 
           <div id="authStatus" class="status"></div>
@@ -441,7 +439,7 @@
       el.className = `status ${type}`;
     }
 
-    // Navigation entre sections
+    // Navigation Sidebar
     const switchSection = (activeSec, activeBtn) => {
       $('sectionAuth').classList.add('hidden');
       $('sectionRes').classList.add('hidden');$('sectionOffers').classList.add('hidden');
@@ -461,13 +459,15 @@
       loadOffers();
     });
 
-    // Choix Auth
+    // Bascule entre Connexion et Inscription
     $('showLoginBtn').addEventListener('click', () => {
       $('authChoice').classList.add('hidden');$('loginForm').classList.remove('hidden');
+      $('signupForm').classList.add('hidden');$('authStatus').className = 'status';
     });
 
     $('showSignupBtn').addEventListener('click', () => {
       $('authChoice').classList.add('hidden');$('signupForm').classList.remove('hidden');
+      $('loginForm').classList.add('hidden');$('authStatus').className = 'status';
     });
 
     document.querySelectorAll('.backToChoice').forEach(btn => {
@@ -477,10 +477,11 @@
       });
     });
 
-    // Supabase Connexion
+    // Connexion Supabase
     $('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
+
       const { error } = await supabase.auth.signInWithPassword({
         email: $('loginEmail').value.trim(),
         password: $('loginPassword').value
@@ -494,10 +495,11 @@
       }
     });
 
-    // Supabase Inscription
+    // Inscription Supabase
     $('signupForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري إنشاء الحساب...', 'info');
+
       const { error } = await supabase.auth.signUp({
         email: $('signupEmail').value.trim(),
         password: $('signupPassword').value,
@@ -512,7 +514,7 @@
       if (error) {
         showStatus($('authStatus'), error.message, 'error');
       } else {
-        showStatus($('authStatus'), 'تم إنشاء الحساب بنجاح!', 'success');
+        showStatus($('authStatus'), 'تم إنشاء الحساب بنجاح! تفقد بريدك لتأكيد الحساب إن لزم.', 'success');
         await checkUserSession();
       }
     });
@@ -563,7 +565,6 @@
       currentUser = user;
 
       if (user) {
-        // Charger le profil de la table profiles
         const { data: profile } = await supabase
           .from('profiles')
           .select('*')
@@ -579,7 +580,7 @@
         const phone = profile?.phone || user.user_metadata?.phone || '—';
         const points = profile?.loyalty_points ?? 0;
 
-        $('welcomeText.textContent = `مرحبا بيك، ${name} ♡`;
+        $('welcomeText').textContent = `مرحبا بيك، ${name} ♡`;
         $('userEmail').textContent = `البريد: ${user.email}`;
         $('userPhone').textContent = `الهاتف: ${phone}`;
         $('userPoints').textContent = `✨ نقاط الوفاء: ${points} نقطة`;
