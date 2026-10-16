@@ -1,4 +1,206 @@
-<script>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#35151f">
+  <title>Flamingo Resto Café - Admin Control Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+
+  <style>
+    :root {
+      --wine: #35151f;
+      --terracotta: #a86d60;
+      --gold: #d5ad70;
+      --cream: #faf5ed;
+      --card-bg: #ffffff;
+      --text: #2a2022;
+      --muted: #7e6f73;
+      --border: #ebdcd8;
+      --shadow: 0 10px 30px rgba(53, 21, 31, 0.1);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100vh; font-family: "Cairo", sans-serif; background: var(--cream); color: var(--text); }
+    button, input, select, textarea { font-family: inherit; }
+    button { cursor: pointer; border: none; outline: none; }
+    .hidden { display: none !important; }
+
+    /* Login Screen */
+    .admin-login-overlay { position: fixed; inset: 0; background: var(--wine); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .admin-login-card { background: white; width: min(400px, 100%); border-radius: 28px; padding: 35px; text-align: center; }
+
+    .admin-shell { display: flex; min-height: 100vh; }
+    .admin-sidebar { width: 280px; background: var(--wine); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; border-left: 1px solid rgba(213,173,112,0.2); }
+    .admin-brand { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .admin-menu { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; color: #dfd5d8; background: transparent; font-size: 14px; font-weight: 700; text-align: right; width: 100%; transition: 0.2s; }
+    .admin-nav-btn:hover, .admin-nav-btn.active { background: var(--terracotta); color: white; }
+
+    .admin-main { flex: 1; padding: 40px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .admin-title { font-size: 26px; font-weight: 900; color: var(--wine); }
+
+    .panel-box { background: var(--card-bg); border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 30px; }
+    .panel-box h3 { color: var(--wine); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 13px; font-weight: 800; color: var(--wine); }
+    .field input, .field select, .field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 16px; font-size: 14px; background: #fff; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--terracotta); outline: none; }
+
+    .btn-admin { padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; background: var(--wine); color: white; transition: 0.2s; }
+    .btn-admin:hover { background: var(--terracotta); }
+    .btn-gold { background: var(--gold); color: var(--wine); }
+
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+    .data-table th, .data-table td { padding: 14px 18px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .data-table th { background: #f7f0ed; color: var(--wine); font-weight: 800; }
+
+    .status-alert { padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-top: 15px; display: none; text-align: center; }
+    .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; }
+    .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; }
+
+    @media (max-width: 768px) {
+      .admin-shell { flex-direction: column; }
+      .admin-sidebar { width: 100%; height: auto; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN LOGIN GATEWAY -->
+  <div id="adminLoginModal" class="admin-login-overlay">
+    <div class="admin-login-card">
+      <h2 style="color:var(--wine); font-weight:900; margin-bottom:6px;">Flamingo Admin</h2>
+      <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">تسجيل الدخول لوحة التحكم المركزية</p>
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display:flex; flex-direction:column; gap:14px; text-align:right;">
+        <div class="field"><label>البريد الإلكتروني</label><input type="email" id="adminEmail" required placeholder="Azizmaraouch@gmail.com"></div>
+        <div class="field"><label>كلمة السر</label><input type="password" id="adminPassword" required placeholder="••••••••"></div>
+        <button type="submit" class="btn-admin" style="width:100%; margin-top:10px;">دخول</button>
+      </form>
+      <div id="adminLoginStatus" class="status-alert"></div>
+    </div>
+  </div>
+
+  <!-- ADMIN DASHBOARD SHELL -->
+  <div id="adminShell" class="admin-shell hidden">
+    <aside class="admin-sidebar">
+      <div>
+        <div class="admin-brand">🦩 Flamingo Admin</div>
+        <div class="admin-menu">
+          <button type="button" class="admin-nav-btn active" onclick="switchAdminTab('scannerSection', this)">📷 ماسح الـ QR والكاميرا</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('offersSection', this)">✨ إدارة العروض</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('historySection', this)">📊 سجل Scans والنقاط</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('reservationsSection', this)">📅 حجوزات الطاولات</button>
+        </div>
+      </div>
+      <div>
+        <button type="button" class="admin-nav-btn" onclick="handleAdminLogout()" style="background:rgba(255,255,255,0.1); justify-content:center;">تسجيل الخروج 🚪</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+      
+      <!-- 1. SCANNER SECTION -->
+      <section id="scannerSection">
+        <div class="admin-header"><h2 class="admin-title">مسح QR Code الزبون وإسناد النقاط</h2></div>
+        <div class="panel-box">
+          <h3>كاميرا مسح الـ QR (Scan Cam)</h3>
+          <div id="reader" style="width: 100%; max-width: 400px; margin: 0 auto 20px; border-radius: 16px; overflow: hidden;"></div>
+          
+          <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px;">
+            <h3>أو البحث اليدوي بالـ ID أو البريد</h3>
+            <div style="display:flex; gap:12px;">
+              <input type="text" id="clientSearchInput" placeholder="أدخل ID العميل أو البريد..." style="flex:1; padding:12px; border:1.5px solid var(--border); border-radius:12px;">
+              <button type="button" class="btn-admin btn-gold" onclick="searchClientManually()">بحث</button>
+            </div>
+          </div>
+
+          <div id="clientResultBox" class="hidden" style="margin-top:20px; padding:20px; background:#fcf9f5; border-radius:16px; border:1px solid var(--gold);">
+            <h4 id="resClientName" style="color:var(--wine); font-size:18px; font-weight:800;"></h4>
+            <p id="resClientEmail" style="font-size:13px; color:var(--muted); margin:4px 0 8px;"></p>
+            <p style="font-size:14px; font-weight:700; color:var(--terracotta);">عدد الزيارات اليوم: <span id="resClientVisitsToday" style="color:var(--wine); font-weight:900;">0</span> مرات</p>
+            <p style="font-size:15px; font-weight:700; color:var(--terracotta);">رصيد النقاط الحالي: <span id="resClientPoints" style="color:var(--wine); font-size:20px; font-weight:900;">0</span> نقطة</p>
+            
+            <div style="display:flex; gap:10px; margin-top:15px; align-items:center;">
+              <input type="number" id="pointsToAdd" value="10" min="1" style="width:100px; padding:10px; border-radius:10px; border:1px solid var(--border);" placeholder="النقاط">
+              <button type="button" class="btn-admin" onclick="addPointsToClient()">قبول وإضافة النقاط للزبون ✅</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. OFFERS SECTION -->
+      <section id="offersSection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">إضافة وحذف العروض والسهرات</h2></div>
+        <div class="panel-box">
+          <h3>نشر عرض جديد</h3>
+          <form class="form-grid" onsubmit="handleCreateOffer(event)">
+            <div class="field"><label>العنوان</label><input type="text" id="offerTitle" required placeholder="مثال: Soirée Saxo"></div>
+            <div class="field"><label>الوسم</label><input type="text" id="offerTag" required placeholder="سهرة حية 🎵"></div>
+            <div class="field full"><label>الوصف</label><textarea id="offerDesc" rows="3" required></textarea></div>
+            <div class="field"><label>رابط الصورة</label><input type="url" id="offerImage" required placeholder="https://..."></div>
+            <div class="field"><label>الصلاحية</label><input type="text" id="offerValidity" required placeholder="كل سبت 20:00"></div>
+            <div class="field full"><button type="submit" class="btn-admin" style="margin-top:10px;">نشر العرض 🚀</button></div>
+          </form>
+          <div id="offerStatus" class="status-alert"></div>
+        </div>
+      </section>
+
+      <!-- 3. HISTORY SECTION -->
+      <section id="historySection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">سجل العمليات والنقاط المضافة</h2></div>
+        <div class="panel-box">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>التاريخ والوقت</th>
+                <th>اسم العميل</th>
+                <th>النقاط المضافة</th>
+                <th>المشرف</th>
+              </tr>
+            </thead>
+            <tbody id="historyTableBody">
+              <tr><td colspan="4" style="text-align:center; color:var(--muted);">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. RESERVATIONS SECTION -->
+      <section id="reservationsSection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">قائمة حجوزات الطاولات</h2></div>
+        <div class="panel-box">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الموعد</th>
+                <th>الأشخاص</th>
+                <th>ملاحظات</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsTableBody">
+              <tr><td colspan="5" style="text-align:center; color:var(--muted);">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script>
     const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
@@ -12,7 +214,7 @@
       el.className = `status-alert ${type}`;
     }
 
-    // 🚀 التحقق التلقائي عند فتح الموقع (Auto-Login check)
+    // Auto-check session on load
     async function checkExistingSession() {
       const { data: { user } } = await _supabase.auth.getUser();
       if (user && user.email.toLowerCase() === 'azizmaraouch@gmail.com') {
@@ -180,3 +382,5 @@
       tbody.innerHTML = data.map(r => `<tr><td><strong>${r.full_name}</strong></td><td>${r.phone}</td><td>${r.reservation_date} (${r.reservation_time})</td><td>${r.guests} أشخاص</td><td>${r.notes || '—'}</td></tr>`).join('');
     }
   </script>
+</body>
+</html>
