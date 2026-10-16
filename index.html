@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -106,92 +105,27 @@
     }
     .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(168, 109, 96, 0.45); }
 
-    /* 2. MAIN APP LAYOUT */
-    .app-shell { display: flex; min-height: 100vh; position: relative; z-index: 10; }
-
-    .navbar { width: 260px; background: var(--wine); display: flex; flex-direction: column; justify-content: space-between; padding: 28px 18px; border-left: 1px solid rgba(213, 173, 112, 0.2); }
-    .nav-brand { display: flex; align-items: center; gap: 12px; padding-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .nav-brand-img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; background: var(--terracotta); flex-shrink: 0; }
-    .nav-brand-img img { width: 100%; height: 100%; object-fit: cover; }
-    .nav-brand-title { color: white; font-weight: 800; font-size: 15px; line-height: 1.2; }
-    .nav-brand-title span { display: block; color: var(--gold); font-size: 11px; font-weight: 600; }
-
-    .nav-menu { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 16px; color: #dfd5d8; font-size: 14px; font-weight: 700; background: transparent; transition: all 0.2s ease; width: 100%; text-align: right; }
-    .nav-item:hover, .nav-item.active { background: var(--terracotta); color: white; box-shadow: 0 4px 15px rgba(168, 109, 96, 0.4); }
-    .nav-item svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
-
-    .user-profile-card { background: rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(213, 173, 112, 0.3); }
-    .user-profile-info { color: white; font-size: 12px; overflow: hidden; }
-    .user-profile-info strong { display: block; color: var(--gold); font-size: 13px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-
-    .btn-logout-icon { background: rgba(255, 255, 255, 0.15); color: white; padding: 8px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .btn-logout-icon:hover { background: #d93838; }
-
-    .app-main { flex: 1; padding: 32px; overflow-y: auto; max-width: 1000px; margin: 0 auto; width: 100%; }
-    .section-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .section-title { color: var(--wine); font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 10px; }
-    .section-badge { font-size: 12px; color: var(--terracotta-dark); font-weight: 700; background: var(--terracotta-light); padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); white-space: nowrap; }
-
-    .offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .card-item { background: var(--card-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); transition: transform 0.25s ease; }
-    .card-item:hover { transform: translateY(-4px); }
-    .card-img-wrap { position: relative; height: 170px; }
-    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .card-badge { position: absolute; top: 12px; right: 12px; background: var(--terracotta); color: white; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; }
-    .card-body { padding: 18px; }
-    .card-body h3 { color: var(--wine); font-size: 18px; font-weight: 800; margin-bottom: 6px; }
-    .card-body p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
-    .card-meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--terracotta-dark); font-weight: 800; }
-
-    .fidelity-card { background: linear-gradient(135deg, var(--wine) 0%, #4a1f2c 100%); border-radius: 28px; padding: 32px 24px; color: white; text-align: center; position: relative; overflow: hidden; border: 2px solid var(--gold); box-shadow: 0 20px 40px rgba(53, 21, 31, 0.25); }
-    .qr-container { background: white; padding: 16px; border-radius: 20px; display: inline-block; margin: 20px 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
-    .qr-container img { width: 170px; height: 170px; display: block; }
-    .points-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(213, 173, 112, 0.2); border: 1px solid var(--gold); padding: 8px 24px; border-radius: 999px; color: var(--gold); font-size: 20px; font-weight: 900; }
-
-    .form-container-box { background: white; border-radius: 26px; padding: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-
-    .games-banner { background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-dark) 100%); border-radius: 28px; padding: 35px 25px; color: white; text-align: center; box-shadow: 0 15px 35px rgba(168, 109, 96, 0.3); }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 25px; opacity: 0.8; pointer-events: none; }
-    .game-mini-card { background: rgba(255, 255, 255, 0.15); border-radius: 20px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.2); }
-
     .status-alert { padding: 12px 16px; border-radius: 14px; font-size: 13px; font-weight: 700; margin-top: 14px; display: none; text-align: center; }
     .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; border: 1px solid #b8ebca; }
     .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; border: 1px solid #f8b4b4; }
     .status-alert.info { display: block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
-
-    @media (max-width: 768px) {
-      .app-shell { flex-direction: column-reverse; }
-      .navbar { width: 100%; height: 72px; flex-direction: row; padding: 0 10px; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; border-left: none; border-top: 1px solid rgba(213, 173, 112, 0.3); }
-      .nav-brand, .user-profile-card { display: none; }
-      .nav-menu { flex-direction: row; justify-content: space-around; align-items: center; width: 100%; margin-top: 0; gap: 3px; }
-      .nav-item { flex-direction: column; gap: 3px; padding: 6px 3px; font-size: 10px; justify-content: center; border-radius: 12px; min-width: 0; }
-      .nav-item svg { width: 22px; height: 22px; }
-      .app-main { padding: 20px 16px 95px 16px; }
-      .section-title { font-size: 20px; }
-      .section-header { flex-wrap: wrap; }
-      .form-container-box { padding: 20px 16px; }
-      .offers-grid { grid-template-columns: 1fr; }
-    }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   </style>
 </head>
 
 <body>
   <div class="app-bg"></div>
 
-  <!-- 1. AUTH GATEWAY -->
+  <!-- AUTH GATEWAY -->
   <div id="authGateway" class="auth-overlay">
     <div class="auth-card">
       <div class="card-logo-wrap">
-        <img src="logo.png" id="appLogoImg" alt="Flamingo Resto Café Logo">
+        <img src="logo.png" id="appLogoImg" alt="Flamingo Logo">
       </div>
       <h1>Flamingo Resto Café</h1>
       <p class="tagline">♡ أهلاً بيك</p>
 
       <div class="auth-tabs">
-        <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthMode('login')">ندخل لحسابي</button>
-        <button type="button" class="auth-tab-btn" id="tabSignupBtn" onclick="switchAuthMode('signup')">نعمل حساب جديد</button>
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthMode('login')">تسجيل الدخول</button>
       </div>
 
       <form id="loginForm" class="form-grid" onsubmit="handleLogin(event)">
@@ -206,171 +140,8 @@
         <button type="submit" class="btn-primary">دخول لحسابي ➔</button>
       </form>
 
-      <form id="signupForm" class="form-grid hidden" onsubmit="handleSignup(event)">
-        <div class="field">
-          <label for="signupName">الاسم واللقب</label>
-          <input type="text" id="signupName" required placeholder="محمد علي" autocomplete="name">
-        </div>
-        <div class="field">
-          <label for="signupPhone">رقم الهاتف</label>
-          <input type="tel" id="signupPhone" required placeholder="50000000" autocomplete="tel">
-        </div>
-        <div class="field">
-          <label for="signupEmail">البريد الإلكتروني</label>
-          <input type="email" id="signupEmail" required placeholder="exemple@mail.com" autocomplete="email">
-        </div>
-        <div class="field">
-          <label for="signupPassword">كلمة السر (6 أحرف على الأقل)</label>
-          <input type="password" id="signupPassword" minlength="6" required placeholder="••••••••" autocomplete="new-password">
-        </div>
-        <button type="submit" class="btn-primary">تسجيل حساب جديد ➔</button>
-      </form>
-
       <div id="authStatus" class="status-alert" role="status" aria-live="polite"></div>
     </div>
-  </div>
-
-  <!-- 2. MAIN APP DASHBOARD -->
-  <div id="appShell" class="app-shell hidden">
-    <nav class="navbar">
-      <div>
-        <div class="nav-brand">
-          <div class="nav-brand-img"><img src="logo.png" alt="Flamingo Logo"></div>
-          <div class="nav-brand-title">Flamingo<span>CAFÉ - RESTAURANT</span></div>
-        </div>
-
-        <div class="nav-menu">
-          <button type="button" class="nav-item active" onclick="switchTab('offersTab', this)">
-            <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
-            <span>العروض والسهرات</span>
-          </button>
-          <button type="button" class="nav-item" onclick="switchTab('reserveTab', this)">
-            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
-            <span>حجز طاولة</span>
-          </button>
-          <button type="button" class="nav-item" onclick="switchTab('fidelityTab', this)">
-            <svg viewBox="0 0 24 24"><path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z"/></svg>
-            <span>بطاقة الوفاء VIP</span>
-          </button>
-          <button type="button" class="nav-item" onclick="switchTab('reclamTab', this)">
-            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
-            <span>الشكاوى والآراء</span>
-          </button>
-          <button type="button" class="nav-item" onclick="switchTab('gamesTab', this)">
-            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
-            <span>الألعاب والهدايا</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="user-profile-card">
-        <div class="user-profile-info">
-          <strong id="userNameDisplay">العميل</strong>
-          <span id="userEmailDisplay" style="font-size: 10px; color: #c0b0b5;">-</span>
-        </div>
-        <button type="button" class="btn-logout-icon" onclick="handleLogout()" title="تسجيل الخروج">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        </button>
-      </div>
-    </nav>
-
-    <!-- Content Area -->
-    <main class="app-main">
-      <section id="offersTab">
-        <div class="section-header">
-          <h2 class="section-title">العروض والسهرات الخاصّة</h2>
-          <span class="section-badge">جديد Flamingo</span>
-        </div>
-        <div class="offers-grid" id="offersContainer">
-          <div class="card-item">
-            <div class="card-img-wrap">
-              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Soirée">
-              <span class="card-badge">سهرة حية 🎵</span>
-            </div>
-            <div class="card-body">
-              <h3>Soirée Saxo &amp; Acoustic Lounge</h3>
-              <p>استمتعوا بأجمل الألحان المباشرة مع عشاء فاخر وأجواء عائلية راقية بـ Flamingo Mahdia.</p>
-              <div class="card-meta"><span>كل يوم سبت 20:00</span><span>دخول مجاني</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="reserveTab" class="hidden">
-        <div class="section-header">
-          <h2 class="section-title">حجز طاولة</h2>
-          <span class="section-badge">تأكيد حيني</span>
-        </div>
-        <div class="form-container-box">
-          <form class="form-grid" onsubmit="handleReservation(event)">
-            <div class="field"><label>الاسم الكامل</label><input type="text" id="resName" required></div>
-            <div class="field"><label>رقم الهاتف</label><input type="tel" id="resPhone" required></div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="field"><label>التاريخ</label><input type="date" id="resDate" required></div>
-              <div class="field"><label>التوقيت</label><input type="time" id="resTime" required></div>
-            </div>
-            <div class="field"><label>عدد الأشخاص</label>
-              <select id="resGuests">
-                <option value="1">1 شخص</option>
-                <option value="2" selected>2 أشخاص</option>
-                <option value="3">3 أشخاص</option>
-                <option value="4">4 أشخاص</option>
-                <option value="5+">مجموعة (5+)</option>
-              </select>
-            </div>
-            <div class="field"><label>ملاحظات</label><textarea id="resNotes" rows="3"></textarea></div>
-            <button type="submit" class="btn-primary">تأكيد طلب الحجز ➔</button>
-          </form>
-          <div id="resStatus" class="status-alert"></div>
-        </div>
-      </section>
-
-      <section id="fidelityTab" class="hidden">
-        <div class="section-header">
-          <h2 class="section-title">بطاقة الوفاء VIP</h2>
-          <span class="section-badge">Code QR</span>
-        </div>
-        <div class="fidelity-card">
-          <h2 style="font-weight: 900; font-size: 22px; color: var(--gold);">Flamingo Loyalty Club</h2>
-          <p style="font-size: 13px; color: #e0d0d5; margin-top: 4px;">إستظهر بهذا الـ QR Code عند الصندوق لكسب النقاط</p>
-          <div class="qr-container"><img id="userQrCodeImg" src="" alt="QR Code VIP"></div>
-          <div><div class="points-badge"><span id="pointsValue">0</span> <span style="font-size: 14px;">نقطة وفاء</span></div></div>
-          <p style="font-size: 11px; opacity: 0.7; margin-top: 15px;" id="qrUserId">ID: VIP-FLAMINGO</p>
-        </div>
-      </section>
-
-      <section id="reclamTab" class="hidden">
-        <div class="section-header">
-          <h2 class="section-title">الشكاوى والآراء</h2>
-          <span class="section-badge">صوتك مسموع</span>
-        </div>
-        <div class="form-container-box">
-          <form class="form-grid" onsubmit="handleReclamation(event)">
-            <div class="field"><label>نوع الرسالة</label>
-              <select id="reclamType">
-                <option value="avis">رأي / اقتراح (Avis)</option>
-                <option value="reclamation">شكوى (Réclamation)</option>
-              </select>
-            </div>
-            <div class="field"><label>نص الرسالة</label><textarea id="reclamMessage" rows="5" required></textarea></div>
-            <button type="submit" class="btn-primary">إرسال الرسالة ➔</button>
-          </form>
-          <div id="reclamStatus" class="status-alert"></div>
-        </div>
-      </section>
-
-      <section id="gamesTab" class="hidden">
-        <div class="games-banner">
-          <span style="background: var(--gold); color: var(--wine); font-weight: 800; font-size: 13px; padding: 4px 16px; border-radius: 20px;">قريباً</span>
-          <h2 style="font-size: 26px; font-weight: 900; margin: 10px 0 6px;">ركن الألعاب والجوائز 🎉</h2>
-          <p style="font-size: 14px; opacity: 0.9;">شاركونا قريباً في المسابقات اليومية وعجلة الحظ لربح نقاط وفاء ووجبات مجانية!</p>
-          <div class="games-grid">
-            <div class="game-mini-card"><div style="font-size: 32px;">🎡</div><h4>عجلة الحظ</h4></div>
-            <div class="game-mini-card"><div style="font-size: 32px;">🧠</div><h4>سؤال وجواب</h4></div>
-          </div>
-        </div>
-      </section>
-    </main>
   </div>
 
   <script>
@@ -378,7 +149,6 @@
     const SUPABASE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let currentUser = null;
     const $ = (id) => document.getElementById(id);
 
     function showStatus(el, msg, type) {
@@ -387,28 +157,11 @@
       el.className = `status-alert ${type}`;
     }
 
-    window.switchAuthMode = function(mode) {
-      if (mode === 'login') {
-        $('loginForm').classList.remove('hidden');$('signupForm').classList.add('hidden');
-        $('tabLoginBtn').classList.add('active');$('tabSignupBtn').classList.remove('active');
-      } else {
-        $('loginForm').classList.add('hidden');$('signupForm').classList.remove('hidden');
-        $('tabLoginBtn').classList.remove('active');$('tabSignupBtn').classList.add('active');
-      }
-      $('authStatus').className = 'status-alert';
-    };
-
-    // Vérification Admin et Redirection automatique
+    // 🚀 التحقق الفوري المباشر من الإيميل وتوجيهه للأمين
     async function checkAdminAndRedirect(user) {
       if (!user) return false;
       
-      const { data: profile } = await _supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (user.email === 'Azizmaraouch@gmail.com' || profile?.role === 'admin') {
+      if (user.email && user.email.trim().toLowerCase() === 'azizmaraouch@gmail.com') {
         window.location.href = 'admin.html';
         return true;
       }
@@ -418,17 +171,13 @@
     window.handleLogin = async function(e) {
       e.preventDefault();
       const emailInput = $('loginEmail').value.trim();
-      
-      // 🚀 تحويل مباشر وسريع للأمين (Admin) قبل أي شيء
-      if (emailInput.toLowerCase() === 'azizmaraouch@gmail.com') {
-        showStatus($('authStatus'), 'أهلاً بك يا سي المدير، جاري توجيهك...', 'success');
-        setTimeout(() => {
-          window.location.href = 'admin.html';
-        }, 500);
-        return;
-      }
 
-      showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
+      // التحقق السريع قبل إرسال الطلب
+      if (emailInput.toLowerCase() === 'azizmaraouch@gmail.com') {
+        showStatus($('authStatus'), 'مرحباً بك يا مدير، جاري توجيهك للوحة التحكم...', 'success');
+      } else {
+        showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
+      }
 
       try {
         const { data, error } = await _supabase.auth.signInWithPassword({
@@ -439,134 +188,26 @@
         if (error) {
           showStatus($('authStatus'), 'البريد أو كلمة السر غير صحيحة', 'error');
         } else {
-          showStatus($('authStatus'), 'تم الدخول بنجاح!', 'success');
-          await initUserSession();
-        }
-      } catch (err) {
-        showStatus($('authStatus'), 'خطأ في الاتصال بقاعدة البيانات', 'error');
-      }
-    };
-
-    window.handleSignup = async function(e) {
-      e.preventDefault();
-      showStatus($('authStatus'), 'جاري إنشاء الحساب...', 'info');
-
-      try {
-        const { data, error } = await _supabase.auth.signUp({
-          email: $('signupEmail').value.trim(),
-          password: $('signupPassword').value,
-          options: {
-            data: {
-              full_name: $('signupName').value.trim(),
-              phone: $('signupPhone').value.trim()
-            }
+          // التحقق والتوجيه الفوري
+          const isAdmin = await checkAdminAndRedirect(data.user);
+          if (!isAdmin) {
+            window.location.href = 'index.html'; // أو البقاء في واجهة العميل العادية
           }
-        });
-
-        if (error) {
-          showStatus($('authStatus'), error.message, 'error');
-        } else {
-          showStatus($('authStatus'), 'تم إنشاء الحساب بنجاح!', 'success');
-          await initUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'خطأ في الاتصال بقاعدة البيانات', 'error');
       }
     };
 
-    window.switchTab = function(tabId, btn) {
-      ['offersTab', 'reserveTab', 'fidelityTab', 'reclamTab', 'gamesTab'].forEach(id => $(id).classList.add('hidden'));$(tabId).classList.remove('hidden');
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-    };
-
-    window.handleLogout = async function() {
-      await _supabase.auth.signOut();
-      location.reload();
-    };
-
-    window.handleReservation = async function(e) {
-      e.preventDefault();
-      if (!currentUser) return;
-      showStatus($('resStatus'), 'جاري إرسال طلب الحجز...', 'info');
-
-      const { error } = await _supabase.from('reservations').insert([{
-        user_id: currentUser.id,
-        full_name: $('resName').value.trim(),
-        phone: $('resPhone').value.trim(),
-        reservation_date: $('resDate').value,
-        reservation_time: $('resTime').value,
-        guests: $('resGuests').value,
-        notes: $('resNotes').value.trim(),
-        status: 'pending'
-      }]);
-
-      if (error) {
-        showStatus($('resStatus'), error.message, 'error');
-      } else {
-        showStatus($('resStatus'), 'تم الحجز بنجاح! سنتصل بك للتأكيد.', 'success');
-        $('resNotes').value = '';
-      }
-    };
-
-    window.handleReclamation = async function(e) {
-      e.preventDefault();
-      if (!currentUser) return;
-      showStatus($('reclamStatus'), 'جاري إرسال الرسالة...', 'info');
-
-      const { error } = await _supabase.from('reclamations').insert([{
-        user_id: currentUser.id,
-        type: $('reclamType').value,
-        message: $('reclamMessage').value.trim(),
-        status: 'pending'
-      }]);
-
-      if (error) {
-        showStatus($('reclamStatus'), error.message, 'error');
-      } else {
-        showStatus($('reclamStatus'), 'شكرًا لك! تم إرسال رسالتك.', 'success');
-        $('reclamMessage').value = '';
-      }
-    };
-
-    async function initUserSession() {
-      try {
-        const { data: { user } } = await _supabase.auth.getUser();
-        if (!user) return;
-
-        const isAdmin = await checkAdminAndRedirect(user);
-        if (isAdmin) return;
-
-        currentUser = user;
-        const { data: profile } = await _supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        const name = profile?.full_name || user.user_metadata?.full_name || 'عميل Flamingo';
-        const phone = profile?.phone || user.user_metadata?.phone || '';
-        const points = profile?.loyalty_points ?? 0;
-
-        $('userNameDisplay').textContent = name;
-        $('userEmailDisplay').textContent = user.email;
-        $('resName').value = name;
-        $('resPhone').value = phone;
-        $('pointsValue').textContent = points;
-        $('qrUserId').textContent = `ID: VIP-${user.id.substring(0, 8).toUpperCase()}`;
-
-        const qrData = encodeURIComponent(`FLAMINGO-VIP:${user.id}`);
-        $('userQrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${qrData}`;
-
-        $('authGateway').classList.add('hidden');$('appShell').classList.remove('hidden');
-      } catch (e) {
-        console.error(e);
+    // التحقق التلقائي إذا كان الجلسة مفتوحة مسبقاً
+    async function initSession() {
+      const { data: { user } } = await _supabase.auth.getUser();
+      if (user) {
+        await checkAdminAndRedirect(user);
       }
     }
 
-    initUserSession();
+    initSession();
   </script>
 </body>
 </html>
-
-```
