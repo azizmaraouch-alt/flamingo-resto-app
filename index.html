@@ -1,934 +1,303 @@
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" dir="ltr">
 <head>
-  <link rel="manifest" href="/manifest.json">
-  <link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#35151f">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#35151f">
   <meta name="description" content="Flamingo Resto Café — Cuisine, convivialité et expériences gourmandes.">
   <title>Flamingo Resto Café</title>
 
+  <link rel="manifest" href="./manifest.json">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;1,400&display=swap" rel="stylesheet">
 
   <style>
     :root {
+      --raspberry: #b83b63;
+      --raspberry-dark: #8c2646;
+      --pink-bg: #fceeed;
       --wine: #35151f;
-      --wine-light: #572632;
       --gold: #d5ad70;
-      --cream: #faf5ed;
-      --white: #fffdf9;
       --text: #292322;
-      --muted: #817672;
-      --border: #e9ded2;
-      --green: #246b4b;
-      --radius: 18px;
+      --muted: #7d6b70;
+      --border: #f3dada;
+      --radius: 24px;
     }
-.brand-logo-img {
-  height: 48px;
-  width: auto;
-  object-fit: contain;
-  display: block;
-}
-    * { box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--text);
-      font-family: "DM Sans", sans-serif;
-    }
-    button, input, select, textarea { font: inherit; }
-    button, a { -webkit-tap-highlight-color: transparent; }
-    a { color: inherit; text-decoration: none; }
-    button { cursor: pointer; }
-    img { display: block; max-width: 100%; }
-    .container { width: min(1120px, 90%); margin: auto; }
 
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 10;
-      background: rgba(53, 21, 31, .97);
-      color: white;
-      border-bottom: 1px solid rgba(213,173,112,.22);
-    }
-    .nav {
-      min-height: 76px;
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; font-family: "Cairo", "DM Sans", sans-serif; background: var(--pink-bg); color: var(--text); }
+    button, input, select, textarea { font: inherit; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; }
+
+    /* App Layout */
+    .app-container {
       display: flex;
+      min-height: 100vh;
+      /* Image Placeholder lil background - badelha baad b 'background.jpg' */
+      background: url('https://via.placeholder.com/1920x1080/fceeed/b83b63?text=Flamingo+Background') center/cover no-repeat fixed;
+      position: relative;
+    }
+
+    .app-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(0,0,0,0.15);
+      z-index: 1;
+    }
+
+    /* Sidebar Gauche */
+    .sidebar {
+      width: 140px;
+      background: rgba(252, 238, 237, 0.95);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      gap: 22px;
+      padding: 30px 10px;
+      z-index: 10;
+      border-right: 1px solid rgba(255, 255, 255, 0.4);
     }
-    .brand {
+
+    /* Logo Flamingo el 7amra f taswira el sghira mta3 el sidebar */
+    .sidebar-logo img {
+      width: 70px;
+      height: 70px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 1.5px solid var(--gold);
+      padding: 5px;
+      background: #ffffff10;
+    }
+
+    .sidebar-nav {
       display: flex;
+      flex-direction: column;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
       align-items: center;
-      gap: 12px;
-      font-family: "Playfair Display", serif;
-      font-size: 21px;
+      gap: 6px;
+      padding: 12px 8px;
+      border-radius: 16px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 600;
+      transition: all 0.2s ease;
+    }
+
+    .nav-item.active, .nav-item:hover {
+      background: #f7dadd;
+      color: var(--raspberry-dark);
+    }
+
+    .nav-item svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .sidebar-footer {
+      text-align: center;
+      font-size: 10px;
+      color: var(--raspberry-dark);
       font-weight: 700;
     }
-    .brand-mark {
+
+    /* Main Content Area */
+    .main-content {
+      flex: 1;
       display: grid;
       place-items: center;
-      width: 42px;
-      height: 42px;
-      border: 1px solid var(--gold);
-      color: var(--gold);
+      padding: 20px;
+      z-index: 5;
+    }
+
+    /* Floating Card Center */
+    .auth-card {
+      background: rgba(255, 245, 245, 0.92);
+      backdrop-filter: blur(15px);
+      width: min(440px, 92%);
+      border-radius: 32px;
+      padding: 40px 30px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    /* Logo Flamingo fil card f nafs el style mta3 tsawerk */
+    .card-logo {
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 20px;
+      object-fit: contain;
       border-radius: 50%;
-      font-size: 24px;
+      border: 2px solid var(--gold);
+      padding: 10px;
+      background: #ffffff10;
     }
-    .nav-links { display: flex; align-items: center; gap: 24px; }
-    .nav-links a { font-size: 13px; color: #f4e9df; }
-    .nav-links a:hover { color: var(--gold); }
-    .nav-actions { display: flex; gap: 9px; align-items: center; }
 
-    .btn {
-      display: inline-flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      border: 1px solid transparent;
-      border-radius: 999px;
-      padding: 12px 19px;
+    .auth-card h1 {
+      font-family: 'Cairo', sans-serif;
+      color: var(--raspberry);
+      font-size: 26px;
+      margin: 10px 0;
       font-weight: 700;
-      font-size: 13px;
-      transition: .2s ease;
+      direction: rtl;
     }
-    .btn-gold { background: var(--gold); color: var(--wine); }
-    .btn-gold:hover { background: #e4c18b; transform: translateY(-1px); }
-    .btn-outline { border-color: rgba(255,255,255,.4); color: white; background: transparent; }
-    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
-    .btn-wine { background: var(--wine); color: white; }
-    .btn-wine:hover { background: var(--wine-light); }
-    .btn-light { border-color: var(--border); background: white; color: var(--wine); }
-    .btn:disabled { opacity: .6; cursor: wait; }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      color: white;
-      background:
-        linear-gradient(90deg, rgba(38,14,22,.96), rgba(38,14,22,.78) 48%, rgba(38,14,22,.3)),
-        url("https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=2000&q=85") center/cover;
+    .auth-card p.subtitle {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 30px;
+      direction: rtl;
     }
-    .hero-inner {
-      min-height: 590px;
-      padding: 90px 0;
+
+    /* Form & Buttons */
+    .btn-action {
+      width: 100%;
+      padding: 14px 20px;
+      border-radius: 999px;
+      font-size: 15px;
+      font-weight: 700;
       display: flex;
       align-items: center;
-    }
-    .hero-copy { max-width: 660px; }
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
+      justify-content: center;
       gap: 10px;
-      color: var(--gold);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
+      margin-bottom: 14px;
+      transition: transform 0.2s;
     }
-    .eyebrow:before { content: ""; width: 30px; height: 1px; background: var(--gold); }
-    h1, h2, h3 { font-family: "Playfair Display", serif; }
-    h1 {
-      margin: 22px 0;
-      font-size: clamp(43px, 7vw, 76px);
-      line-height: 1.08;
-      font-weight: 600;
-      letter-spacing: -1.5px;
-    }
-    h1 em { color: var(--gold); font-style: normal; }
-    .hero-copy p { max-width: 500px; color: #eadfdc; line-height: 1.9; font-size: 15px; }
-    .hero-buttons { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-    .hero-note { margin-top: 36px; color: #e1d1c6; font-size: 12px; }
-    .hero-note span { color: var(--gold); margin-right: 8px; }
 
-    .trust-strip {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
+    .btn-action:hover {
+      transform: translateY(-2px);
     }
-    .trust-inner {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 23px 0;
-      gap: 20px;
-    }
-    .trust-item { text-align: center; font-size: 12px; color: var(--muted); }
-    .trust-item strong { display: block; margin-bottom: 5px; color: var(--wine); font-size: 14px; }
 
-    section { padding: 86px 0; scroll-margin-top: 75px; }
-    .section-heading { text-align: center; max-width: 650px; margin: 0 auto 42px; }
-    .section-heading .eyebrow { color: #9b7540; }
-    h2 { color: var(--wine); font-size: clamp(31px, 4vw, 46px); margin: 15px 0; }
-    .section-heading p { color: var(--muted); font-size: 14px; line-height: 1.9; }
-
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 55px; align-items: center; }
-    .about-image {
-      min-height: 430px;
-      border-radius: 170px 170px 18px 18px;
-      background: url("https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1100&q=85") center/cover;
+    .btn-raspberry {
+      background: var(--raspberry);
+      color: white;
+      box-shadow: 0 8px 20px rgba(184, 59, 99, 0.3);
     }
-    .about-copy .eyebrow { color: #9b7540; }
-    .about-copy h2 { line-height: 1.18; }
-    .about-copy p { color: var(--muted); line-height: 1.95; font-size: 14px; }
-    .feature-list { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 25px 0; }
-    .feature { padding-left: 13px; border-left: 2px solid var(--gold); }
-    .feature strong { display: block; color: var(--wine); font-size: 13px; }
-    .feature span { color: var(--muted); font-size: 12px; }
 
-    .offers-section { background: #f0e7db; }
-    .offers-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
-    .offer-card {
-      overflow: hidden;
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      transition: transform .2s, box-shadow .2s;
+    .btn-outline-raspberry {
+      background: transparent;
+      border: 1.5px solid var(--raspberry);
+      color: var(--raspberry);
     }
-    .offer-card:hover { transform: translateY(-4px); box-shadow: 0 16px 35px #35151f12; }
-    .offer-image { width: 100%; height: 210px; object-fit: cover; background: #e7d8c6; }
-    .offer-content { padding: 23px; }
-    .offer-tag {
+
+    .forgot-link {
       display: inline-block;
-      background: #f5e8d4;
-      color: #785323;
-      border-radius: 30px;
-      padding: 6px 10px;
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: .6px;
+      margin-top: 15px;
+      color: var(--raspberry);
+      font-size: 12px;
+      text-decoration: underline;
+      direction: rtl;
     }
-    .offer-content h3 { margin: 15px 0 8px; color: var(--wine); font-size: 23px; }
-    .offer-content p { color: var(--muted); line-height: 1.7; font-size: 13px; }
-    .offer-validity { font-size: 11px; color: #927b69; }
-    .empty-state { grid-column: 1/-1; text-align: center; padding: 30px; color: var(--muted); }
 
-    .reservation-grid { display: grid; grid-template-columns: .8fr 1.2fr; gap: 45px; align-items: start; }
-    .reservation-info { padding-top: 12px; }
-    .reservation-info h2 { line-height: 1.2; }
-    .reservation-info p { color: var(--muted); line-height: 1.9; font-size: 14px; }
-    .info-row { display: flex; gap: 13px; margin-top: 24px; align-items: flex-start; }
-    .info-icon { display: grid; place-items: center; width: 42px; height: 42px; flex: 0 0 42px; border-radius: 12px; background: #f0e3d0; color: var(--wine); }
-    .info-row strong { display: block; color: var(--wine); font-size: 13px; }
-    .info-row span { display: block; color: var(--muted); font-size: 12px; margin-top: 4px; }
-
-    .form-card { padding: 30px; background: white; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: 0 15px 45px #35151f08; }
-    .form-card h3 { margin: 0 0 8px; color: var(--wine); font-size: 25px; }
-    .form-subtitle { margin: 0 0 23px; color: var(--muted); font-size: 12px; line-height: 1.7; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    .field { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-    .field.full { grid-column: 1/-1; }
-    .field label { color: #554843; font-size: 12px; font-weight: 700; }
-    .field input, .field select, .field textarea {
-      width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 12px;
-      outline: none;
-      background: #fffdfb;
-      color: var(--text);
-      font-size: 13px;
-    }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); box-shadow: 0 0 0 3px #d5ad7020; }
-    .field textarea { resize: vertical; min-height: 85px; }
-    .form-card .btn { width: 100%; margin-top: 18px; }
-    .status { display: none; margin-top: 15px; border-radius: 10px; padding: 12px; font-size: 12px; line-height: 1.6; }
-    .status.success { display: block; background: #e9f6ee; color: #1d6340; }
-    .status.error { display: block; background: #fff0ed; color: #9a3024; }
-    .status.info { display: block; background: #f7f0df; color: #75541f; }
-
-    .account-section { background: var(--wine); color: white; }
-    .account-section .section-heading h2 { color: white; }
-    .account-section .section-heading p { color: #dfceca; }
-    .account-section .eyebrow { color: var(--gold); }
-    .account-card { max-width: 620px; margin: auto; padding: 30px; border: 1px solid #ffffff26; background: #ffffff09; border-radius: var(--radius); }
-    .account-tabs { display: flex; gap: 8px; margin-bottom: 22px; }
-    .account-tab { flex: 1; border: 1px solid #ffffff38; background: transparent; color: white; border-radius: 9px; padding: 12px; font-weight: 700; font-size: 12px; }
-    .account-tab.active { background: var(--gold); color: var(--wine); border-color: var(--gold); }
-    .account-card .field label { color: #f1e2da; }
-    .account-card .field input { background: #ffffff12; border-color: #ffffff32; color: white; }
-    .account-card .field input::placeholder { color: #d5c3bf; }
-    .account-card .field input:focus { border-color: var(--gold); }
-    .account-card .form-subtitle { color: #dfceca; }
-    .account-card .status.info { background: #f7f0df; color: #75541f; }
-    .account-card .status.success { background: #e9f6ee; color: #1d6340; }
-    .account-card .status.error { background: #fff0ed; color: #9a3024; }
-    .account-result { margin-top: 20px; padding: 18px; background: #ffffff0c; border: 1px solid #ffffff25; border-radius: 12px; }
-    .account-result h3 { color: var(--gold); margin: 0 0 8px; }
-    .account-result p { font-size: 13px; color: #eee0dc; line-height: 1.7; overflow-wrap: anywhere; }
-    .hidden { display: none !important; }
-
-    footer { background: #241016; color: #eadbd6; padding: 45px 0 20px; }
-    .footer-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 35px; }
-    footer h3 { color: var(--gold); font-size: 20px; margin-top: 0; }
-    footer p, footer a { font-size: 12px; line-height: 1.9; color: #cdbcb8; }
-    .footer-links { display: flex; flex-direction: column; gap: 7px; }
-    .footer-bottom { border-top: 1px solid #ffffff20; margin-top: 30px; padding-top: 18px; text-align: center; font-size: 11px; color: #b9a5a1; }
-
-    .mobile-menu { display: none; }
-    .connection-indicator { position: fixed; bottom: 15px; right: 15px; z-index: 20; background: #fffdf9; border: 1px solid var(--border); border-radius: 30px; padding: 9px 13px; color: var(--muted); box-shadow: 0 4px 20px #0000000b; font-size: 10px; }
-    .connection-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #d39d46; margin-right: 6px; }
-    .connection-dot.online { background: #299b65; }
-    .connection-dot.offline { background: #c64d42; }
-
-    @media (max-width: 850px) {
-      .nav-links { display: none; }
-      .mobile-menu { display: inline-flex; }
-      .nav { flex-wrap: wrap; padding: 12px 0; }
-      .nav.open .nav-links { display: flex; flex-direction: column; align-items: flex-start; order: 3; width: 100%; padding: 12px 0; gap: 18px; }
-      .nav.open { flex-wrap: wrap; }
-      .about-grid, .reservation-grid { grid-template-columns: 1fr; gap: 30px; }
-      .about-image { min-height: 350px; border-radius: 120px 120px 18px 18px; }
-      .offers-grid { grid-template-columns: repeat(2, 1fr); }
-      .footer-grid { grid-template-columns: 1fr 1fr; }
-      .footer-grid > div:first-child { grid-column: 1/-1; }
-    }
-    @media (max-width: 560px) {
-      .container { width: 91%; }
-      .nav { min-height: 66px; gap: 10px; }
-      .brand { font-size: 17px; gap: 8px; }
-      .brand-mark { width: 35px; height: 35px; font-size: 20px; }
-      .nav-actions .btn { padding: 10px 12px; font-size: 11px; }
-      .hero-inner { min-height: 570px; padding: 70px 0; }
-      h1 { font-size: 46px; }
-      .hero-copy p { font-size: 14px; }
-      .trust-inner { grid-template-columns: 1fr; gap: 18px; }
-      section { padding: 65px 0; }
-      .offers-grid { grid-template-columns: 1fr; }
-      .offer-image { height: 225px; }
-      .form-card, .account-card { padding: 21px; }
-      .form-grid { grid-template-columns: 1fr; }
-      .field.full { grid-column: auto; }
-      .feature-list { gap: 15px; }
-      .footer-grid { grid-template-columns: 1fr; gap: 20px; }
-      .footer-grid > div:first-child { grid-column: auto; }
+    /* Mobile Responsive Header */
+    @media (max-width: 768px) {
+      .app-container { flex-direction: column-reverse; }
+      .sidebar {
+        width: 100%;
+        height: 70px;
+        flex-direction: row;
+        padding: 0 20px;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        border-right: none;
+        border-top: 1px solid rgba(255,255,255,0.4);
+      }
+      .sidebar-logo, .sidebar-footer { display: none; }
+      .sidebar-nav { flex-direction: row; justify-content: space-around; gap: 0; }
+      .main-content { padding-bottom: 90px; }
+      
+      .auth-card { padding: 30px 20px; border-radius: 24px; }
+      .card-logo { width: 100px; height: 100px; margin-bottom: 15px; }
+      .auth-card h1 { font-size: 22px; }
     }
   </style>
 </head>
 
 <body>
-  <header>
-    <div class="container nav" id="navbar">
-      <a href="#accueil" class="brand" aria-label="Flamingo accueil">
-  <img src="./logo.png" alt="Flamingo Resto Café" class="brand-logo-img">
-  <span>Flamingo <span style="color:var(--gold)">Resto Café</span></span>
-</a>
+  <div class="app-container">
+    <div class="app-overlay"></div>
 
-      <nav class="nav-links" aria-label="Navigation principale">
-        <a href="#accueil">Accueil</a>
-        <a href="#histoire">Notre histoire</a>
-        <a href="#offres">Nos offres</a>
-        <a href="#reservation">Réservation</a>
-        <a href="#compte">Mon compte</a>
+    <!-- Sidebar Gauche (Navigation) -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <!-- Logo Flamingo el 7amra sghira fil navbar[cite: 1] -->
+        <img src="./logo.png" alt="Flamingo Resto Café">
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#accueil" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+          <span>Accueil</span>
+        </a>
+        <a href="#menu" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M11 9H9V2H7v7H5V2H3v7c0 2.12 1.46 3.91 3.45 4.38l-.95 7.62H7.52l.95-7.62C10.46 12.91 11.92 11.12 11.92 9V2h-2v7zM16 2v18h2V12h3V2h-5z"/></svg>
+          <span>Menu</span>
+        </a>
+        <a href="#reservation" class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
+          <span>Réservation</span>
+        </a>
+        <a href="#compte" class="nav-item active">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span>Compte</span>
+        </a>
       </nav>
 
-      <div class="nav-actions">
-        <a class="btn btn-gold" href="#reservation">Réserver une table ↗</a>
-        <button class="btn btn-outline mobile-menu" id="menuToggle" aria-label="Ouvrir le menu">☰</button>
+      <div class="sidebar-footer">
+        Mahdia<br>Corniche 1
       </div>
-    </div>
-  </header>
+    </aside>
 
-  <main>
-    <section class="hero" id="accueil">
-      <div class="container hero-inner">
-        <div class="hero-copy">
-          <div class="eyebrow">Bienvenue chez Flamingo</div>
-          <h1>Un goût unique.<br>Un moment <em>précieux.</em></h1>
-          <p>
-            Découvrez un lieu où la cuisine, le café et la convivialité se rencontrent.
-            Installez-vous, partagez et savourez chaque instant.
-          </p>
-          <div class="hero-buttons">
-            <a href="#reservation" class="btn btn-gold">Réserver maintenant ↗</a>
-            <a href="#offres" class="btn btn-outline">Découvrir nos offres</a>
-          </div>
-          <div class="hero-note"><span>✦</span> Une expérience chaleureuse, à chaque visite.</div>
-        </div>
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <div class="auth-card">
+        <!-- Logo Flamingo el kbira fil card fil wost[cite: 1, 4] -->
+        <img src="./logo.png" alt="Flamingo Resto Café" class="card-logo">
+        
+        <h1>عسلامة بيك في Flamingo ♡</h1>
+        <p class="subtitle">ادخل لحسابك ولا اعمل حساب جديد<br>باش تكتشف العروض وتحجز طاولتك.</p>
+
+        <button class="btn-action btn-raspberry" id="loginBtn">
+          <span>ندخل لحسابي</span>
+          <span>➔</span>
+        </button>
+
+        <button class="btn-action btn-outline-raspberry" id="signupBtn">
+          <span>نعمل حساب جديد</span>
+          <span>➔</span>
+        </button>
+
+        <a href="#" class="forgot-link">نسيت كلمة السر ؟</a>
       </div>
-    </section>
-
-    <div class="trust-strip">
-      <div class="container trust-inner">
-        <div class="trust-item"><strong>✦ Une ambiance élégante</strong>Un cadre accueillant pour chaque occasion</div>
-        <div class="trust-item"><strong>✦ Des moments à partager</strong>En famille, entre amis ou en tête-à-tête</div>
-        <div class="trust-item"><strong>✦ Fidélité récompensée</strong>Retrouvez votre espace client en ligne</div>
-      </div>
-    </div>
-
-    <section id="histoire">
-      <div class="container about-grid">
-        <div class="about-image" role="img" aria-label="Intérieur chaleureux d'un restaurant"></div>
-        <div class="about-copy">
-          <div class="eyebrow">L'esprit Flamingo</div>
-          <h2>Plus qu'un café,<br>une expérience à vivre.</h2>
-          <p>
-            Chez Flamingo Resto Café, nous croyons que les meilleurs souvenirs
-            naissent autour d'une table. Notre espace est pensé pour vous accueillir
-            dans une atmosphère conviviale, soignée et pleine de caractère.
-          </p>
-          <p>
-            Pour un café, un repas ou un moment à célébrer, nous sommes heureux
-            de vous accueillir.
-          </p>
-          <div class="feature-list">
-            <div class="feature"><strong>Un accueil chaleureux</strong><span>Le plaisir de vous recevoir</span></div>
-            <div class="feature"><strong>Un cadre soigné</strong><span>Confort et élégance</span></div>
-            <div class="feature"><strong>Des offres exclusives</strong><span>Découvrez les nouveautés</span></div>
-            <div class="feature"><strong>Un espace fidélité</strong><span>Suivez vos avantages</span></div>
-          </div>
-          <a href="#reservation" class="btn btn-wine">Planifier ma visite ↗</a>
-        </div>
-      </div>
-    </section>
-
-    <section class="offers-section" id="offres">
-      <div class="container">
-        <div class="section-heading">
-          <div class="eyebrow">À découvrir</div>
-          <h2>Nos offres du moment</h2>
-          <p>Retrouvez ici les offres et actualités publiées par Flamingo Resto Café.</p>
-        </div>
-        <div class="offers-grid" id="offersGrid">
-          <div class="empty-state">Chargement des offres…</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="reservation">
-      <div class="container reservation-grid">
-        <div class="reservation-info">
-          <div class="eyebrow" style="color:#9b7540">Votre prochaine visite</div>
-          <h2>Réservez votre<br>moment Flamingo.</h2>
-          <p>
-            Complétez le formulaire pour envoyer votre demande de réservation.
-            Votre réservation sera en attente jusqu'à sa confirmation par l'équipe.
-          </p>
-          <div class="info-row">
-            <div class="info-icon">◷</div>
-            <div><strong>Choisissez votre créneau</strong><span>Sélectionnez une date et une heure.</span></div>
-          </div>
-          <div class="info-row">
-            <div class="info-icon">♧</div>
-            <div><strong>Précisez votre groupe</strong><span>Indiquez le nombre de personnes.</span></div>
-          </div>
-          <div class="info-row">
-            <div class="info-icon">♡</div>
-            <div><strong>Confirmation par l'équipe</strong><span>Votre demande n'est pas confirmée automatiquement.</span></div>
-          </div>
-        </div>
-
-        <div class="form-card">
-          <h3>Demande de réservation</h3>
-          <p class="form-subtitle">Connectez-vous à votre compte pour envoyer une demande.</p>
-          <form id="reservationForm">
-            <div class="form-grid">
-              <div class="field">
-                <label for="reservationName">Nom complet</label>
-                <input id="reservationName" name="name" required maxlength="100" autocomplete="name" placeholder="Votre nom">
-              </div>
-              <div class="field">
-                <label for="reservationPhone">Téléphone</label>
-                <input id="reservationPhone" name="phone" required maxlength="30" autocomplete="tel" placeholder="Votre numéro">
-              </div>
-              <div class="field">
-                <label for="reservationDate">Date</label>
-                <input id="reservationDate" name="date" type="date" required>
-              </div>
-              <div class="field">
-                <label for="reservationTime">Heure</label>
-                <input id="reservationTime" name="time" type="time" required>
-              </div>
-              <div class="field">
-                <label for="reservationGuests">Nombre de personnes</label>
-                <select id="reservationGuests" name="guests" required>
-                  <option value="1">1 personne</option>
-                  <option value="2" selected>2 personnes</option>
-                  <option value="3">3 personnes</option>
-                  <option value="4">4 personnes</option>
-                  <option value="5">5 personnes</option>
-                  <option value="6">6 personnes</option>
-                  <option value="7">7 personnes</option>
-                  <option value="8">8 personnes</option>
-                  <option value="9">9 personnes</option>
-                  <option value="10">10 personnes</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="reservationEmail">E-mail du compte</label>
-                <input id="reservationEmail" name="email" type="email" readonly placeholder="Connectez-vous d'abord">
-              </div>
-              <div class="field full">
-                <label for="reservationNotes">Notes (facultatif)</label>
-                <textarea id="reservationNotes" name="notes" maxlength="1000" placeholder="Une demande particulière ?"></textarea>
-              </div>
-            </div>
-            <button class="btn btn-wine" id="reservationSubmit" type="submit">Envoyer ma demande ↗</button>
-            <div id="reservationStatus" class="status" role="status" aria-live="polite"></div>
-          </form>
-        </div>
-      </div>
-    </section>
-
-    <section class="account-section" id="compte">
-      <div class="container">
-        <div class="section-heading">
-          <div class="eyebrow">Votre espace personnel</div>
-          <h2>Bienvenue dans votre univers Flamingo.</h2>
-          <p>Créez votre compte ou connectez-vous pour gérer vos réservations et accéder à votre espace fidélité.</p>
-        </div>
-
-        <div class="account-card">
-          <div id="authForms">
-            <div class="account-tabs">
-              <button type="button" class="account-tab active" id="loginTab">Connexion</button>
-              <button type="button" class="account-tab" id="signupTab">Créer un compte</button>
-            </div>
-
-            <form id="loginForm">
-              <p class="form-subtitle">Connectez-vous avec l'adresse e-mail de votre compte.</p>
-              <div class="form-grid">
-                <div class="field full">
-                  <label for="loginEmail">Adresse e-mail</label>
-                  <input id="loginEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com">
-                </div>
-                <div class="field full">
-                  <label for="loginPassword">Mot de passe</label>
-                  <input id="loginPassword" type="password" autocomplete="current-password" minlength="6" required placeholder="Votre mot de passe">
-                </div>
-              </div>
-              <button class="btn btn-gold" type="submit" id="loginSubmit">Se connecter</button>
-            </form>
-
-            <form id="signupForm" class="hidden">
-              <p class="form-subtitle">Créez votre espace personnel Flamingo.</p>
-              <div class="form-grid">
-                <div class="field full">
-                  <label for="signupName">Nom complet</label>
-                  <input id="signupName" autocomplete="name" maxlength="100" required placeholder="Votre nom complet">
-                </div>
-                <div class="field full">
-                  <label for="signupPhone">Téléphone</label>
-                  <input id="signupPhone" type="tel" autocomplete="tel" maxlength="30" required placeholder="Votre numéro">
-                </div>
-                <div class="field full">
-                  <label for="signupEmail">Adresse e-mail</label>
-                  <input id="signupEmail" type="email" autocomplete="email" required placeholder="vous@exemple.com">
-                </div>
-                <div class="field full">
-                  <label for="signupPassword">Mot de passe (6 caractères minimum)</label>
-                  <input id="signupPassword" type="password" autocomplete="new-password" minlength="6" required placeholder="Choisissez un mot de passe">
-                </div>
-              </div>
-              <button class="btn btn-gold" type="submit" id="signupSubmit">Créer mon compte</button>
-            </form>
-          </div>
-
-          <div id="authStatus" class="status" role="status" aria-live="polite"></div>
-
-          <div id="accountPanel" class="account-result hidden">
-            <h3>Votre espace personnel</h3>
-            <p id="accountWelcome"></p>
-            <p id="accountDetails"></p>
-            <p id="accountPoints"></p>
-            <button class="btn btn-outline" type="button" id="logoutButton">Se déconnecter</button>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h3>Flamingo Resto Café</h3>
-          <p>Un lieu chaleureux pour partager de bons moments.<br>Nous serons ravis de vous accueillir.</p>
-        </div>
-        <div>
-          <h3>Navigation</h3>
-          <div class="footer-links">
-            <a href="#accueil">Accueil</a>
-            <a href="#histoire">Notre histoire</a>
-            <a href="#offres">Nos offres</a>
-            <a href="#reservation">Réservation</a>
-          </div>
-        </div>
-        <div>
-          <h3>Votre compte</h3>
-          <div class="footer-links">
-            <a href="#compte">Connexion / Inscription</a>
-            <a href="#reservation">Réserver une table</a>
-            <a href="#offres">Offres du moment</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-bottom">© <span id="currentYear"></span> Flamingo Resto Café. Tous droits réservés.</div>
-    </div>
-  </footer>
-
-  <div class="connection-indicator" id="connectionIndicator">
-    <span class="connection-dot" id="connectionDot"></span>
-    <span id="connectionText">Initialisation…</span>
+    </main>
   </div>
 
   <script type="module">
     import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
-    // Configuration publique du projet Supabase.
-    // Ne jamais mettre de clé service_role ou secret ici.
     const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-    const $ = (id) => document.getElementById(id);
-
-    $('currentYear').textContent = new Date().getFullYear();
-
-    function showStatus(element, message, type = 'info') {
-      element.textContent = message;
-      element.className = `status ${type}`;
-    }
-
-    function setConnection(ok, message) {
-      $('connectionDot').className = `connection-dot ${ok ? 'online' : 'offline'}`;
-      $('connectionText').textContent = message;
-    }
-
-    function friendlyError(error) {
-      const message = error?.message || 'Une erreur inattendue est survenue.';
-      if (/invalid login credentials/i.test(message)) return 'E-mail ou mot de passe incorrect.';
-      if (/email not confirmed/i.test(message)) return 'Confirmez votre adresse e-mail avant de vous connecter.';
-      if (/user already registered/i.test(message)) return 'Cette adresse e-mail possède déjà un compte.';
-      if (/row-level security|permission denied/i.test(message)) return 'Accès refusé par les règles de sécurité Supabase. Les politiques RLS doivent être configurées.';
-      if (/foreign key/i.test(message)) return 'Le lien entre les tables doit être vérifié dans Supabase.';
-      return message;
-    }
-
-    function safeText(value) {
-      return String(value ?? '');
-    }
-
-    function imageForOffer(url) {
-      const fallback = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80';
-      if (!url) return fallback;
-      try {
-        const parsed = new URL(url);
-        if (parsed.protocol === 'https:' || parsed.protocol === 'http:') return parsed.href;
-      } catch {}
-      return fallback;
-    }
-
-    function makeOfferCard(offer) {
-      const article = document.createElement('article');
-      article.className = 'offer-card';
-
-      const image = document.createElement('img');
-      image.className = 'offer-image';
-      image.src = imageForOffer(offer.image_url);
-      image.alt = safeText(offer.title || 'Offre Flamingo');
-      image.loading = 'lazy';
-      image.onerror = () => {
-        image.onerror = null;
-        image.src = 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=900&q=80';
-      };
-
-      const content = document.createElement('div');
-      content.className = 'offer-content';
-
-      const tag = document.createElement('span');
-      tag.className = 'offer-tag';
-      tag.textContent = offer.tag || 'Flamingo';
-
-      const title = document.createElement('h3');
-      title.textContent = offer.title || 'Offre Flamingo';
-
-      const description = document.createElement('p');
-      description.textContent = offer.description || 'Découvrez cette offre chez Flamingo Resto Café.';
-
-      const validity = document.createElement('div');
-      validity.className = 'offer-validity';
-      validity.textContent = offer.validity ? `Validité : ${offer.validity}` : '';
-
-      content.append(tag, title, description, validity);
-      article.append(image, content);
-      return article;
-    }
-
-    async function loadOffers() {
-      const grid = $('offersGrid');
-      grid.replaceChildren();
-
-      const { data, error } = await supabase
-        .from('offers')
-        .select('id,title,description,tag,validity,image_url')
-        .eq('active', true)
-        .order('created_at', { ascending: false });
-
-      if (error) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.textContent = 'Les offres ne sont pas disponibles pour le moment. Vérifiez les politiques RLS de la table offers.';
-        grid.append(empty);
-        console.error('Chargement des offres :', error.message);
-        return;
-      }
-
-      if (!data || data.length === 0) {
-        const empty = document.createElement('div');
-        empty.className = 'empty-state';
-        empty.textContent = 'Aucune offre publiée pour le moment. Revenez bientôt !';
-        grid.append(empty);
-        return;
-      }
-
-      data.forEach((offer) => grid.append(makeOfferCard(offer)));
-    }
-
-    let currentUser = null;
-    let currentProfile = null;
-
-    async function loadProfile(user) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('id,full_name,phone,email,role,loyalty_points')
-        .eq('id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Chargement du profil :', error.message);
-        currentProfile = null;
-        return;
-      }
-
-      currentProfile = data;
-    }
-
-    function renderAuthState() {
-      const loggedIn = Boolean(currentUser);
-      $('authForms').classList.toggle('hidden', loggedIn);
-      $('accountPanel').classList.toggle('hidden', !loggedIn);
-
-      $('reservationEmail').value = currentUser?.email || '';
-
-      if (!loggedIn) return;
-
-      const name = currentProfile?.full_name || currentUser.email || 'Client Flamingo';
-      $('accountWelcome').textContent = `Bienvenue, ${name} !`;
-      $('accountDetails').textContent =
-        `E-mail : ${currentUser.email || '—'} · Téléphone : ${currentProfile?.phone || '—'}`;
-      $('accountPoints').textContent =
-        `Points fidélité : ${currentProfile?.loyalty_points ?? 0}`;
-    }
-
-    async function refreshSession() {
-      const { data, error } = await supabase.auth.getSession();
-
-      if (error) {
-        setConnection(false, 'Erreur de connexion');
-        console.error(error.message);
-        return;
-      }
-
-      currentUser = data.session?.user || null;
-      currentProfile = null;
-
-      if (currentUser) await loadProfile(currentUser);
-
-      renderAuthState();
-      setConnection(true, 'Supabase connecté');
-    }
-
-    function switchAuthTab(tab) {
-      const signup = tab === 'signup';
-      $('loginForm').classList.toggle('hidden', signup);
-      $('signupForm').classList.toggle('hidden', !signup);
-      $('loginTab').classList.toggle('active', !signup);
-      $('signupTab').classList.toggle('active', signup);
-      $('authStatus').className = 'status';
-      $('authStatus').textContent = '';
-    }
-
-    $('loginTab').addEventListener('click', () => switchAuthTab('login'));
-    $('signupTab').addEventListener('click', () => switchAuthTab('signup'));
-
-    $('loginForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const button = $('loginSubmit');
-      button.disabled = true;
-      button.textContent = 'Connexion…';
-
-      try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: $('loginEmail').value.trim(),
-          password: $('loginPassword').value
-        });
-
-        if (error) throw error;
-
-        await refreshSession();
-        showStatus($('authStatus'), 'Connexion réussie. Bienvenue chez Flamingo !', 'success');
-      } catch (error) {
-        showStatus($('authStatus'), friendlyError(error), 'error');
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Se connecter';
-      }
+    document.getElementById('loginBtn').addEventListener('click', () => {
+      alert('Se connecter avec Supabase');
     });
 
-    $('signupForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const button = $('signupSubmit');
-      button.disabled = true;
-      button.textContent = 'Création du compte…';
-
-      const fullName = $('signupName').value.trim();
-      const phone = $('signupPhone').value.trim();
-      const email = $('signupEmail').value.trim();
-      const password = $('signupPassword').value;
-
-      try {
-        const { data, error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            data: {
-              full_name: fullName,
-              phone
-            }
-          }
-        });
-
-        if (error) throw error;
-
-        if (data.session) {
-          currentUser = data.user;
-          await loadProfile(currentUser);
-          renderAuthState();
-          showStatus($('authStatus'), 'Compte créé avec succès !', 'success');
-        } else {
-          showStatus(
-            $('authStatus'),
-            'Inscription envoyée. Consultez votre boîte e-mail pour confirmer votre compte avant de vous connecter.',
-            'success'
-          );
-        }
-      } catch (error) {
-        showStatus($('authStatus'), friendlyError(error), 'error');
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Créer mon compte';
-      }
+    document.getElementById('signupBtn').addEventListener('click', () => {
+      alert('Créer un compte Supabase');
     });
-
-    $('logoutButton').addEventListener('click', async () => {
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        showStatus($('authStatus'), friendlyError(error), 'error');
-        return;
-      }
-
-      currentUser = null;
-      currentProfile = null;
-      renderAuthState();
-      showStatus($('authStatus'), 'Vous êtes déconnecté.', 'success');
-      switchAuthTab('login');
-    });
-
-    $('reservationDate').min = new Date().toLocaleDateString('en-CA');
-
-    $('reservationForm').addEventListener('submit', async (event) => {
-      event.preventDefault();
-      const button = $('reservationSubmit');
-      const status = $('reservationStatus');
-
-      if (!currentUser) {
-        showStatus(status, 'Connectez-vous ou créez un compte dans la section « Mon compte » avant de réserver.', 'error');
-        $('compte').scrollIntoView({ behavior: 'smooth' });
-        return;
-      }
-
-      const reservationDate = $('reservationDate').value;
-      const reservationTime = $('reservationTime').value;
-      const guests = Number($('reservationGuests').value);
-      const notes = $('reservationNotes').value.trim();
-
-      if (!reservationDate || !reservationTime || reservationDate < new Date().toLocaleDateString('en-CA')) {
-        showStatus(status, 'Choisissez une date valide et une heure pour votre réservation.', 'error');
-        return;
-      }
-
-      if (!Number.isInteger(guests) || guests < 1 || guests > 10) {
-        showStatus(status, 'Le nombre de personnes doit être compris entre 1 et 10.', 'error');
-        return;
-      }
-
-      button.disabled = true;
-      button.textContent = 'Envoi…';
-
-      try {
-        const { error } = await supabase.from('reservations').insert({
-          user_id: currentUser.id,
-          user_name: currentProfile?.full_name || '',
-          user_email: currentUser.email || '',
-          user_phone: currentProfile?.phone || '',
-          reservation_date: reservationDate,
-          reservation_time: reservationTime,
-          guests,
-          notes,
-          status: 'pending'
-        });
-
-        if (error) throw error;
-
-        showStatus(status, 'Votre demande a été envoyée ! Elle reste en attente de confirmation par l’équipe Flamingo.', 'success');
-        $('reservationForm').reset();
-        $('reservationEmail').value = currentUser.email || '';
-        $('reservationDate').min = new Date().toLocaleDateString('en-CA');
-      } catch (error) {
-        showStatus(status, friendlyError(error), 'error');
-        console.error('Création de réservation :', error.message);
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Envoyer ma demande ↗';
-      }
-    });
-
-    $('menuToggle').addEventListener('click', () => {
-      $('navbar').classList.toggle('open');
-    });
-
-    document.querySelectorAll('.nav-links a').forEach((link) => {
-      link.addEventListener('click', () => $('navbar').classList.remove('open'));
-    });
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'INITIAL_SESSION') return;
-
-      currentUser = session?.user || null;
-
-      // Avoid performing additional Supabase requests inside this callback.
-      setTimeout(async () => {
-        if (currentUser) await loadProfile(currentUser);
-        else currentProfile = null;
-        renderAuthState();
-      }, 0);
-    });
-
-    try {
-      await refreshSession();
-      await loadOffers();
-    } catch (error) {
-      setConnection(false, 'Connexion indisponible');
-      console.error(error);
-    }
   </script>
 </body>
 </html>
