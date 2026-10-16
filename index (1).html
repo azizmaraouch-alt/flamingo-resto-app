@@ -3,65 +3,59 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Flamingo Resto Café</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    * { box-sizing: border-box; }
     body {
       margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #151313;
-      color: #fff;
       font-family: Arial, sans-serif;
-      padding: 24px;
-    }
-    main {
-      width: 100%;
-      max-width: 480px;
-      padding: 32px 24px;
-      border: 1px solid #4c3038;
-      border-radius: 20px;
+      background: #fff5f5;
+      color: #40252c;
       text-align: center;
-      background: #211c1e;
     }
-    h1 { color: #ff83a4; letter-spacing: 3px; }
-    p { color: #ddd; line-height: 1.6; }
-    #status { margin-top: 24px; font-size: 14px; }
+    header {
+      background: #d94f70;
+      color: white;
+      padding: 35px 15px;
+    }
+    h1 { margin: 0; font-size: 2.2rem; }
+    main { padding: 35px 20px; }
+    .card {
+      max-width: 500px;
+      margin: 20px auto;
+      padding: 25px;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 4px 15px #00000012;
+    }
+    button {
+      background: #d94f70;
+      color: white;
+      border: 0;
+      border-radius: 8px;
+      padding: 12px 22px;
+      cursor: pointer;
+    }
+    footer { padding: 20px; color: #75545c; }
   </style>
 </head>
 <body>
+  <header>
+    <h1>🦩 Flamingo Resto Café</h1>
+    <p>Bienvenue chez nous !</p>
+  </header>
+
   <main>
-    <h1>FLAMINGO</h1>
-    <p>RESTO CAFÉ</p>
-    <p>Bienvenue dans votre espace fidélité.</p>
-    <div id="status">Préparation de la connexion...</div>
+    <div class="card">
+      <h2>Notre restaurant</h2>
+      <p>Découvrez notre espace et nos services.</p>
+      <p>🍽️ Restaurant · ☕ Café · ❤️ Bienvenue</p>
+      <button onclick="alert('Bienvenue chez Flamingo !')">
+        Découvrir
+      </button>
+    </div>
   </main>
 
-  <script>
-    const SUPABASE_URL =
-      "https://dnbcanwxikpysscslotn.supabase.co";
-
-    const SUPABASE_KEY =
-      "sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT";
-
-    const status = document.getElementById("status");
-
-    if (!window.supabase) {
-      status.textContent =
-        "Bibliothèque Supabase indisponible. Réessayez.";
-    } else {
-      const client = window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-      );
-
-      status.textContent =
-        "Interface prête. Prochaine étape : Auth et sécurité RLS.";
-      window.flamingoSupabase = client;
-    }
-  </script>
+  <footer>© 2026 Flamingo Resto Café</footer>
 </body>
 </html>
