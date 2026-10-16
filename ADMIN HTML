@@ -1,0 +1,423 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#35151f">
+  <title>Administration | Flamingo Resto Café</title>
+  <style>
+    :root {
+      --wine: #35151f;
+      --gold: #d5ad70;
+      --cream: #faf5ed;
+      --white: #fff;
+      --text: #302628;
+      --muted: #817672;
+      --border: #e9ded2;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--text);
+      font-family: Arial, sans-serif;
+    }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    header {
+      background: var(--wine);
+      color: white;
+      padding: 18px 5%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    header h1 { margin: 0; font-size: 21px; }
+    header h1 span { color: var(--gold); }
+    header a { color: white; text-decoration: none; font-size: 13px; }
+    main { width: min(1150px, 92%); margin: 35px auto; }
+    .panel {
+      padding: 25px;
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 30px #35151f08;
+    }
+    h2 { color: var(--wine); margin-top: 0; }
+    .muted { color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .field { display: grid; gap: 7px; margin-bottom: 15px; }
+    label { font-size: 13px; font-weight: bold; }
+    input, select {
+      width: 100%;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      background: #fffdfb;
+    }
+    .btn {
+      border: 0;
+      border-radius: 9px;
+      padding: 12px 16px;
+      font-weight: bold;
+    }
+    .btn-gold { background: var(--gold); color: var(--wine); }
+    .btn-wine { background: var(--wine); color: white; }
+    .btn-light { background: #f1e7dc; color: var(--wine); }
+    .btn:disabled { opacity: .55; cursor: wait; }
+    .hidden { display: none !important; }
+    .status {
+      display: none;
+      padding: 12px;
+      margin-top: 14px;
+      border-radius: 9px;
+      font-size: 13px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+    .status.success { display: block; background: #e9f6ee; color: #1d6340; }
+    .status.error { display: block; background: #fff0ed; color: #9a3024; }
+    .status.info { display: block; background: #f7f0df; color: #75541f; }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 22px;
+    }
+    .stat {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 20px;
+    }
+    .stat span { color: var(--muted); font-size: 12px; }
+    .stat strong {
+      display: block;
+      margin-top: 9px;
+      color: var(--wine);
+      font-size: 28px;
+    }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 720px; }
+    th, td {
+      padding: 13px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: middle;
+      font-size: 12px;
+    }
+    th { color: var(--wine); background: #faf5ed; }
+    td select { min-width: 125px; padding: 8px; }
+    .empty { padding: 25px 0; text-align: center; color: var(--muted); }
+    .top-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+    .top-actions button { margin: 0; }
+    @media(max-width: 650px) {
+      .stats { grid-template-columns: 1fr; }
+      .panel { padding: 18px; }
+      main { margin-top: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Flamingo <span>Administration</span></h1>
+    <div class="top-actions">
+      <a class="btn btn-light" href="index.html">Voir le site</a>
+      <button id="logoutButton" class="btn btn-gold hidden">Déconnexion</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginPanel" class="panel">
+      <h2>Connexion administrateur</h2>
+      <p class="muted">Connectez-vous avec votre compte Supabase. Seuls les comptes ayant le rôle admin peuvent ouvrir le tableau de bord.</p>
+      <form id="loginForm">
+        <div class="field">
+          <label for="email">Adresse e-mail</label>
+          <input id="email" type="email" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input id="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button id="loginButton" class="btn btn-wine" type="submit">Se connecter</button>
+      </form>
+      <div id="loginStatus" class="status" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="dashboard" class="hidden">
+      <div class="panel">
+        <h2>Tableau de bord</h2>
+        <p class="muted" id="welcome"></p>
+        <div class="top-actions">
+          <button id="refreshButton" class="btn btn-gold">Actualiser les données</button>
+        </div>
+        <div id="dashboardStatus" class="status" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="stats">
+        <div class="stat"><span>Total des réservations chargées</span><strong id="totalCount">—</strong></div>
+        <div class="stat"><span>En attente</span><strong id="pendingCount">—</strong></div>
+        <div class="stat"><span>Confirmées</span><strong id="confirmedCount">—</strong></div>
+      </div>
+
+      <section class="panel">
+        <h2>Gestion des réservations</h2>
+        <p class="muted">Vous pouvez modifier le statut d'une réservation si les politiques RLS de Supabase autorisent cette action.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Client</th>
+                <th>E-mail</th>
+                <th>Date</th>
+                <th>Heure</th>
+                <th>Personnes</th>
+                <th>Statut</th>
+                <th>Enregistrer</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsBody">
+              <tr><td colspan="7" class="empty">Connectez-vous pour afficher les données.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script type="module">
+    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+    const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
+    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
+    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const $ = id => document.getElementById(id);
+
+    let currentUser = null;
+    let reservations = [];
+
+    function status(element, message, type = 'info') {
+      element.textContent = message;
+      element.className = `status ${type}`;
+    }
+
+    function safeError(error) {
+      const message = error?.message || 'Une erreur est survenue.';
+      if (/row-level security|permission denied/i.test(message)) {
+        return 'Accès refusé par Supabase. Vérifiez les politiques RLS et les autorisations administrateur.';
+      }
+      return message;
+    }
+
+    function showLogin(message = '') {
+      $('loginPanel').classList.remove('hidden');
+      $('dashboard').classList.add('hidden');
+      $('logoutButton').classList.add('hidden');
+      if (message) status($('loginStatus'), message, 'error');
+    }
+
+    function showDashboard(profile) {
+      $('loginPanel').classList.add('hidden');
+      $('dashboard').classList.remove('hidden');
+      $('logoutButton').classList.remove('hidden');
+      $('welcome').textContent =
+        `Connecté : ${profile.full_name || currentUser.email} · Rôle : ${profile.role}`;
+    }
+
+    async function verifyAdmin() {
+      const { data: sessionData, error: sessionError } =
+        await supabase.auth.getSession();
+
+      if (sessionError) throw sessionError;
+
+      currentUser = sessionData.session?.user || null;
+      if (!currentUser) {
+        showLogin();
+        return false;
+      }
+
+      const { data: profile, error } = await supabase
+        .from('profiles')
+        .select('id, full_name, role')
+        .eq('id', currentUser.id)
+        .maybeSingle();
+
+      if (error) throw error;
+
+      if (!profile || profile.role !== 'admin') {
+        await supabase.auth.signOut();
+        currentUser = null;
+        showLogin('Ce compte ne possède pas le rôle admin. Utilisez un compte administrateur autorisé.');
+        return false;
+      }
+
+      showDashboard(profile);
+      return true;
+    }
+
+    function makeCell(value) {
+      const td = document.createElement('td');
+      td.textContent = value == null || value === '' ? '—' : String(value);
+      return td;
+    }
+
+    function renderReservations() {
+      const body = $('reservationsBody');
+      body.replaceChildren();
+
+      if (!reservations.length) {
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+        td.colSpan = 7;
+        td.className = 'empty';
+        td.textContent = 'Aucune réservation trouvée.';
+        tr.append(td);
+        body.append(tr);
+        return;
+      }
+
+      for (const reservation of reservations) {
+        const tr = document.createElement('tr');
+        tr.append(
+          makeCell(reservation.user_name),
+          makeCell(reservation.user_email),
+          makeCell(reservation.reservation_date),
+          makeCell(String(reservation.reservation_time || '').slice(0, 5)),
+          makeCell(reservation.guests)
+        );
+
+        const statusCell = document.createElement('td');
+        const select = document.createElement('select');
+        select.setAttribute('aria-label', `Statut de la réservation ${reservation.id}`);
+
+        for (const value of ['pending', 'confirmed', 'cancelled', 'completed']) {
+          const option = document.createElement('option');
+          option.value = value;
+          option.textContent = ({
+            pending: 'En attente',
+            confirmed: 'Confirmée',
+            cancelled: 'Annulée',
+            completed: 'Terminée'
+          })[value];
+          option.selected = reservation.status === value;
+          select.append(option);
+        }
+        statusCell.append(select);
+        tr.append(statusCell);
+
+        const actionCell = document.createElement('td');
+        const save = document.createElement('button');
+        save.className = 'btn btn-wine';
+        save.textContent = 'Enregistrer';
+        save.addEventListener('click', async () => {
+          save.disabled = true;
+          try {
+            const { error } = await supabase
+              .from('reservations')
+              .update({ status: select.value })
+              .eq('id', reservation.id);
+
+            if (error) throw error;
+
+            status($('dashboardStatus'), 'Statut mis à jour.', 'success');
+            await loadReservations();
+          } catch (error) {
+            status($('dashboardStatus'), safeError(error), 'error');
+          } finally {
+            save.disabled = false;
+          }
+        });
+        actionCell.append(save);
+        tr.append(actionCell);
+        body.append(tr);
+      }
+    }
+
+    async function loadReservations() {
+      status($('dashboardStatus'), 'Chargement des réservations…', 'info');
+
+      const { data, error } = await supabase
+        .from('reservations')
+        .select('id,user_name,user_email,reservation_date,reservation_time,guests,status,created_at')
+        .order('created_at', { ascending: false })
+        .limit(500);
+
+      if (error) throw error;
+
+      reservations = data || [];
+      $('totalCount').textContent = reservations.length;
+      $('pendingCount').textContent = reservations.filter(r => r.status === 'pending').length;
+      $('confirmedCount').textContent = reservations.filter(r => r.status === 'confirmed').length;
+      renderReservations();
+      status($('dashboardStatus'), 'Données actualisées.', 'success');
+    }
+
+    async function start() {
+      try {
+        if (await verifyAdmin()) {
+          await loadReservations();
+        }
+      } catch (error) {
+        showLogin(safeError(error));
+      }
+    }
+
+    $('loginForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const button = $('loginButton');
+      button.disabled = true;
+      button.textContent = 'Connexion…';
+
+      try {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: $('email').value.trim(),
+          password: $('password').value
+        });
+
+        if (error) throw error;
+
+        if (await verifyAdmin()) await loadReservations();
+      } catch (error) {
+        showLogin(safeError(error));
+      } finally {
+        button.disabled = false;
+        button.textContent = 'Se connecter';
+      }
+    });
+
+    $('refreshButton').addEventListener('click', async () => {
+      try {
+        if (await verifyAdmin()) await loadReservations();
+      } catch (error) {
+        status($('dashboardStatus'), safeError(error), 'error');
+      }
+    });
+
+    $('logoutButton').addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      currentUser = null;
+      reservations = [];
+      showLogin();
+    });
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'INITIAL_SESSION') return;
+      setTimeout(async () => {
+        currentUser = session?.user || null;
+        if (!currentUser) {
+          showLogin();
+          return;
+        }
+        await start();
+      }, 0);
+    });
+
+    await start();
+  </script>
+</body>
+</html>
