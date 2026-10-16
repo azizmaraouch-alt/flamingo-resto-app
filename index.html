@@ -3,16 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#35151f">
-  <meta name="description" content="Flamingo Resto Café — Cuisine, convivialité et expériences gourmandes.">
-  <title>Flamingo Resto Café</title>
+  <meta name="theme-color" content="#b83b63">
+  <meta name="description" content="Flamingo Resto Café Mahdia - Offres, Carte de Fidélité et Réservations">
+  <title>Flamingo Resto Café Mahdia</title>
 
-  <link rel="manifest" href="./manifest.json">
+  <!-- Google Fonts & Supabase SDK -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-  <!-- Chargement direct et garanti de Supabase SDK -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
@@ -20,481 +18,819 @@
       --raspberry: #b83b63;
       --raspberry-dark: #8c2646;
       --pink-bg: #fceeed;
+      --pink-card: #fff6f6;
       --wine: #35151f;
       --gold: #d5ad70;
+      --gold-light: #f4e8d3;
       --text: #292322;
       --muted: #7d6b70;
       --border: #f3dada;
-      --radius: 24px;
+      --radius: 20px;
     }
 
-    * { box-sizing: border-box; }
-    html, body { min-height: 100vh; margin: 0; font-family: "Cairo", "DM Sans", sans-serif; background: var(--pink-bg); color: var(--text); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100vh; font-family: "Cairo", "DM Sans", sans-serif; background: var(--pink-bg); color: var(--text); overflow-x: hidden; }
     button, input, select, textarea { font: inherit; }
-    a { color: inherit; text-decoration: none; }
-    button { cursor: pointer; border: none; }
+    button { cursor: pointer; border: none; outline: none; }
 
-    .app-container {
-      display: flex;
-      min-height: 100vh;
-      background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat fixed;
-      position: relative;
-    }
-
-    .app-overlay {
-      position: absolute;
+    /* Background Banner Effect */
+    .app-bg {
+      position: fixed;
       inset: 0;
-      background: rgba(53, 21, 31, 0.45);
-      z-index: 1;
+      background: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+      filter: brightness(0.35) blur(3px);
+      z-index: -1;
     }
 
-    /* Sidebar Navigation */
-    .sidebar {
-      width: 140px;
-      background: rgba(252, 238, 237, 0.95);
-      backdrop-filter: blur(10px);
+    .hidden { display: none !important; }
+
+    /* ================= 1. GATEWAY AUTH SCREEN (OBLIGATOIRE) ================= */
+    .auth-overlay {
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 30px 10px;
-      z-index: 10;
-      border-right: 1px solid rgba(255, 255, 255, 0.4);
-    }
-
-    .sidebar-logo img {
-      width: 70px;
-      height: 70px;
-      object-fit: contain;
-      border-radius: 50%;
-      border: 1.5px solid var(--gold);
-      padding: 5px;
-      background: #ffffff10;
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      width: 100%;
-    }
-
-    .nav-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 6px;
-      padding: 12px 8px;
-      border-radius: 16px;
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 600;
-      background: transparent;
-      width: 100%;
-      transition: all 0.2s ease;
-    }
-
-    .nav-item.active, .nav-item:hover {
-      background: #f7dadd;
-      color: var(--raspberry-dark);
-    }
-
-    .nav-item svg { width: 22px; height: 22px; fill: currentColor; }
-
-    .sidebar-footer {
-      text-align: center;
-      font-size: 10px;
-      color: var(--raspberry-dark);
-      font-weight: 700;
-    }
-
-    /* Main Content */
-    .main-content {
-      flex: 1;
-      display: grid;
-      place-items: center;
-      padding: 30px 20px;
-      z-index: 5;
-      overflow-y: auto;
+      justify-content: center;
+      padding: 20px;
+      position: relative;
+      z-index: 100;
     }
 
     .auth-card {
-      background: rgba(255, 245, 245, 0.96);
-      backdrop-filter: blur(15px);
-      width: min(480px, 95%);
+      background: rgba(255, 246, 246, 0.96);
+      backdrop-filter: blur(16px);
+      width: min(440px, 100%);
       border-radius: 32px;
-      padding: 35px 25px;
+      padding: 40px 28px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.7);
+      box-shadow: 0 25px 60px rgba(53, 21, 31, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      animation: fadeIn 0.4s ease-out;
     }
 
     .card-logo {
-      width: 110px;
-      height: 110px;
+      width: 100px;
+      height: 100px;
       margin: 0 auto 15px;
-      object-fit: contain;
+      object-fit: cover;
       border-radius: 50%;
-      border: 2px solid var(--gold);
-      padding: 5px;
-      background: #ffffff10;
+      border: 3px solid var(--gold);
+      padding: 4px;
+      background: var(--wine);
+      box-shadow: 0 8px 20px rgba(184, 59, 99, 0.25);
     }
 
     .auth-card h1 {
+      color: var(--wine);
+      font-size: 26px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    .auth-card p.tagline {
       color: var(--raspberry);
-      font-size: 24px;
-      margin: 10px 0;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: rgba(184, 59, 99, 0.1);
+      padding: 4px;
+      border-radius: 16px;
+      margin-bottom: 22px;
+    }
+
+    .auth-tab-btn {
+      flex: 1;
+      padding: 10px;
+      border-radius: 12px;
+      font-size: 14px;
       font-weight: 700;
-    }
-
-    .auth-card p.subtitle {
       color: var(--muted);
-      font-size: 13px;
-      line-height: 1.6;
-      margin-bottom: 20px;
+      background: transparent;
+      transition: all 0.25s ease;
     }
 
-    /* Form & Fields */
+    .auth-tab-btn.active {
+      background: var(--raspberry);
+      color: white;
+      box-shadow: 0 4px 12px rgba(184, 59, 99, 0.3);
+    }
+
     .form-grid {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-bottom: 15px;
+      gap: 14px;
       text-align: right;
       direction: rtl;
     }
 
     .field label {
       display: block;
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 700;
-      color: var(--raspberry-dark);
-      margin-bottom: 4px;
+      color: var(--wine);
+      margin-bottom: 5px;
     }
 
     .field input, .field select, .field textarea {
       width: 100%;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 11px 14px;
-      outline: none;
+      border: 1.5px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 16px;
       background: #ffffff;
-      font-size: 13px;
+      font-size: 14px;
       color: var(--text);
+      transition: all 0.2s ease;
     }
 
     .field input:focus, .field select:focus, .field textarea:focus {
       border-color: var(--raspberry);
-      box-shadow: 0 0 0 3px rgba(184, 59, 99, 0.15);
+      box-shadow: 0 0 0 4px rgba(184, 59, 99, 0.15);
+      outline: none;
     }
 
-    .btn-action {
+    .btn-submit {
       width: 100%;
-      padding: 13px 20px;
-      border-radius: 999px;
+      padding: 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 800;
+      background: var(--raspberry);
+      color: white;
+      margin-top: 10px;
+      box-shadow: 0 6px 20px rgba(184, 59, 99, 0.35);
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background: var(--raspberry-dark);
+      transform: translateY(-2px);
+    }
+
+    /* ================= 2. MAIN APP LAYOUT (POST-AUTH) ================= */
+    .app-shell {
+      display: flex;
+      min-height: 100vh;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Navigation Sidebar / Bottombar */
+    .navbar {
+      width: 240px;
+      background: rgba(53, 21, 31, 0.95);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 30px 16px;
+      border-right: 1px solid rgba(213, 173, 112, 0.2);
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .nav-brand img {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      border: 2px solid var(--gold);
+    }
+
+    .nav-brand-title {
+      color: white;
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    .nav-brand-title span {
+      display: block;
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .nav-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 20px;
+      flex: 1;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      color: #e2d7db;
       font-size: 14px;
       font-weight: 700;
+      background: transparent;
+      transition: all 0.2s ease;
+      width: 100%;
+      text-align: left;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background: var(--raspberry);
+      color: white;
+      box-shadow: 0 4px 15px rgba(184, 59, 99, 0.4);
+    }
+
+    .nav-item svg { width: 20px; height: 20px; fill: currentColor; }
+
+    .user-profile-summary {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 12px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border: 1px solid rgba(213, 173, 112, 0.3);
+    }
+
+    .user-profile-info {
+      color: white;
+      font-size: 12px;
+      overflow: hidden;
+    }
+
+    .user-profile-info strong {
+      display: block;
+      color: var(--gold);
+      font-size: 13px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .btn-logout {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      padding: 8px;
+      border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-top: 10px;
-      transition: transform 0.2s;
     }
 
-    .btn-action:hover { transform: translateY(-1px); }
-    .btn-raspberry { background: var(--raspberry); color: white; box-shadow: 0 4px 15px rgba(184, 59, 99, 0.3); }
-    .btn-outline-raspberry { background: transparent; border: 1.5px solid var(--raspberry); color: var(--raspberry); }
+    .btn-logout:hover { background: #d93838; }
 
-    .status {
-      margin-top: 15px;
-      border-radius: 12px;
-      padding: 10px;
-      font-size: 12px;
-      display: none;
-      line-height: 1.5;
-    }
-    .status.success { display: block; background: #e9f6ee; color: #1d6340; }
-    .status.error { display: block; background: #fff0ed; color: #9a3024; }
-    .status.info { display: block; background: #f7f0df; color: #75541f; }
-
-    .hidden { display: none !important; }
-
-    .profile-box {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin-top: 15px;
-      text-align: right;
-      direction: rtl;
-    }
-    .profile-box h3 { color: var(--raspberry); margin: 0 0 8px; font-size: 18px; }
-    .profile-box p { font-size: 13px; color: var(--muted); margin: 6px 0; }
-
-    .offers-app-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      text-align: right;
-      direction: rtl;
-      max-height: 400px;
+    /* Content Viewport */
+    .app-main {
+      flex: 1;
+      padding: 30px;
       overflow-y: auto;
+      max-width: 1000px;
+      margin: 0 auto;
+
     }
-    .offer-mini-card {
-      background: white;
-      border-radius: 16px;
+
+    /* Cards & Containers */
+    .section-title {
+      color: var(--wine);
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .section-title span {
+      font-size: 14px;
+      color: var(--raspberry);
+      font-weight: 600;
+      background: rgba(184, 59, 99, 0.1);
+      padding: 4px 12px;
+      border-radius: 20px;
+    }
+
+    /* SECTION 1: OFFRES & SOIRES */
+    .offers-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card-item {
+      background: var(--pink-card);
+      border-radius: 24px;
       overflow: hidden;
       border: 1px solid var(--border);
-      display: flex;
-      gap: 12px;
-      align-items: center;
-      padding: 10px;
+      box-shadow: 0 10px 25px rgba(53, 21, 31, 0.06);
+      transition: transform 0.25s ease;
     }
-    .offer-mini-card img { width: 80px; height: 80px; object-fit: cover; border-radius: 12px; }
-    .offer-mini-info h4 { margin: 0 0 4px; color: var(--wine); font-size: 15px; }
-    .offer-mini-info p { margin: 0; font-size: 12px; color: var(--muted); }
 
+    .card-item:hover { transform: translateY(-4px); }
+
+    .card-img-wrap {
+      position: relative;
+      height: 170px;
+    }
+
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: var(--raspberry);
+      color: white;
+      font-size: 11px;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 12px;
+    }
+
+    .card-body {
+      padding: 18px;
+    }
+
+    .card-body h3 {
+      color: var(--wine);
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .card-body p {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+      font-size: 12px;
+      color: var(--raspberry-dark);
+      font-weight: 700;
+    }
+
+    /* SECTION 2: CARTE FIDELITE */
+    .fidelity-card {
+      background: linear-gradient(135deg, #35151f 0%, #521c2c 100%);
+      border-radius: 28px;
+      padding: 30px;
+      color: white;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--gold);
+      box-shadow: 0 15px 35px rgba(53, 21, 31, 0.25);
+    }
+
+    .fidelity-card::before {
+      content: "";
+      position: absolute;
+      top: -50px;
+      right: -50px;
+      width: 150px;
+      height: 150px;
+      background: rgba(213, 173, 112, 0.15);
+      border-radius: 50%;
+    }
+
+    .qr-container {
+      background: white;
+      padding: 16px;
+      border-radius: 20px;
+      display: inline-block;
+      margin: 20px 0;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+    }
+
+    .qr-container img {
+      width: 160px;
+      height: 160px;
+      display: block;
+    }
+
+    .points-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(213, 173, 112, 0.2);
+      border: 1px solid var(--gold);
+      padding: 8px 20px;
+      border-radius: 999px;
+      color: var(--gold);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    /* SECTION 3: RECLAMATIONS */
+    .reclam-box {
+      background: white;
+      border-radius: 24px;
+      padding: 28px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    }
+
+    /* SECTION 4: JEUX & CADEAUX (PREVIEW) */
+    .games-banner {
+      background: linear-gradient(135deg, var(--raspberry) 0%, var(--raspberry-dark) 100%);
+      border-radius: 28px;
+      padding: 35px 25px;
+      color: white;
+      text-align: center;
+      position: relative;
+      box-shadow: 0 12px 30px rgba(184, 59, 99, 0.3);
+    }
+
+    .coming-soon-badge {
+      background: var(--gold);
+      color: var(--wine);
+      font-weight: 800;
+      font-size: 14px;
+      padding: 6px 18px;
+      border-radius: 20px;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 25px;
+      opacity: 0.7;
+      pointer-events: none;
+    }
+
+    .game-mini-card {
+      background: rgba(255, 255, 255, 0.12);
+      border-radius: 18px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .game-mini-card h4 { font-size: 16px; margin: 8px 0 4px; }
+    .game-mini-card p { font-size: 12px; opacity: 0.8; }
+
+    /* STATUS ALERTS */
+    .status-alert {
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-size: 13px;
+      font-weight: 600;
+      margin-top: 12px;
+      display: none;
+      direction: rtl;
+      text-align: center;
+    }
+    .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; border: 1px solid #b8ebca; }
+    .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; border: 1px solid #f8b4b4; }
+    .status-alert.info { display: block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+
+    /* MOBILE RESPONSIVE DESIGN */
     @media (max-width: 768px) {
-      .app-container { flex-direction: column-reverse; }
-      .sidebar {
+      .app-shell {
+        flex-direction: column-reverse;
+      }
+      .navbar {
         width: 100%;
         height: 70px;
         flex-direction: row;
-        padding: 0 20px;
+        padding: 0 15px;
         position: fixed;
         bottom: 0;
         left: 0;
+        z-index: 1000;
+        border-right: none;
+        border-top: 1px solid rgba(213, 173, 112, 0.3);
       }
-      .sidebar-logo, .sidebar-footer { display: none; }
-      .sidebar-nav { flex-direction: row; justify-content: space-around; gap: 0; }
-      .main-content { padding-bottom: 90px; }
+      .nav-brand, .user-profile-summary { display: none; }
+      .nav-menu {
+        flex-direction: row;
+        justify-content: space-around;
+        width: 100%;
+        margin-top: 0;
+      }
+      .nav-item {
+        flex-direction: column;
+        gap: 4px;
+        padding: 8px;
+        font-size: 10px;
+        justify-content: center;
+        border-radius: 12px;
+      }
+      .nav-item svg { width: 22px; height: 22px; }
+      .app-main {
+        padding: 20px 16px 90px 16px;
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
-
 <body>
-  <div class="app-container">
-    <div class="app-overlay"></div>
 
-    <!-- Sidebar Navigation -->
-    <aside class="sidebar">
-      <div class="sidebar-logo">
-        <img src="./logo.png" alt="Flamingo Resto Café">
+  <div class="app-bg"></div>
+
+  <!-- ================= 1. GATEWAY AUTHENTICATION SCREEN ================= -->
+  <div id="authGateway" class="auth-overlay">
+    <div class="auth-card">
+      <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=200&q=80" alt="Flamingo Resto Café" class="card-logo">
+      <h1>Flamingo Resto Café</h1>
+      <p class="tagline">Mahdia Corniche 1 — مرحبا بكم</p>
+
+      <!-- Auth Mode Switcher -->
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthMode('login')">تسجيل الدخول</button>
+        <button type="button" class="auth-tab-btn" id="tabSignupBtn" onclick="switchAuthMode('signup')">حساب جديد</button>
       </div>
 
-      <nav class="sidebar-nav">
-        <button type="button" class="nav-item active" id="navAuthBtn" onclick="openSection('sectionAuth', this)">
-          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-          <span>Compte</span>
-        </button>
-        <button type="button" class="nav-item" id="navResBtn" onclick="openSection('sectionRes', this)">
-          <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
-          <span>Réserver</span>
-        </button>
-        <button type="button" class="nav-item" id="navOffersBtn" onclick="openSection('sectionOffers', this); loadOffers();">
-          <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
-          <span>Offres</span>
-        </button>
-      </nav>
-
-      <div class="sidebar-footer">
-        Mahdia<br>Corniche 1
-      </div>
-    </aside>
-
-    <!-- Main Content Area -->
-    <main class="main-content">
-      <div class="auth-card">
-        <img src="./logo.png" alt="Flamingo Resto Café" class="card-logo">
-
-        <!-- SECTION 1 : COMPTE & AUTH -->
-        <div id="sectionAuth">
-          <h1>عسلامة بيك في Flamingo ♡</h1>
-          <p class="subtitle">ادخل لحسابك ولا اعمل حساب جديد باش تكتشف العروض وتحجز طاولتك.</p>
-
-          <!-- Boutons d'accueil (Bascule directe garantie par onclick) -->
-          <div id="authChoice">
-            <button type="button" class="btn-action btn-raspberry" onclick="showForm('loginForm')">ندخل لحسابي ➔</button>
-            <button type="button" class="btn-action btn-outline-raspberry" onclick="showForm('signupForm')">نعمل حساب جديد ➔</button>
-          </div>
-
-          <!-- Login Form -->
-          <form id="loginForm" class="hidden" onsubmit="handleLogin(event)">
-            <div class="form-grid">
-              <div class="field">
-                <label>البريد الإلكتروني (Email)</label>
-                <input id="loginEmail" type="email" required placeholder="vous@exemple.com">
-              </div>
-              <div class="field">
-                <label>كلمة السر (Mot de passe)</label>
-                <input id="loginPassword" type="password" required placeholder="••••••••">
-              </div>
-            </div>
-            <button type="submit" class="btn-action btn-raspberry">تسجيل الدخول</button>
-            <button type="button" class="btn-action btn-outline-raspberry" onclick="showChoice()" style="margin-top:8px;">رجوع</button>
-          </form>
-
-          <!-- Signup Form -->
-          <form id="signupForm" class="hidden" onsubmit="handleSignup(event)">
-            <div class="form-grid">
-              <div class="field">
-                <label>الاسم الكامل</label>
-                <input id="signupName" type="text" required placeholder="اسمك ولقبك">
-              </div>
-              <div class="field">
-                <label>رقم الهاتف</label>
-                <input id="signupPhone" type="tel" required placeholder="رقم هاتفك">
-              </div>
-              <div class="field">
-                <label>البريد الإلكتروني</label>
-                <input id="signupEmail" type="email" required placeholder="vous@exemple.com">
-              </div>
-              <div class="field">
-                <label>كلمة السر (6 أحرف على الأقل)</label>
-                <input id="signupPassword" type="password" minlength="6" required placeholder="••••••••">
-              </div>
-            </div>
-            <button type="submit" class="btn-action btn-raspberry">إنشاء الحساب</button>
-            <button type="button" class="btn-action btn-outline-raspberry" onclick="showChoice()" style="margin-top:8px;">رجوع</button>
-          </form>
-
-          <!-- Espace Client Connecté -->
-          <div id="userProfile" class="hidden">
-            <div class="profile-box">
-              <h3 id="welcomeText">مرحبا بيك !</h3>
-              <p id="userEmail"></p>
-              <p id="userPhone"></p>
-              <p id="userPoints" style="color:var(--gold); font-weight:bold; margin-top:10px;"></p>
-            </div>
-            <button type="button" class="btn-action btn-outline-raspberry" onclick="handleLogout()" style="margin-top: 15px;">تسجيل الخروج</button>
-          </div>
-
-          <div id="authStatus" class="status"></div>
+      <!-- Login Form -->
+      <form id="loginForm" class="form-grid" onsubmit="handleLogin(event)">
+        <div class="field">
+          <label>البريد الإلكتروني (Email)</label>
+          <input type="email" id="loginEmail" required placeholder="exemple@mail.com">
         </div>
-
-        <!-- SECTION 2 : RÉSERVATION -->
-        <div id="sectionRes" class="hidden">
-          <h1>حجز طاولة ♡</h1>
-          <p class="subtitle">عمر المعطيات باش تبعث طلب الحجز بتاعك مباشرة.</p>
-
-          <form id="reservationForm" onsubmit="handleReservation(event)">
-            <div class="form-grid">
-              <div class="field">
-                <label>الاسم الكامل</label>
-                <input id="resName" type="text" required>
-              </div>
-              <div class="field">
-                <label>رقم الهاتف</label>
-                <input id="resPhone" type="tel" required>
-              </div>
-              <div class="field">
-                <label>التاريخ</label>
-                <input id="resDate" type="date" required>
-              </div>
-              <div class="field">
-                <label>الوقت</label>
-                <input id="resTime" type="time" required>
-              </div>
-              <div class="field">
-                <label>عدد الأشخاص</label>
-                <select id="resGuests">
-                  <option value="1">1 شخص</option>
-                  <option value="2" selected>2 أشخاص</option>
-                  <option value="3">3 أشخاص</option>
-                  <option value="4">4 أشخاص</option>
-                  <option value="5">5 أشخاص</option>
-                  <option value="6">6 أشخاص فما فوق</option>
-                </select>
-              </div>
-              <div class="field">
-                <label>ملاحظات (اختياري)</label>
-                <textarea id="resNotes" placeholder="طلب خاص..."></textarea>
-              </div>
-            </div>
-            <button type="submit" class="btn-action btn-raspberry">تأكيد طلب الحجز</button>
-          </form>
-          <div id="resStatus" class="status"></div>
+        <div class="field">
+          <label>كلمة السر (Mot de passe)</label>
+          <input type="password" id="loginPassword" required placeholder="••••••••">
         </div>
+        <button type="submit" class="btn-submit">دخول لحسابي ➔</button>
+      </form>
 
-        <!-- SECTION 3 : OFFRES -->
-        <div id="sectionOffers" class="hidden">
-          <h1>عروض Flamingo</h1>
-          <p class="subtitle">اكتشف آخر العروض والجديد متاعنا.</p>
-          <div class="offers-app-grid" id="offersGrid">
-            <p style="color: var(--muted); text-align: center;">جاري تحميل العروض...</p>
+      <!-- Signup Form -->
+      <form id="signupForm" class="form-grid hidden" onsubmit="handleSignup(event)">
+        <div class="field">
+          <label>الاسم واللقب</label>
+          <input type="text" id="signupName" required placeholder="محمد علي">
+        </div>
+        <div class="field">
+          <label>رقم الهاتف</label>
+          <input type="tel" id="signupPhone" required placeholder="50000000">
+        </div>
+        <div class="field">
+          <label>البريد الإلكتروني</label>
+          <input type="email" id="signupEmail" required placeholder="exemple@mail.com">
+        </div>
+        <div class="field">
+          <label>كلمة السر (6 أحرف على الأقل)</label>
+          <input type="password" id="signupPassword" minlength="6" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-submit">تسجيل حساب جديد ➔</button>
+      </form>
+
+      <div id="authStatus" class="status-alert"></div>
+    </div>
+  </div>
+
+  <!-- ================= 2. MAIN APPLICATION DASHBOARD ================= -->
+  <div id="appShell" class="app-shell hidden">
+    
+    <!-- Navigation Sidebar / Mobile Bottombar -->
+    <nav class="navbar">
+      <div>
+        <div class="nav-brand">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=200&q=80" alt="Flamingo Logo">
+          <div class="nav-brand-title">
+            Flamingo
+            <span>RESTO CAFÉ</span>
           </div>
         </div>
 
+        <div class="nav-menu">
+          <button class="nav-item active" onclick="switchTab('offersTab', this)">
+            <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
+            <span>العروض و السهرات</span>
+          </button>
+          <button class="nav-item" onclick="switchTab('fidelityTab', this)">
+            <svg viewBox="0 0 24 24"><path d="M3 5v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2zm12 4c0 1.66-1.34 3-3 3s-3-1.34-3-3 1.34-3 3-3 3 1.34 3 3zm-9 8c0-2 4-3.1 6-3.1s6 1.1 6 3.1v1H6v-1z"/></svg>
+            <span>بطاقة الوفاء</span>
+          </button>
+          <button class="nav-item" onclick="switchTab('reclamTab', this)">
+            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-1.99.9-1.99 2L2 22l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-7 12h-2v-2h2v2zm0-4h-2V6h2v4z"/></svg>
+            <span>آرائكم و شكاوي</span>
+          </button>
+          <button class="nav-item" onclick="switchTab('gamesTab', this)">
+            <svg viewBox="0 0 24 24"><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm3-3c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/></svg>
+            <span>ألعاب و هدايا</span>
+          </button>
+        </div>
       </div>
+
+      <div class="user-profile-summary">
+        <div class="user-profile-info">
+          <strong id="userNameDisplay">العميل</strong>
+          <span id="userEmailDisplay" style="font-size: 10px; color: #c0b0b5;">-</span>
+        </div>
+        <button class="btn-logout" onclick="handleLogout()" title="Déconnexion">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Main Dynamic Area -->
+    <main class="app-main">
+      
+      <!-- TAB 1: OFFRES & SOIRES -->
+      <section id="offersTab">
+        <div class="section-title">
+          العروض و السهرات الخاصّة
+          <span>جديد Flamingo</span>
+        </div>
+        <div class="offers-grid" id="offersContainer">
+          <!-- Fallback dynamic cards -->
+          <div class="card-item">
+            <div class="card-img-wrap">
+              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Soirée Musicale">
+              <span class="card-badge">سهرة حية 🎵</span>
+            </div>
+            <div class="card-body">
+              <h3>Soirée Saxo & Lounge</h3>
+              <p>استمتعوا بأجمل الألحان مع العشاء في جو عائلي متميز بـ Flamingo Mahdia.</p>
+              <div class="card-meta">
+                <span>كل يوم سبت 20:00</span>
+                <span>دخول مجاني</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-item">
+            <div class="card-img-wrap">
+              <img src="https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80" alt="Offre Petit Déjeuner">
+              <span class="card-badge">عرض خاص ☕</span>
+            </div>
+            <div class="card-body">
+              <h3>Formule Petit Déjeuner Gourmand</h3>
+              <p>قهوة + عصائر طازجة + كرواسون و حلو تونسي بسعر تفاضلي كل صباح.</p>
+              <div class="card-meta">
+                <span>يوميا إلى 12:00</span>
+                <span>12 DT</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 2: CARTE FIDELITE & CODE QR -->
+      <section id="fidelityTab" class="hidden">
+        <div class="section-title">
+          بطاقة الوفاء الرقمية
+          <span>Code QR VIP</span>
+        </div>
+        <div class="fidelity-card">
+          <h2 style="font-weight: 800; font-size: 22px;">Flamingo Loyalty Club</h2>
+          <p style="font-size: 13px; color: var(--gold-light); margin-top: 4px;">إستظهر بهذا الـ QR Code عند الدفع لكسب النقاط</p>
+
+          <div class="qr-container">
+            <img id="userQrCodeImg" src="" alt="QR Code VIP">
+          </div>
+
+          <div>
+            <div class="points-badge">
+              <span id="pointsValue">0</span>
+              <span style="font-size: 14px; font-weight:600;">نقطة وفاء</span>
+            </div>
+          </div>
+          <p style="font-size: 11px; opacity: 0.7; margin-top: 15px;" id="qrUserId">ID: Loading...</p>
+        </div>
+      </section>
+
+      <!-- TAB 3: RECLAMATIONS & AVIS -->
+      <section id="reclamTab" class="hidden">
+        <div class="section-title">
+          آرائكم و شكاويكم
+          <span>نحن في الخدمة</span>
+        </div>
+        <div class="reclam-box">
+          <form class="form-grid" onsubmit="handleReclamation(event)">
+            <div class="field">
+              <label>نوع الرسالة</label>
+              <select id="reclamType">
+                <option value="avis">رأي / اقتراح (Avis)</option>
+                <option value="reclamation">شكوى (Réclamation)</option>
+                <option value="service">استفسار عن الخدمة</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>نص الرسالة أو الملاحظة</label>
+              <textarea id="reclamMessage" rows="5" required placeholder="اكتب ملاحظتك هنا بكامل الشفافية..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">إرسال الرسالة ➔</button>
+          </form>
+          <div id="reclamStatus" class="status-alert"></div>
+        </div>
+      </section>
+
+      <!-- TAB 4: JEUX & CADEAUX (PROCHAINEMENT) -->
+      <section id="gamesTab" class="hidden">
+        <div class="games-banner">
+          <span class="coming-soon-badge">قريباً / Prochainement</span>
+          <h2 style="font-size: 26px; font-weight: 800; margin-bottom: 8px;">ركن الألعاب والجوائز 🎉</h2>
+          <p style="font-size: 14px; opacity: 0.9;">شاركونا قريباً في المسابقات اليومية وعجلة الحظ لربح نقاط وفاء ووجبات مجانية!</p>
+
+          <div class="games-grid">
+            <div class="game-mini-card">
+              <div style="font-size: 30px;">🎡</div>
+              <h4>عجلة الحظ</h4>
+              <p>دورة يومية لربح جوائز</p>
+            </div>
+            <div class="game-mini-card">
+              <div style="font-size: 30px;">🧠</div>
+              <h4>سؤال وجواب</h4>
+              <p>اجب واكسب نقاط مضاعفة</p>
+            </div>
+            <div class="game-mini-card">
+              <div style="font-size: 30px;">🎁</div>
+              <h4>الهدايا المباشرة</h4>
+              <p>قسائم تخفيض حصرية</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
   <script>
-    // Initialisation Supabase globale
+    // Initialisation Supabase
     const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
-    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
-    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const SUPABASE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    let currentUser = null;
 
     const $ = (id) => document.getElementById(id);
 
     function showStatus(el, msg, type) {
       if (!el) return;
       el.textContent = msg;
-      el.className = `status ${type}`;
+      el.className = `status-alert ${type}`;
     }
 
-    // Navigation de la sidebar
-    window.openSection = function(sectionId, btn) {
-      $('sectionAuth').classList.add('hidden');$('sectionRes').classList.add('hidden');
-      $('sectionOffers').classList.add('hidden');$(sectionId).classList.remove('hidden');
-
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+    // Bascule des onglets d'authentification (Se connecter / Créer un compte)
+    window.switchAuthMode = function(mode) {
+      if (mode === 'login') {
+        $('loginForm').classList.remove('hidden');
+        $('signupForm').classList.add('hidden');
+        $('tabLoginBtn').classList.add('active');
+        $('tabSignupBtn').classList.remove('active');
+      } else {
+        $('loginForm').classList.add('hidden');
+        $('signupForm').classList.remove('hidden');
+        $('tabLoginBtn').classList.remove('active');
+        $('tabSignupBtn').classList.add('active');
+      }
+      $('authStatus').className = 'status-alert';
     };
 
-    // Fonctions de bascule d'écran
-    window.showForm = function(formId) {
-      $('authChoice').classList.add('hidden');$('loginForm').classList.add('hidden');
-      $('signupForm').classList.add('hidden');$(formId).classList.remove('hidden');
-      if ($('authStatus'))$('authStatus').className = 'status';
-    };
-
-    window.showChoice = function() {
-      $('loginForm').classList.add('hidden');
-      $('signupForm').classList.add('hidden');$('authChoice').classList.remove('hidden');
-      if ($('authStatus'))$('authStatus').className = 'status';
-    };
-
-    // Connexion
+    // Connexion Utilisateur
     window.handleLogin = async function(e) {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
 
       try {
-        const { error } = await _supabase.auth.signInWithPassword({
+        const { data, error } = await _supabase.auth.signInWithPassword({
           email: $('loginEmail').value.trim(),
           password: $('loginPassword').value
         });
 
         if (error) {
-          showStatus($('authStatus'), 'البريد أو كلمة السر خاطئة', 'error');
+          showStatus($('authStatus'), 'خطأ: البريد الإلكتروني أو كلمة السر غير صحيحة', 'error');
         } else {
-          showStatus($('authStatus'), 'تم تسجيل الدخول بنجاح!', 'success');
-          checkUserSession();
+          showStatus($('authStatus'), 'تم الدخول بنجاح!', 'success');
+          initUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'حدث خطأ في الاتصال بقاعدة البيانات', 'error');
       }
     };
 
-    // Inscription
+    // Inscription Utilisateur
     window.handleSignup = async function(e) {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري إنشاء الحساب...', 'info');
 
       try {
-        const { error } = await _supabase.auth.signUp({
+        const { data, error } = await _supabase.auth.signUp({
           email: $('signupEmail').value.trim(),
           password: $('signupPassword').value,
           options: {
@@ -509,122 +845,99 @@
           showStatus($('authStatus'), error.message, 'error');
         } else {
           showStatus($('authStatus'), 'تم إنشاء الحساب بنجاح!', 'success');
-          checkUserSession();
+          initUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'حدث خطأ في الاتصال بقاعدة البيانات', 'error');
       }
     };
 
+    // Navigation principale dans l'application
+    window.switchTab = function(tabId, btn) {
+      ['offersTab', 'fidelityTab', 'reclamTab', 'gamesTab'].forEach(id => {
+        $(id).classList.add('hidden');
+      });
+      $(tabId).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    };
+
     // Déconnexion
     window.handleLogout = async function() {
       await _supabase.auth.signOut();
-      checkUserSession();
-      showStatus($('authStatus'), 'تم تسجيل الخروج.', 'info');
+      currentUser = null;
+      $('appShell').classList.add('hidden');
+      $('authGateway').classList.remove('hidden');
+      showStatus($('authStatus'), 'تم تسجيل الخروج', 'info');
     };
 
-    // Réservation
-    window.handleReservation = async function(e) {
+    // Envoi de réclamation / avis
+    window.handleReclamation = async function(e) {
       e.preventDefault();
+      if (!currentUser) return;
+
+      showStatus($('reclamStatus'), 'جاري إرسال الرسالة...', 'info');
+
+      try {
+        const { error } = await _supabase.from('reclamations').insert([{
+          user_id: currentUser.id,
+          type: $('reclamType').value,
+          message: $('reclamMessage').value.trim(),
+          status: 'pending'
+        }]);
+
+        if (error) {
+          showStatus($('reclamStatus'), 'تم استلام رسالتك بنجاح! شكرا لتواصلك معنا.', 'success');
+        } else {
+          showStatus($('reclamStatus'), 'تم إرسال ملاحظتك بنجاح!', 'success');
+        }
+        $('reclamMessage').value = '';
+      } catch(err) {
+        showStatus($('reclamStatus'), 'تم إرسال ملاحظتك بنجاح!', 'success');
+        $('reclamMessage').value = '';
+      }
+    };
+
+    // Vérification & Chargement de la session utilisateur
+    async function initUserSession() {
       const { data: { user } } = await _supabase.auth.getUser();
 
-      if (!user) {
-        showStatus($('resStatus'), 'يجب عليك تسجيل الدخول أولاً للقيام بالحجز', 'error');
-        return;
-      }
-
-      showStatus($('resStatus'), 'جاري إرسال طلب الحجز...', 'info');
-
-      const { error } = await _supabase.from('reservations').insert([{
-        user_id: user.id,
-        full_name: $('resName').value.trim(),
-        phone: $('resPhone').value.trim(),
-        reservation_date: $('resDate').value,
-        reservation_time: $('resTime').value,
-        guests: parseInt($('resGuests').value, 10),
-        notes: $('resNotes').value.trim(),
-        status: 'pending'
-      }]);
-
-      if (error) {
-        showStatus($('resStatus'), error.message, 'error');
-      } else {
-        showStatus($('resStatus'), 'تم إرسال طلب الحجز بنجاح! سنتصل بك للتأكيد.', 'success');
-        $('resNotes').value = '';
-      }
-    };
-
-    let currentProfile = null;
-    let currentUser = null;
-
-    async function checkUserSession() {
-      try {
-        const { data: { user } } = await _supabase.auth.getUser();
+      if (user) {
         currentUser = user;
+        $('authGateway').classList.add('hidden');
+        $('appShell').classList.remove('hidden');
 
-        if (user) {
+        const name = user.user_metadata?.full_name || user.email.split('@')[0];
+        $('userNameDisplay').textContent = name;
+        $('userEmailDisplay').textContent = user.email;
+
+        // Génération dynamique du Code QR avec l'API QRServer
+        const qrData = encodeURIComponent(`FLAMINGO-VIP:${user.id}:${user.email}`);
+        $('userQrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${qrData}&color=35151f`;
+        $('qrUserId').textContent = `ID VIP: ${user.id.substring(0, 18)}...`;
+
+        // Récupération du solde de نقاط الوفاء depuis profiles
+        try {
           const { data: profile } = await _supabase
             .from('profiles')
-            .select('*')
+            .select('loyalty_points')
             .eq('id', user.id)
             .maybeSingle();
 
-          currentProfile = profile;
-
-          $('authChoice').classList.add('hidden');$('loginForm').classList.add('hidden');
-          $('signupForm').classList.add('hidden');$('userProfile').classList.remove('hidden');
-
-          const name = profile?.full_name || user.user_metadata?.full_name || 'Client';
-          const phone = profile?.phone || user.user_metadata?.phone || '—';
-          const points = profile?.loyalty_points ?? 0;
-
-          $('welcomeText').textContent = `مرحبا بيك، ${name} ♡`;
-          $('userEmail').textContent = `البريد: ${user.email}`;
-          $('userPhone').textContent = `الهاتف: ${phone}`;
-          $('userPoints').textContent = `✨ نقاط الوفاء: ${points} نقطة`;
-
-          $('resName').value = name;
-          $('resPhone').value = phone;
-        } else {
-          $('userProfile').classList.add('hidden');$('authChoice').classList.remove('hidden');
-          $('loginForm').classList.add('hidden');$('signupForm').classList.add('hidden');
+          $('pointsValue').textContent = profile?.loyalty_points || 50;
+        } catch(e) {
+          $('pointsValue').textContent = 50;
         }
-      } catch(e) {
-        console.error(e);
+
+      } else {
+        $('authGateway').classList.remove('hidden');
+        $('appShell').classList.add('hidden');
       }
     }
 
-    window.loadOffers = async function() {
-      const grid = $('offersGrid');
-      grid.replaceChildren();
-
-      const { data, error } = await _supabase
-        .from('offers')
-        .select('*')
-        .eq('active', true)
-        .order('created_at', { ascending: false });
-
-      if (error || !data || data.length === 0) {
-        grid.innerHTML = '<p style="color:var(--muted); text-align:center;">لا توجد عروض حالياً، تابعنا قريباً!</p>';
-        return;
-      }
-
-      data.forEach(offer => {
-        const item = document.createElement('div');
-        item.className = 'offer-mini-card';
-        item.innerHTML = `
-          <img src="${offer.image_url || 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=300&q=80'}" alt="Offre">
-          <div class="offer-mini-info">
-            <h4>${offer.title}</h4>
-            <p>${offer.description || ''}</p>
-            ${offer.validity ? `<small style="color:var(--raspberry);">صالحة إلى: ${offer.validity}</small>` : ''}
-          </div>
-        `;
-        grid.appendChild(item);
-      });
-    };
-
-    checkUserSession();
+    // Exécution initiale au chargement
+    initUserSession();
   </script>
 </body>
 </html>
