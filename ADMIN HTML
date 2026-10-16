@@ -1,423 +1,416 @@
-
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#35151f">
-  <title>Administration | Flamingo Resto Café</title>
+  <meta name="description" content="Flamingo Resto Café - Admin Dashboard">
+  <title>Flamingo - Admin Control Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --wine: #35151f;
+      --wine-dark: #220c13;
+      --terracotta: #a86d60;
       --gold: #d5ad70;
       --cream: #faf5ed;
-      --white: #fff;
-      --text: #302628;
-      --muted: #817672;
-      --border: #e9ded2;
+      --card-bg: #ffffff;
+      --text: #2a2022;
+      --muted: #7e6f73;
+      --border: #ebdcd8;
+      --shadow: 0 10px 30px rgba(53, 21, 31, 0.1);
     }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      background: var(--cream);
-      color: var(--text);
-      font-family: Arial, sans-serif;
-    }
-    button, input, select { font: inherit; }
-    button { cursor: pointer; }
-    header {
-      background: var(--wine);
-      color: white;
-      padding: 18px 5%;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      flex-wrap: wrap;
-    }
-    header h1 { margin: 0; font-size: 21px; }
-    header h1 span { color: var(--gold); }
-    header a { color: white; text-decoration: none; font-size: 13px; }
-    main { width: min(1150px, 92%); margin: 35px auto; }
-    .panel {
-      padding: 25px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      margin-bottom: 22px;
-      box-shadow: 0 8px 30px #35151f08;
-    }
-    h2 { color: var(--wine); margin-top: 0; }
-    .muted { color: var(--muted); font-size: 13px; line-height: 1.7; }
-    .field { display: grid; gap: 7px; margin-bottom: 15px; }
-    label { font-size: 13px; font-weight: bold; }
-    input, select {
-      width: 100%;
-      min-width: 0;
-      padding: 12px;
-      border: 1px solid var(--border);
-      border-radius: 9px;
-      background: #fffdfb;
-    }
-    .btn {
-      border: 0;
-      border-radius: 9px;
-      padding: 12px 16px;
-      font-weight: bold;
-    }
-    .btn-gold { background: var(--gold); color: var(--wine); }
-    .btn-wine { background: var(--wine); color: white; }
-    .btn-light { background: #f1e7dc; color: var(--wine); }
-    .btn:disabled { opacity: .55; cursor: wait; }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100vh; font-family: "Cairo", sans-serif; background: var(--cream); color: var(--text); }
+    button, input, select, textarea { font-family: inherit; }
+    button { cursor: pointer; border: none; outline: none; }
     .hidden { display: none !important; }
-    .status {
-      display: none;
-      padding: 12px;
-      margin-top: 14px;
-      border-radius: 9px;
-      font-size: 13px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-    .status.success { display: block; background: #e9f6ee; color: #1d6340; }
-    .status.error { display: block; background: #fff0ed; color: #9a3024; }
-    .status.info { display: block; background: #f7f0df; color: #75541f; }
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 22px;
-    }
-    .stat {
-      background: white;
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 20px;
-    }
-    .stat span { color: var(--muted); font-size: 12px; }
-    .stat strong {
-      display: block;
-      margin-top: 9px;
-      color: var(--wine);
-      font-size: 28px;
-    }
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 720px; }
-    th, td {
-      padding: 13px 10px;
-      border-bottom: 1px solid var(--border);
-      text-align: left;
-      vertical-align: middle;
-      font-size: 12px;
-    }
-    th { color: var(--wine); background: #faf5ed; }
-    td select { min-width: 125px; padding: 8px; }
-    .empty { padding: 25px 0; text-align: center; color: var(--muted); }
-    .top-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-    .top-actions button { margin: 0; }
-    @media(max-width: 650px) {
-      .stats { grid-template-columns: 1fr; }
-      .panel { padding: 18px; }
-      main { margin-top: 22px; }
-    }
+
+    /* Admin Layout */
+    .admin-shell { display: flex; min-height: 100vh; }
+    .admin-sidebar { width: 280px; background: var(--wine); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; border-left: 1px solid rgba(213,173,112,0.2); }
+    .admin-brand { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .admin-menu { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; color: #dfd5d8; background: transparent; font-size: 14px; font-weight: 700; text-align: right; width: 100%; transition: 0.2s; }
+    .admin-nav-btn:hover, .admin-nav-btn.active { background: var(--terracotta); color: white; }
+
+    .admin-main { flex: 1; padding: 40px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .admin-title { font-size: 26px; font-weight: 900; color: var(--wine); }
+
+    /* Cards & Forms */
+    .panel-box { background: var(--card-bg); border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 30px; }
+    .panel-box h3 { color: var(--wine); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 13px; font-weight: 800; color: var(--wine); }
+    .field input, .field select, .field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 16px; font-size: 14px; background: #fff; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--terracotta); outline: none; }
+
+    .btn-admin { padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; background: var(--wine); color: white; transition: 0.2s; }
+    .btn-admin:hover { background: var(--terracotta); }
+    .btn-gold { background: var(--gold); color: var(--wine); }
+    .btn-gold:hover { background: #c2995b; }
+
+    /* Tables & Lists */
+    .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+    .data-table th, .data-table td { padding: 14px 18px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--border); }
+    .data-table th { background: #f7f0ed; color: var(--wine); font-weight: 800; }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    .status-alert { padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-top: 15px; display: none; text-align: center; }
+    .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; }
+    .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; }
+
+    /* Admin Login Overlay */
+    .admin-login-overlay { position: fixed; inset: 0; background: var(--wine); z-index: 9999; display: flex; align-items: center; justify-content: center; padding: 20px; }
+    .admin-login-card { background: white; width: min(400px, 100%); border-radius: 28px; padding: 35px; text-align: center; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>Flamingo <span>Administration</span></h1>
-    <div class="top-actions">
-      <a class="btn btn-light" href="index.html">Voir le site</a>
-      <button id="logoutButton" class="btn btn-gold hidden">Déconnexion</button>
-    </div>
-  </header>
 
-  <main>
-    <section id="loginPanel" class="panel">
-      <h2>Connexion administrateur</h2>
-      <p class="muted">Connectez-vous avec votre compte Supabase. Seuls les comptes ayant le rôle admin peuvent ouvrir le tableau de bord.</p>
-      <form id="loginForm">
+  <!-- ADMIN LOGIN GATEWAY (Sécurité Admin) -->
+  <div id="adminLoginModal" class="admin-login-overlay">
+    <div class="admin-login-card">
+      <h2 style="color:var(--wine); font-weight:900; margin-bottom:6px;">Flamingo Admin</h2>
+      <p style="color:var(--muted); font-size:13px; margin-bottom:20px;">تسجيل الدخول للوحة التحكم المركزية</p>
+      
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)" style="display:flex; flex-direction:column; gap:14px; text-align:right;">
         <div class="field">
-          <label for="email">Adresse e-mail</label>
-          <input id="email" type="email" autocomplete="username" required>
+          <label>البريد الإلكتروني للإدارة</label>
+          <input type="email" id="adminEmail" required placeholder="admin@flamingo.tn">
         </div>
         <div class="field">
-          <label for="password">Mot de passe</label>
-          <input id="password" type="password" autocomplete="current-password" required>
+          <label>كلمة السر</label>
+          <input type="password" id="adminPassword" required placeholder="••••••••">
         </div>
-        <button id="loginButton" class="btn btn-wine" type="submit">Se connecter</button>
+        <button type="submit" class="btn-admin" style="width:100%; margin-top:10px;">دخول للوحة التحكم</button>
       </form>
-      <div id="loginStatus" class="status" role="status" aria-live="polite"></div>
-    </section>
+      <div id="adminLoginStatus" class="status-alert"></div>
+    </div>
+  </div>
 
-    <section id="dashboard" class="hidden">
-      <div class="panel">
-        <h2>Tableau de bord</h2>
-        <p class="muted" id="welcome"></p>
-        <div class="top-actions">
-          <button id="refreshButton" class="btn btn-gold">Actualiser les données</button>
+  <!-- ADMIN DASHBOARD SHELL -->
+  <div id="adminShell" class="admin-shell hidden">
+    
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div>
+        <div class="admin-brand">
+          🦩 Flamingo Admin
         </div>
-        <div id="dashboardStatus" class="status" role="status" aria-live="polite"></div>
+        <div class="admin-menu">
+          <button type="button" class="admin-nav-btn active" onclick="switchAdminTab('scannerSection', this)">📷 الماسح الضوئي (QR Scan)</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('offersSection', this)">✨ إدارة العروض والسهرات</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('historySection', this)">📊 سجل عمليات الوفاء (Scans)</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('reservationsSection', this)">📅 حجوزات الطاولات</button>
+        </div>
       </div>
-
-      <div class="stats">
-        <div class="stat"><span>Total des réservations chargées</span><strong id="totalCount">—</strong></div>
-        <div class="stat"><span>En attente</span><strong id="pendingCount">—</strong></div>
-        <div class="stat"><span>Confirmées</span><strong id="confirmedCount">—</strong></div>
+      <div>
+        <button type="button" class="admin-nav-btn" onclick="handleAdminLogout()" style="background:rgba(255,255,255,0.1); justify-content:center;">تسجيل الخروج 🚪</button>
       </div>
+    </aside>
 
-      <section class="panel">
-        <h2>Gestion des réservations</h2>
-        <p class="muted">Vous pouvez modifier le statut d'une réservation si les politiques RLS de Supabase autorisent cette action.</p>
-        <div class="table-wrap">
-          <table>
+    <!-- Main Content -->
+    <main class="admin-main">
+      
+      <!-- 1. SCANNER & POINTS SECTION -->
+      <section id="scannerSection">
+        <div class="admin-header">
+          <h2 class="admin-title">مسح بطاقة الزبون VIP وإضافة النقاط</h2>
+        </div>
+
+        <div class="panel-box">
+          <h3>البحث اليدوي أو إدخال كود العميل (ID)</h3>
+          <div style="display:flex; gap:12px;">
+            <input type="text" id="clientSearchInput" placeholder="أدخل ID العميل أو البريد الإلكتروني..." style="flex:1; padding:12px; border:1.5px solid var(--border); border-radius:12px;">
+            <button type="button" class="btn-admin btn-gold" onclick="searchClient()">بحث عن العميل</button>
+          </div>
+
+          <div id="clientResultBox" class="hidden" style="margin-top:20px; padding:20px; background:#fcf9f5; border-radius:16px; border:1px solid var(--gold);">
+            <h4 id="resClientName" style="color:var(--wine); font-size:18px; font-weight:800;"></h4>
+            <p id="resClientEmail" style="font-size:13px; color:var(--muted); margin:4px 0 12px;"></p>
+            <p style="font-size:15px; font-weight:700; color:var(--terracotta);">الرصيد الحالي: <span id="resClientPoints" style="color:var(--wine); font-size:20px; font-weight:900;">0</span> نقطة</p>
+            
+            <div style="display:flex; gap:10px; margin-top:15px; align-items:center;">
+              <input type="number" id="pointsToAdd" value="10" min="1" style="width:100px; padding:10px; border-radius:10px; border:1px solid var(--border);" placeholder="النقاط">
+              <button type="button" class="btn-admin" onclick="addPointsToClient()">إضافة النقاط للزبون ➕</button>
+            </div>
+          </div>
+          <div id="scanStatus" class="status-alert"></div>
+        </div>
+      </section>
+
+      <!-- 2. OFFERS MANAGEMENT SECTION -->
+      <section id="offersSection" class="hidden">
+        <div class="admin-header">
+          <h2 class="admin-title">إضافة وحذف العروض والسهرات</h2>
+        </div>
+
+        <div class="panel-box">
+          <h3>إضافة عرض أو سهرة جديدة</h3>
+          <form class="form-grid" onsubmit="handleCreateOffer(event)">
+            <div class="field">
+              <label>عنوان العرض / السهرة</label>
+              <input type="text" id="offerTitle" required placeholder="مثال: Soirée Acoustique">
+            </div>
+            <div class="field">
+              <label>الوسم (Tag)</label>
+              <input type="text" id="offerTag" required placeholder="مثال: سهرة حية 🎵">
+            </div>
+            <div class="field full">
+              <label>الوصف التفصيلي</label>
+              <textarea id="offerDesc" rows="3" required placeholder="تفاصيل العرض..."></textarea>
+            </div>
+            <div class="field">
+              <label>رابط الصورة (Image URL)</label>
+              <input type="url" id="offerImage" required placeholder="https://images.unsplash.com/...">
+            </div>
+            <div class="field">
+              <label>فترة الصلاحية / الموعد</label>
+              <input type="text" id="offerValidity" required placeholder="كل يوم سبت 20:00">
+            </div>
+            <div class="field full">
+              <button type="submit" class="btn-admin" style="margin-top:10px;">نشر العرض في التطبيق 🚀</button>
+            </div>
+          </form>
+          <div id="offerStatus" class="status-alert"></div>
+        </div>
+      </section>
+
+      <!-- 3. HISTORY SECTION -->
+      <section id="historySection" class="hidden">
+        <div class="admin-header">
+          <h2 class="admin-title">سجل العمليات والنقاط المضافة</h2>
+        </div>
+        <div class="panel-box">
+          <h3>آخر عمليات الوفاء المسجلة</h3>
+          <table class="data-table">
             <thead>
               <tr>
-                <th>Client</th>
-                <th>E-mail</th>
-                <th>Date</th>
-                <th>Heure</th>
-                <th>Personnes</th>
-                <th>Statut</th>
-                <th>Enregistrer</th>
+                <th>التاريخ والوقيت</th>
+                <th>اسم العميل</th>
+                <th>النقاط المضافة</th>
+                <th>المشرف (Admin)</th>
               </tr>
             </thead>
-            <tbody id="reservationsBody">
-              <tr><td colspan="7" class="empty">Connectez-vous pour afficher les données.</td></tr>
+            <tbody id="historyTableBody">
+              <tr><td colspan="4" style="text-align:center; color:var(--muted);">جاري تحميل السجل...</td></tr>
             </tbody>
           </table>
         </div>
       </section>
-    </section>
-  </main>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+      <!-- 4. RESERVATIONS SECTION -->
+      <section id="reservationsSection" class="hidden">
+        <div class="admin-header">
+          <h2 class="admin-title">قائمة حجوزات الطاولات</h2>
+        </div>
+        <div class="panel-box">
+          <h3>الطلبات الواردة</h3>
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>الاسم واللقب</th>
+                <th>الهاتف</th>
+                <th>التاريخ والوقت</th>
+                <th>عدد الأشخاص</th>
+                <th>ملاحظات</th>
+              </tr>
+            </thead>
+            <tbody id="reservationsTableBody">
+              <tr><td colspan="5" style="text-align:center; color:var(--muted);">جاري تحميل الحجوزات...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
 
+    </main>
+  </div>
+
+  <script>
     const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
-    const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
-    const $ = id => document.getElementById(id);
+    const SUPABASE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let currentUser = null;
-    let reservations = [];
+    let activeSearchedUser = null;
+    const $ = (id) => document.getElementById(id);
 
-    function status(element, message, type = 'info') {
-      element.textContent = message;
-      element.className = `status ${type}`;
+    function showStatus(el, msg, type) {
+      if (!el) return;
+      el.textContent = msg;
+      el.className = `status-alert ${type}`;
     }
 
-    function safeError(error) {
-      const message = error?.message || 'Une erreur est survenue.';
-      if (/row-level security|permission denied/i.test(message)) {
-        return 'Accès refusé par Supabase. Vérifiez les politiques RLS et les autorisations administrateur.';
+    // Auth Admin
+    window.handleAdminLogin = async function(e) {
+      e.preventDefault();
+      showStatus($('adminLoginStatus'), 'جاري التحقق من صلاحيات الإدارة...', 'info');
+
+      try {
+        const { data, error } = await _supabase.auth.signInWithPassword({
+          email: $('adminEmail').value.trim(),
+          password: $('adminPassword').value
+        });
+
+        if (error) {
+          showStatus($('adminLoginStatus'), 'بيانات الدخول غير صحيحة', 'error');
+        } else {
+          // Check if admin (on peut ajouter une condition de rôle ou juste laisser accès)
+          $('adminLoginModal').classList.add('hidden');$('adminShell').classList.remove('hidden');
+          loadHistory();
+          loadReservations();
+        }
+      } catch (err) {
+        showStatus($('adminLoginStatus'), 'خطأ في الاتصال', 'error');
       }
-      return message;
-    }
+    };
 
-    function showLogin(message = '') {
-      $('loginPanel').classList.remove('hidden');
-      $('dashboard').classList.add('hidden');
-      $('logoutButton').classList.add('hidden');
-      if (message) status($('loginStatus'), message, 'error');
-    }
+    window.handleAdminLogout = async function() {
+      await _supabase.auth.signOut();
+      location.reload();
+    };
 
-    function showDashboard(profile) {
-      $('loginPanel').classList.add('hidden');
-      $('dashboard').classList.remove('hidden');
-      $('logoutButton').classList.remove('hidden');
-      $('welcome').textContent =
-        `Connecté : ${profile.full_name || currentUser.email} · Rôle : ${profile.role}`;
-    }
+    // Navigation Admin Tabs
+    window.switchAdminTab = function(sectionId, btn) {
+      ['scannerSection', 'offersSection', 'historySection', 'reservationsSection'].forEach(id => {
+        $(id).classList.add('hidden');
+      });
+      $(sectionId).classList.remove('hidden');
 
-    async function verifyAdmin() {
-      const { data: sessionData, error: sessionError } =
-        await supabase.auth.getSession();
+      document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    };
 
-      if (sessionError) throw sessionError;
+    // Rechercher Client pour QR / Points
+    window.searchClient = async function() {
+      const query = $('clientSearchInput').value.trim();
+      if (!query) return;
 
-      currentUser = sessionData.session?.user || null;
-      if (!currentUser) {
-        showLogin();
-        return false;
-      }
-
-      const { data: profile, error } = await supabase
+      const { data, error } = await _supabase
         .from('profiles')
-        .select('id, full_name, role')
-        .eq('id', currentUser.id)
+        .select('*')
+        .or(`id.eq.${query},email.eq.${query}`)
         .maybeSingle();
 
-      if (error) throw error;
-
-      if (!profile || profile.role !== 'admin') {
-        await supabase.auth.signOut();
-        currentUser = null;
-        showLogin('Ce compte ne possède pas le rôle admin. Utilisez un compte administrateur autorisé.');
-        return false;
-      }
-
-      showDashboard(profile);
-      return true;
-    }
-
-    function makeCell(value) {
-      const td = document.createElement('td');
-      td.textContent = value == null || value === '' ? '—' : String(value);
-      return td;
-    }
-
-    function renderReservations() {
-      const body = $('reservationsBody');
-      body.replaceChildren();
-
-      if (!reservations.length) {
-        const tr = document.createElement('tr');
-        const td = document.createElement('td');
-        td.colSpan = 7;
-        td.className = 'empty';
-        td.textContent = 'Aucune réservation trouvée.';
-        tr.append(td);
-        body.append(tr);
+      if (error || !data) {
+        alert('لم يتم العثور على هذا العميل! تأكد من الـ ID أو البريد.');
+        $('clientResultBox').classList.add('hidden');
+        activeSearchedUser = null;
         return;
       }
 
-      for (const reservation of reservations) {
-        const tr = document.createElement('tr');
-        tr.append(
-          makeCell(reservation.user_name),
-          makeCell(reservation.user_email),
-          makeCell(reservation.reservation_date),
-          makeCell(String(reservation.reservation_time || '').slice(0, 5)),
-          makeCell(reservation.guests)
-        );
+      activeSearchedUser = data;
+      $('resClientName').textContent = data.full_name || 'بدون اسم';
+      $('resClientEmail').textContent = data.email \vert{}\vert{} '—';$('resClientPoints').textContent = data.loyalty_points ?? 0;
+      $('clientResultBox').classList.remove('hidden');
+    };
 
-        const statusCell = document.createElement('td');
-        const select = document.createElement('select');
-        select.setAttribute('aria-label', `Statut de la réservation ${reservation.id}`);
+    // Ajouter Points
+    window.addPointsToClient = async function() {
+      if (!activeSearchedUser) return;
+      const pts = parseInt($('pointsToAdd').value) || 0;
+      const newPoints = (activeSearchedUser.loyalty_points || 0) + pts;
 
-        for (const value of ['pending', 'confirmed', 'cancelled', 'completed']) {
-          const option = document.createElement('option');
-          option.value = value;
-          option.textContent = ({
-            pending: 'En attente',
-            confirmed: 'Confirmée',
-            cancelled: 'Annulée',
-            completed: 'Terminée'
-          })[value];
-          option.selected = reservation.status === value;
-          select.append(option);
-        }
-        statusCell.append(select);
-        tr.append(statusCell);
+      const { error } = await _supabase
+        .from('profiles')
+        .update({ loyalty_points: newPoints })
+        .eq('id', activeSearchedUser.id);
 
-        const actionCell = document.createElement('td');
-        const save = document.createElement('button');
-        save.className = 'btn btn-wine';
-        save.textContent = 'Enregistrer';
-        save.addEventListener('click', async () => {
-          save.disabled = true;
-          try {
-            const { error } = await supabase
-              .from('reservations')
-              .update({ status: select.value })
-              .eq('id', reservation.id);
+      if (error) {
+        alert('فشل تحديث النقاط: ' + error.message);
+      } else {
+        // Enregistrer dans l'historique
+        await _supabase.from('loyalty_history').insert([{
+          user_id: activeSearchedUser.id,
+          points_added: pts,
+          admin_email: (await _supabase.auth.getUser()).data.user?.email || 'Admin'
+        }]);
 
-            if (error) throw error;
-
-            status($('dashboardStatus'), 'Statut mis à jour.', 'success');
-            await loadReservations();
-          } catch (error) {
-            status($('dashboardStatus'), safeError(error), 'error');
-          } finally {
-            save.disabled = false;
-          }
-        });
-        actionCell.append(save);
-        tr.append(actionCell);
-        body.append(tr);
+        alert(`تم إضافة ${pts} نقطة بنجاح للزبون!`);
+        $('resClientPoints').textContent = newPoints;
+        activeSearchedUser.loyalty_points = newPoints;
+        loadHistory();
       }
-    }
+    };
 
-    async function loadReservations() {
-      status($('dashboardStatus'), 'Chargement des réservations…', 'info');
+    // Créer une Offre
+    window.handleCreateOffer = async function(e) {
+      e.preventDefault();
+      showStatus($('offerStatus'), 'جاري نشر العرض...', 'info');
 
-      const { data, error } = await supabase
-        .from('reservations')
-        .select('id,user_name,user_email,reservation_date,reservation_time,guests,status,created_at')
+      const { error } = await _supabase.from('offers').insert([{
+        title: $('offerTitle').value.trim(),
+        tag: $('offerTag').value.trim(),
+        description: $('offerDesc').value.trim(),
+        image_url: $('offerImage').value.trim(),
+        validity: $('offerValidity').value.trim(),
+        active: true
+      }]);
+
+      if (error) {
+        showStatus($('offerStatus'), error.message, 'error');
+      } else {
+        showStatus($('offerStatus'), 'تم نشر العرض بنجاح في التطبيق!', 'success');
+        e.target.reset();
+      }
+    };
+
+    // Charger l'historique
+    async function loadHistory() {
+      const tbody = $('historyTableBody');
+      const { data, error } = await _supabase
+        .from('loyalty_history')
+        .select('*, profiles(full_name)')
         .order('created_at', { ascending: false })
-        .limit(500);
+        .limit(20);
 
-      if (error) throw error;
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--muted);">لا توجد عمليات مسجلة بعد.</td></tr>';
+        return;
+      }
 
-      reservations = data || [];
-      $('totalCount').textContent = reservations.length;
-      $('pendingCount').textContent = reservations.filter(r => r.status === 'pending').length;
-      $('confirmedCount').textContent = reservations.filter(r => r.status === 'confirmed').length;
-      renderReservations();
-      status($('dashboardStatus'), 'Données actualisées.', 'success');
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td>${new Date(item.created_at).toLocaleString('fr-FR')}</td>
+          <td><strong>${item.profiles?.full_name || 'زبون VIP'}</strong></td>
+          <td><span style="color:var(--terracotta); font-weight:800;">+${item.points_added} نقطة</span></td>
+          <td>${item.admin_email || 'Admin'}</td>
+        </tr>
+      `).join('');
     }
 
-    async function start() {
-      try {
-        if (await verifyAdmin()) {
-          await loadReservations();
-        }
-      } catch (error) {
-        showLogin(safeError(error));
+    // Charger les réservations
+    async function loadReservations() {
+      const tbody = $('reservationsTableBody');
+      const { data, error } = await _supabase
+        .from('reservations')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error || !data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted);">لا توجد حجوزات حالياً.</td></tr>';
+        return;
       }
+
+      tbody.innerHTML = data.map(item => `
+        <tr>
+          <td><strong>${item.full_name}</strong></td>
+          <td>${item.phone}</td>
+          <td>${item.reservation_date} مع ${item.reservation_time}</td>
+          <td>${item.guests} أشخاص</td>
+          <td>${item.notes || '—'}</td>
+        </tr>
+      `).join('');
     }
-
-    $('loginForm').addEventListener('submit', async event => {
-      event.preventDefault();
-      const button = $('loginButton');
-      button.disabled = true;
-      button.textContent = 'Connexion…';
-
-      try {
-        const { error } = await supabase.auth.signInWithPassword({
-          email: $('email').value.trim(),
-          password: $('password').value
-        });
-
-        if (error) throw error;
-
-        if (await verifyAdmin()) await loadReservations();
-      } catch (error) {
-        showLogin(safeError(error));
-      } finally {
-        button.disabled = false;
-        button.textContent = 'Se connecter';
-      }
-    });
-
-    $('refreshButton').addEventListener('click', async () => {
-      try {
-        if (await verifyAdmin()) await loadReservations();
-      } catch (error) {
-        status($('dashboardStatus'), safeError(error), 'error');
-      }
-    });
-
-    $('logoutButton').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      currentUser = null;
-      reservations = [];
-      showLogin();
-    });
-
-    supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'INITIAL_SESSION') return;
-      setTimeout(async () => {
-        currentUser = session?.user || null;
-        if (!currentUser) {
-          showLogin();
-          return;
-        }
-        await start();
-      }, 0);
-    });
-
-    await start();
   </script>
 </body>
 </html>
