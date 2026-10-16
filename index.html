@@ -3,312 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#a86d60">
-  <meta name="description" content="Flamingo Resto Café - Mahdia Corniche 1 - Application Officielle">
-  <title>Flamingo Resto Café - Mahdia</title>
+  <meta name="theme-color" content="#35151f">
+  <title>Flamingo Resto Café - Admin Control Center</title>
 
-  <!-- Google Fonts & Supabase SDK -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <!-- مكتبة الكاميرا للـ QR Scan الخاصة بلوحة التحكم -->
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
 
   <style>
     :root {
-      --terracotta: #a86d60;
-      --terracotta-dark: #8c5246;
-      --terracotta-light: #f6eeec;
-      --gold: #d5ad70;
-      --gold-dark: #b88d4d;
       --wine: #35151f;
+      --terracotta: #a86d60;
+      --gold: #d5ad70;
       --cream: #faf5ed;
       --card-bg: #ffffff;
       --text: #2a2022;
       --muted: #7e6f73;
       --border: #ebdcd8;
-      --radius: 22px;
-      --shadow: 0 12px 32px rgba(168, 109, 96, 0.12);
+      --shadow: 0 10px 30px rgba(53, 21, 31, 0.1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { min-height: 100vh; font-family: "Cairo", sans-serif; background: var(--cream); color: var(--text); overflow-x: hidden; }
+    html, body { min-height: 100vh; font-family: "Cairo", sans-serif; background: var(--cream); color: var(--text); }
     button, input, select, textarea { font-family: inherit; }
     button { cursor: pointer; border: none; outline: none; }
-
-    .app-bg {
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(circle at 80% 20%, rgba(213, 173, 112, 0.15) 0%, transparent 50%),
-        radial-gradient(circle at 20% 80%, rgba(168, 109, 96, 0.12) 0%, transparent 50%);
-      z-index: -1;
-    }
-
     .hidden { display: none !important; }
 
-    /* 1. AUTH SCREEN */
-    .auth-overlay {
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      position: relative;
-      z-index: 100;
-    }
+    .admin-shell { display: flex; min-height: 100vh; }
+    .admin-sidebar { width: 280px; background: var(--wine); color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 30px 20px; border-left: 1px solid rgba(213,173,112,0.2); }
+    .admin-brand { font-size: 18px; font-weight: 900; color: var(--gold); margin-bottom: 30px; display: flex; align-items: center; gap: 10px; }
+    .admin-menu { display: flex; flex-direction: column; gap: 10px; flex: 1; }
+    .admin-nav-btn { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-radius: 14px; color: #dfd5d8; background: transparent; font-size: 14px; font-weight: 700; text-align: right; width: 100%; transition: 0.2s; }
+    .admin-nav-btn:hover, .admin-nav-btn.active { background: var(--terracotta); color: white; }
 
-    .auth-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      width: min(440px, 100%);
-      border-radius: 32px;
-      padding: 36px 28px;
-      text-align: center;
-      box-shadow: 0 25px 60px rgba(53, 21, 31, 0.18);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      animation: fadeIn 0.4s ease-out;
-    }
+    .admin-main { flex: 1; padding: 40px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+    .admin-title { font-size: 26px; font-weight: 900; color: var(--wine); }
 
-    .card-logo-wrap {
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 16px;
-      border-radius: 50%;
-      background: var(--terracotta);
-      border: 3px solid var(--gold);
-      box-shadow: 0 10px 25px rgba(168, 109, 96, 0.3);
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .card-logo-wrap img { width: 100%; height: 100%; object-fit: cover; }
-
-    .auth-card h1 { color: var(--wine); font-size: 24px; font-weight: 800; margin-bottom: 4px; }
-    .auth-card p.tagline { color: var(--terracotta); font-size: 14px; font-weight: 700; margin-bottom: 24px; }
-
-    .auth-tabs { display: flex; background: var(--terracotta-light); padding: 5px; border-radius: 18px; margin-bottom: 22px; }
-    .auth-tab-btn { flex: 1; padding: 10px; border-radius: 14px; font-size: 14px; font-weight: 800; color: var(--muted); background: transparent; transition: all 0.25s ease; }
-    .auth-tab-btn.active { background: var(--terracotta); color: white; box-shadow: 0 4px 14px rgba(168, 109, 96, 0.3); }
-
-    .form-grid { display: flex; flex-direction: column; gap: 14px; text-align: right; }
-    .field { display: flex; flex-direction: column; gap: 6px; }
-    .field label { font-size: 13px; font-weight: 800; color: var(--wine); }
-    .field input, .field select, .field textarea {
-      width: 100%; border: 1.5px solid var(--border); border-radius: 16px; padding: 12px 16px; background: #ffffff; font-size: 14px; color: var(--text); transition: all 0.2s ease;
-    }
-    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--terracotta); box-shadow: 0 0 0 4px rgba(168, 109, 96, 0.15); outline: none; }
-
-    .btn-primary {
-      width: 100%; padding: 14px; border-radius: 18px; font-size: 15px; font-weight: 800; background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-dark) 100%); color: white; margin-top: 10px; box-shadow: 0 8px 22px rgba(168, 109, 96, 0.35); transition: all 0.2s ease;
-    }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(168, 109, 96, 0.45); }
-
-    /* 2. CLIENT APP LAYOUT */
-    .app-shell { display: flex; min-height: 100vh; position: relative; z-index: 10; }
-
-    .navbar { width: 260px; background: var(--wine); display: flex; flex-direction: column; justify-content: space-between; padding: 28px 18px; border-left: 1px solid rgba(213, 173, 112, 0.2); }
-    .nav-brand { display: flex; align-items: center; gap: 12px; padding-bottom: 22px; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-    .nav-brand-img { width: 48px; height: 48px; border-radius: 50%; border: 2px solid var(--gold); overflow: hidden; background: var(--terracotta); flex-shrink: 0; }
-    .nav-brand-img img { width: 100%; height: 100%; object-fit: cover; }
-    .nav-brand-title { color: white; font-weight: 800; font-size: 15px; line-height: 1.2; }
-    .nav-brand-title span { display: block; color: var(--gold); font-size: 11px; font-weight: 600; }
-
-    .nav-menu { display: flex; flex-direction: column; gap: 8px; margin-top: 20px; flex: 1; }
-    .nav-item { display: flex; align-items: center; gap: 12px; padding: 13px 16px; border-radius: 16px; color: #dfd5d8; font-size: 14px; font-weight: 700; background: transparent; transition: all 0.2s ease; width: 100%; text-align: right; }
-    .nav-item:hover, .nav-item.active { background: var(--terracotta); color: white; box-shadow: 0 4px 15px rgba(168, 109, 96, 0.4); }
-    .nav-item svg { width: 20px; height: 20px; fill: currentColor; flex-shrink: 0; }
-
-    .user-profile-card { background: rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 12px 14px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(213, 173, 112, 0.3); }
-    .user-profile-info { color: white; font-size: 12px; overflow: hidden; }
-    .user-profile-info strong { display: block; color: var(--gold); font-size: 13px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; }
-
-    .btn-logout-icon { background: rgba(255, 255, 255, 0.15); color: white; padding: 8px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: background 0.2s; }
-    .btn-logout-icon:hover { background: #d93838; }
-
-    .app-main { flex: 1; padding: 32px; overflow-y: auto; max-width: 1000px; margin: 0 auto; width: 100%; }
-    .section-header { margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .section-title { color: var(--wine); font-size: 24px; font-weight: 900; display: flex; align-items: center; gap: 10px; }
-    .section-badge { font-size: 12px; color: var(--terracotta-dark); font-weight: 700; background: var(--terracotta-light); padding: 5px 14px; border-radius: 20px; border: 1px solid var(--border); white-space: nowrap; }
-
-    .offers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .card-item { background: var(--card-bg); border-radius: 24px; overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow); transition: transform 0.25s ease; }
-    .card-item:hover { transform: translateY(-4px); }
-    .card-img-wrap { position: relative; height: 170px; }
-    .card-img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-    .card-badge { position: absolute; top: 12px; right: 12px; background: var(--terracotta); color: white; font-size: 11px; font-weight: 800; padding: 4px 12px; border-radius: 12px; }
-    .card-body { padding: 18px; }
-    .card-body h3 { color: var(--wine); font-size: 18px; font-weight: 800; margin-bottom: 6px; }
-    .card-body p { color: var(--muted); font-size: 13px; line-height: 1.5; margin-bottom: 14px; }
-    .card-meta { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding-top: 10px; border-top: 1px dashed var(--border); font-size: 12px; color: var(--terracotta-dark); font-weight: 800; }
-
-    .fidelity-card { background: linear-gradient(135deg, var(--wine) 0%, #4a1f2c 100%); border-radius: 28px; padding: 32px 24px; color: white; text-align: center; position: relative; overflow: hidden; border: 2px solid var(--gold); box-shadow: 0 20px 40px rgba(53, 21, 31, 0.25); }
-    .qr-container { background: white; padding: 16px; border-radius: 20px; display: inline-block; margin: 20px 0; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); }
-    .qr-container img { width: 170px; height: 170px; display: block; }
-    .points-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(213, 173, 112, 0.2); border: 1px solid var(--gold); padding: 8px 24px; border-radius: 999px; color: var(--gold); font-size: 20px; font-weight: 900; }
-
-    .form-container-box { background: white; border-radius: 26px; padding: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-
-    /* 3. ADMIN DASHBOARD VIEW (Inside same file) */
-    .admin-container { padding: 10px; }
     .panel-box { background: var(--card-bg); border-radius: 24px; padding: 30px; border: 1px solid var(--border); box-shadow: var(--shadow); margin-bottom: 30px; }
     .panel-box h3 { color: var(--wine); font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    .field label { font-size: 13px; font-weight: 800; color: var(--wine); }
+    .field input, .field select, .field textarea { width: 100%; border: 1.5px solid var(--border); border-radius: 14px; padding: 12px 16px; font-size: 14px; background: #fff; }
+    .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--terracotta); outline: none; }
+
+    .btn-admin { padding: 12px 24px; border-radius: 14px; font-size: 14px; font-weight: 800; background: var(--wine); color: white; transition: 0.2s; }
+    .btn-admin:hover { background: var(--terracotta); }
+    .btn-gold { background: var(--gold); color: var(--wine); }
+
     .data-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
     .data-table th, .data-table td { padding: 14px 18px; text-align: right; font-size: 13px; border-bottom: 1px solid var(--border); }
     .data-table th { background: #f7f0ed; color: var(--wine); font-weight: 800; }
 
-    .status-alert { padding: 12px 16px; border-radius: 14px; font-size: 13px; font-weight: 700; margin-top: 14px; display: none; text-align: center; }
-    .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; border: 1px solid #b8ebca; }
-    .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; border: 1px solid #f8b4b4; }
-    .status-alert.info { display: block; background: #fef3c7; color: #92400e; border: 1px solid #fcd34d; }
+    .status-alert { padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 700; margin-top: 15px; display: none; text-align: center; }
+    .status-alert.success { display: block; background: #e8f7ed; color: #1e7e43; }
+    .status-alert.error { display: block; background: #fde8e8; color: #b91c1c; }
 
     @media (max-width: 768px) {
-      .app-shell { flex-direction: column-reverse; }
-      .navbar { width: 100%; height: 72px; flex-direction: row; padding: 0 10px; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1000; border-top: 1px solid rgba(213, 173, 112, 0.3); }
-      .nav-brand, .user-profile-card { display: none; }
-      .nav-menu { flex-direction: row; justify-content: space-around; align-items: center; width: 100%; margin-top: 0; gap: 3px; }
-      .nav-item { flex-direction: column; gap: 3px; padding: 6px 3px; font-size: 10px; justify-content: center; border-radius: 12px; }
-      .nav-item svg { width: 22px; height: 22px; }
-      .app-main { padding: 20px 16px 95px 16px; }
+      .admin-shell { flex-direction: column; }
+      .admin-sidebar { width: 100%; height: auto; }
+      .form-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
-
 <body>
-  <div class="app-bg"></div>
 
-  <!-- AUTH GATEWAY -->
-  <div id="authGateway" class="auth-overlay">
-    <div class="auth-card">
-      <div class="card-logo-wrap">
-        <img src="logo.png" id="appLogoImg" alt="Flamingo Logo">
-      </div>
-      <h1>Flamingo Resto Café</h1>
-      <p class="tagline">♡ أهلاً بيك</p>
-
-      <div class="auth-tabs">
-        <button type="button" class="auth-tab-btn active" id="tabLoginBtn" onclick="switchAuthMode('login')">تسجيل الدخول</button>
-      </div>
-
-      <form id="loginForm" class="form-grid" onsubmit="handleLogin(event)">
-        <div class="field">
-          <label for="loginEmail">البريد الإلكتروني (Email)</label>
-          <input type="email" id="loginEmail" required placeholder="exemple@mail.com" autocomplete="email">
-        </div>
-        <div class="field">
-          <label for="loginPassword">كلمة السر (Mot de passe)</label>
-          <input type="password" id="loginPassword" required placeholder="••••••••" autocomplete="current-password">
-        </div>
-        <button type="submit" class="btn-primary">دخول لحسابي ➔</button>
-      </form>
-
-      <div id="authStatus" class="status-alert" role="status" aria-live="polite"></div>
-    </div>
-  </div>
-
-  <!-- CLIENT & ADMIN APP SHELL -->
-  <div id="appShell" class="app-shell hidden">
-    <nav class="navbar">
+  <!-- ADMIN DASHBOARD SHELL (Visible Directly) -->
+  <div id="adminShell" class="admin-shell">
+    <aside class="admin-sidebar">
       <div>
-        <div class="nav-brand">
-          <div class="nav-brand-img"><img src="logo.png" alt="Flamingo Logo"></div>
-          <div class="nav-brand-title">Flamingo<span>CAFÉ - RESTAURANT</span></div>
-        </div>
-
-        <div class="nav-menu" id="navMenuContainer">
-          <!-- ديناميكي حسب هل هو زبون أو مدير -->
+        <div class="admin-brand">🦩 Flamingo Admin</div>
+        <div class="admin-menu">
+          <button type="button" class="admin-nav-btn active" onclick="switchAdminTab('scannerSection', this)">📷 ماسح الـ QR والكاميرا</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('offersSection', this)">✨ إدارة العروض</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('historySection', this)">📊 سجل Scans والنقاط</button>
+          <button type="button" class="admin-nav-btn" onclick="switchAdminTab('reservationsSection', this)">📅 حجوزات الطاولات</button>
         </div>
       </div>
-
-      <div class="user-profile-card">
-        <div class="user-profile-info">
-          <strong id="userNameDisplay">العميل</strong>
-          <span id="userEmailDisplay" style="font-size: 10px; color: #c0b0b5;">-</span>
-        </div>
-        <button type="button" class="btn-logout-icon" onclick="handleLogout()" title="تسجيل الخروج">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-        </button>
+      <div>
+        <button type="button" class="admin-nav-btn" onclick="handleAdminLogout()" style="background:rgba(255,255,255,0.1); justify-content:center;">تسجيل الخروج 🚪</button>
       </div>
-    </nav>
+    </aside>
 
-    <!-- Content Area -->
-    <main class="app-main">
+    <main class="admin-main">
       
-      <!-- 1. OFFERS TAB (Client) -->
-      <section id="offersTab">
-        <div class="section-header">
-          <h2 class="section-title">العروض والسهرات الخاصّة</h2>
-          <span class="section-badge">جديد Flamingo</span>
-        </div>
-        <div class="offers-grid" id="offersContainer">
-          <div class="card-item">
-            <div class="card-img-wrap">
-              <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Soirée">
-              <span class="card-badge">سهرة حية 🎵</span>
-            </div>
-            <div class="card-body">
-              <h3>Soirée Saxo &amp; Acoustic Lounge</h3>
-              <p>استمتعوا بأجمل الألحان المباشرة مع عشاء فاخر وأجواء عائلية راقية بـ Flamingo Mahdia.</p>
-              <div class="card-meta"><span>كل يوم سبت 20:00</span><span>دخول مجاني</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- 2. RESERVE TAB (Client) -->
-      <section id="reserveTab" class="hidden">
-        <div class="section-header"><h2 class="section-title">حجز طاولة</h2><span class="section-badge">تأكيد حيني</span></div>
-        <div class="form-container-box">
-          <form class="form-grid" onsubmit="handleReservation(event)">
-            <div class="field"><label>الاسم الكامل</label><input type="text" id="resName" required></div>
-            <div class="field"><label>رقم الهاتف</label><input type="tel" id="resPhone" required></div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-              <div class="field"><label>التاريخ</label><input type="date" id="resDate" required></div>
-              <div class="field"><label>التوقيت</label><input type="time" id="resTime" required></div>
-            </div>
-            <div class="field"><label>عدد الأشخاص</label>
-              <select id="resGuests">
-                <option value="1">1 شخص</option>
-                <option value="2" selected>2 أشخاص</option>
-                <option value="3">3 أشخاص</option>
-                <option value="4">4 أشخاص</option>
-                <option value="5+">مجموعة (5+)</option>
-              </select>
-            </div>
-            <div class="field"><label>ملاحظات</label><textarea id="resNotes" rows="3"></textarea></div>
-            <button type="submit" class="btn-primary">تأكيد طلب الحجز ➔</button>
-          </form>
-          <div id="resStatus" class="status-alert"></div>
-        </div>
-      </section>
-
-      <!-- 3. FIDELITY TAB (Client VIP Card) -->
-      <section id="fidelityTab" class="hidden">
-        <div class="section-header"><h2 class="section-title">بطاقة الوفاء VIP</h2><span class="section-badge">Code QR</span></div>
-        <div class="fidelity-card">
-          <h2 style="font-weight: 900; font-size: 22px; color: var(--gold);">Flamingo Loyalty Club</h2>
-          <p style="font-size: 13px; color: #e0d0d5; margin-top: 4px;">إستظهر بهذا الـ QR Code عند الصندوق لكسب النقاط</p>
-          <div class="qr-container"><img id="userQrCodeImg" src="" alt="QR Code VIP"></div>
-          <div><div class="points-badge"><span id="pointsValue">0</span> <span style="font-size: 14px;">نقطة وفاء</span></div></div>
-          <p style="font-size: 11px; opacity: 0.7; margin-top: 15px;" id="qrUserId">ID: VIP-FLAMINGO</p>
-        </div>
-      </section>
-
-      <!-- 4. ADMIN SCANNER & CONTROL PANEL (Visible ONLY for Azizmaraouch@gmail.com) -->
-      <section id="adminScannerTab" class="hidden">
-        <div class="section-header"><h2 class="section-title">📷 ماسح الـ QR وإسناد النقاط</h2><span class="section-badge">لوحة المدير</span></div>
+      <!-- 1. SCANNER SECTION -->
+      <section id="scannerSection">
+        <div class="admin-header"><h2 class="admin-title">مسح QR Code الزبون وإسناد النقاط</h2></div>
         <div class="panel-box">
           <h3>كاميرا مسح الـ QR (Scan Cam)</h3>
-          <div id="reader" style="width: 100%; max-width: 350px; margin: 0 auto 20px; border-radius: 16px; overflow: hidden;"></div>
+          <div id="reader" style="width: 100%; max-width: 400px; margin: 0 auto 20px; border-radius: 16px; overflow: hidden;"></div>
           
           <div style="border-top: 1px solid var(--border); padding-top: 20px; margin-top: 20px;">
             <h3>أو البحث اليدوي بالـ ID أو البريد</h3>
-            <div style="display:flex; gap:12px; margin-top:10px;">
+            <div style="display:flex; gap:12px;">
               <input type="text" id="clientSearchInput" placeholder="أدخل ID العميل أو البريد..." style="flex:1; padding:12px; border:1.5px solid var(--border); border-radius:12px;">
-              <button type="button" class="btn-primary" style="width:auto; margin:0;" onclick="searchClientManually()">بحث</button>
+              <button type="button" class="btn-admin btn-gold" onclick="searchClientManually()">بحث</button>
             </div>
           </div>
 
@@ -320,47 +115,66 @@
             
             <div style="display:flex; gap:10px; margin-top:15px; align-items:center;">
               <input type="number" id="pointsToAdd" value="10" min="1" style="width:100px; padding:10px; border-radius:10px; border:1px solid var(--border);" placeholder="النقاط">
-              <button type="button" class="btn-primary" style="width:auto; margin:0;" onclick="addPointsToClient()">قبول وإضافة النقاط للزبون ✅</button>
+              <button type="button" class="btn-admin" onclick="addPointsToClient()">قبول وإضافة النقاط للزبون ✅</button>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 5. ADMIN OFFERS MANAGEMENT -->
-      <section id="adminOffersTab" class="hidden">
-        <div class="section-header"><h2 class="section-title">✨ نشر العروض والسهرات</h2><span class="section-badge">لوحة المدير</span></div>
+      <!-- 2. OFFERS SECTION -->
+      <section id="offersSection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">إضافة وحذف العروض والسهرات</h2></div>
         <div class="panel-box">
-          <h3>إضافة عرض أو سهرة جديدة</h3>
+          <h3>نشر عرض جديد</h3>
           <form class="form-grid" onsubmit="handleCreateOffer(event)">
             <div class="field"><label>العنوان</label><input type="text" id="offerTitle" required placeholder="مثال: Soirée Saxo"></div>
             <div class="field"><label>الوسم</label><input type="text" id="offerTag" required placeholder="سهرة حية 🎵"></div>
             <div class="field full"><label>الوصف</label><textarea id="offerDesc" rows="3" required></textarea></div>
             <div class="field"><label>رابط الصورة</label><input type="url" id="offerImage" required placeholder="https://..."></div>
             <div class="field"><label>الصلاحية</label><input type="text" id="offerValidity" required placeholder="كل سبت 20:00"></div>
-            <div class="field full"><button type="submit" class="btn-primary" style="margin-top:10px;">نشر العرض 🚀</button></div>
+            <div class="field full"><button type="submit" class="btn-admin" style="margin-top:10px;">نشر العرض 🚀</button></div>
           </form>
           <div id="offerStatus" class="status-alert"></div>
         </div>
       </section>
 
-      <!-- 6. ADMIN HISTORY & RESERVATIONS -->
-      <section id="adminHistoryTab" class="hidden">
-        <div class="section-header"><h2 class="section-title">📊 سجل Scans والحجوزات</h2><span class="section-badge">لوحة المدير</span></div>
+      <!-- 3. HISTORY SECTION -->
+      <section id="historySection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">سجل العمليات والنقاط المضافة</h2></div>
         <div class="panel-box">
-          <h3>سجل عمليات النقاط والـ Scans الأخيرة</h3>
           <table class="data-table">
             <thead>
-              <tr><th>الوقت</th><th>العميل</th><th>النقاط</th><th>المشرف</th></tr>
+              <tr>
+                <th>التاريخ والوقت</th>
+                <th>اسم العميل</th>
+                <th>النقاط المضافة</th>
+                <th>المشرف</th>
+              </tr>
             </thead>
-            <tbody id="historyTableBody"><tr><td colspan="4" style="text-align:center;">جاري التحميل...</td></tr></tbody>
+            <tbody id="historyTableBody">
+              <tr><td colspan="4" style="text-align:center; color:var(--muted);">جاري التحميل...</td></tr>
+            </tbody>
           </table>
+        </div>
+      </section>
 
-          <h3 style="margin-top:30px;">قائمة حجوزات الطاولات</h3>
+      <!-- 4. RESERVATIONS SECTION -->
+      <section id="reservationsSection" class="hidden">
+        <div class="admin-header"><h2 class="admin-title">قائمة حجوزات الطاولات</h2></div>
+        <div class="panel-box">
           <table class="data-table">
             <thead>
-              <tr><th>الاسم</th><th>الهاتف</th><th>الموعد</th><th>الأشخاص</th></tr>
+              <tr>
+                <th>الاسم</th>
+                <th>الهاتف</th>
+                <th>الموعد</th>
+                <th>الأشخاص</th>
+                <th>ملاحظات</th>
+              </tr>
             </thead>
-            <tbody id="reservationsTableBody"><tr><td colspan="4" style="text-align:center;">جاري التحميل...</td></tr></tbody>
+            <tbody id="reservationsTableBody">
+              <tr><td colspan="5" style="text-align:center; color:var(--muted);">جاري التحميل...</td></tr>
+            </tbody>
           </table>
         </div>
       </section>
@@ -373,7 +187,6 @@
     const SUPABASE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-    let currentUser = null;
     let activeSearchedUser = null;
     const $ = (id) => document.getElementById(id);
 
@@ -383,108 +196,30 @@
       el.className = `status-alert ${type}`;
     }
 
-    window.switchAuthMode = function(mode) {
-      $('loginForm').classList.remove('hidden');
+    // تشغيل لوحة التحكم مباشرة دون الحاجة لشاشة تسجيل الدخول
+    window.onload = function() {
+      loadHistory();
+      loadReservations();
+      initQrScanner();
     };
 
-    window.handleLogin = async function(e) {
-      e.preventDefault();
-      showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
-
-      try {
-        const { data, error } = await _supabase.auth.signInWithPassword({
-          email: $('loginEmail').value.trim(),
-          password: $('loginPassword').value
-        });
-
-        if (error) {
-          showStatus($('authStatus'), 'البريد أو كلمة السر غير صحيحة', 'error');
-        } else {
-          showStatus($('authStatus'), 'تم الدخول بنجاح!', 'success');
-          await initUserSession();
-        }
-      } catch (err) {
-        showStatus($('authStatus'), 'خطأ في الاتصال بقاعدة البيانات', 'error');
-      }
-    };
-
-    window.switchTab = function(tabId, btn) {
-      ['offersTab', 'reserveTab', 'fidelityTab', 'adminScannerTab', 'adminOffersTab', 'adminHistoryTab'].forEach(id => {
-        if ($(id))$(id).classList.add('hidden');
-      });
-      if ($(tabId))$(tabId).classList.remove('hidden');
-      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
-      if (btn) btn.classList.add('active');
-    };
-
-    window.handleLogout = async function() {
+    window.handleAdminLogout = async function() {
       await _supabase.auth.signOut();
       location.reload();
     };
 
-    async function initUserSession() {
-      try {
-        const { data: { user } } = await _supabase.auth.getUser();
-        if (!user) return;
+    window.switchAdminTab = function(sectionId, btn) {
+      ['scannerSection', 'offersSection', 'historySection', 'reservationsSection'].forEach(id => $(id).classList.add('hidden'));$(sectionId).classList.remove('hidden');
+      document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+    };
 
-        currentUser = user;
-        const isAdmin = user.email.toLowerCase() === 'azizmaraouch@gmail.com';
-
-        const { data: profile } = await _supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
-          .maybeSingle();
-
-        const name = profile?.full_name || (isAdmin ? 'المدير (Aziz)' : 'عميل Flamingo');
-        const phone = profile?.phone || '';
-        const points = profile?.loyalty_points ?? 0;
-
-        $('userNameDisplay').textContent = name;
-        $('userEmailDisplay').textContent = user.email;
-
-        const navMenu = $('navMenuContainer');
-
-        if (isAdmin) {
-          // القائمة الخاصة بالمدير
-          navMenu.innerHTML = `
-            <button type="button" class="nav-item active" onclick="switchTab('adminScannerTab', this)"><span>📷 مسح الـ QR</span></button>
-            <button type="button" class="nav-item" onclick="switchTab('adminOffersTab', this)"><span>✨ إدارة العروض</span></button>
-            <button type="button" class="nav-item" onclick="switchTab('adminHistoryTab', this)"><span>📊 السجل والحجوزات</span></button>
-          `;
-          switchTab('adminScannerTab', navMenu.children[0]);
-          initQrScanner();
-          loadHistory();
-          loadReservations();
-        } else {
-          // القائمة العادية للزبون
-          navMenu.innerHTML = `
-            <button type="button" class="nav-item active" onclick="switchTab('offersTab', this)"><span>العروض والسهرات</span></button>
-            <button type="button" class="nav-item" onclick="switchTab('reserveTab', this)"><span>حجز طاولة</span></button>
-            <button type="button" class="nav-item" onclick="switchTab('fidelityTab', this)"><span>بطاقة الوفاء VIP</span></button>
-          `;
-          switchTab('offersTab', navMenu.children[0]);
-          $('resName').value = name;
-          $('resPhone').value = phone;
-          $('pointsValue').textContent = points;
-          $('qrUserId').textContent = `ID: VIP-${user.id.substring(0, 8).toUpperCase()}`;
-          const qrData = encodeURIComponent(`FLAMINGO-VIP:${user.id}`);
-          $('userQrCodeImg').src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${qrData}`;
-        }
-
-        $('authGateway').classList.add('hidden');$('appShell').classList.remove('hidden');
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    // دوال المدير
     function initQrScanner() {
       try {
         const html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start(
           { facingMode: "environment" },
-          { fps: 10, qrbox: { width: 220, height: 220 } },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
           async (decodedText) => {
             let userId = decodedText;
             if (decodedText.includes('FLAMINGO-VIP:')) {
@@ -505,7 +240,12 @@
         userId = query.split('FLAMINGO-VIP:')[1];
       }
 
-      const { data } = await _supabase.from('profiles').select('*').or(`id.eq.${userId},email.eq.${query}`).maybeSingle();
+      const { data } = await _supabase
+        .from('profiles')
+        .select('*')
+        .or(`id.eq.${userId},email.eq.${query}`)
+        .maybeSingle();
+
       if (!data) {
         alert('لم يتم العثور على هذا الزبون!');
         return;
@@ -514,7 +254,12 @@
     };
 
     async function fetchClientDetails(userId) {
-      const { data: profile } = await _supabase.from('profiles').select('*').eq('id', userId).maybeSingle();
+      const { data: profile } = await _supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', userId)
+        .maybeSingle();
+
       if (!profile) return;
 
       activeSearchedUser = profile;
@@ -523,7 +268,13 @@
 
       const todayStart = new Date();
       todayStart.setHours(0,0,0,0);
-      const { count } = await _supabase.from('loyalty_history').select('*', { count: 'exact', head: true }).eq('user_id', userId).gte('created_at', todayStart.toISOString());
+
+      const { count } = await _supabase
+        .from('loyalty_history')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .gte('created_at', todayStart.toISOString());
+
       $('resClientVisitsToday').textContent = count || 0;
       $('clientResultBox').classList.remove('hidden');
     }
@@ -534,13 +285,14 @@
       const newPoints = (activeSearchedUser.loyalty_points || 0) + pts;
 
       await _supabase.from('profiles').update({ loyalty_points: newPoints }).eq('id', activeSearchedUser.id);
+      
       await _supabase.from('loyalty_history').insert([{
         user_id: activeSearchedUser.id,
         points_added: pts,
-        admin_email: currentUser.email
+        admin_email: 'Azizmaraouch@gmail.com'
       }]);
 
-      alert(`تمت إضافة ${pts} نقطة بنجاح للزبون!`);
+      alert(`تمت إضافة ${pts} نقطة بنجاح!`);
       $('resClientPoints').textContent = newPoints;
       activeSearchedUser.loyalty_points = newPoints;
       loadHistory();
@@ -567,9 +319,23 @@
 
     async function loadHistory() {
       const tbody = $('historyTableBody');
-      const { data } = await _supabase.from('loyalty_history').select('*, profiles(full_name)').order('created_at', { ascending: false }).limit(15);
+      const { data } = await _supabase.from('loyalty_history').select('*, profiles(full_name)').order('created_at', { ascending: false }).limit(20);
       if (!data || data.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">لا توجد عمليات.</td></tr>';
         return;
       }
-      tbody.innerHTML = data.map(i =>
+      tbody.innerHTML = data.map(i => `<tr><td>${new Date(i.created_at).toLocaleString('fr-FR')}</td><td><strong>${i.profiles?.full_name || 'VIP'}</strong></td><td style="color:var(--terracotta); font-weight:800;">+${i.points_added}</td><td>${i.admin_email}</td></tr>`).join('');
+    }
+
+    async function loadReservations() {
+      const tbody = $('reservationsTableBody');
+      const { data } = await _supabase.from('reservations').select('*').order('created_at', { ascending: false });
+      if (!data || data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد حجوزات.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = data.map(r => `<tr><td><strong>${r.full_name}</strong></td><td>${r.phone}</td><td>${r.reservation_date} (${r.reservation_time})</td><td>${r.guests} أشخاص</td><td>${r.notes || '—'}</td></tr>`).join('');
+    }
+  </script>
+</body>
+</html>
