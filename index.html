@@ -12,6 +12,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
+  <!-- Chargement direct et garanti de Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
   <style>
     :root {
       --raspberry: #b83b63;
@@ -45,7 +48,7 @@
       z-index: 1;
     }
 
-    /* Sidebar */
+    /* Sidebar Navigation */
     .sidebar {
       width: 140px;
       background: rgba(252, 238, 237, 0.95);
@@ -105,7 +108,7 @@
       font-weight: 700;
     }
 
-    /* Main Content Area */
+    /* Main Content */
     .main-content {
       flex: 1;
       display: grid;
@@ -115,7 +118,6 @@
       overflow-y: auto;
     }
 
-    /* Card App Center */
     .auth-card {
       background: rgba(255, 245, 245, 0.96);
       backdrop-filter: blur(15px);
@@ -152,13 +154,14 @@
       margin-bottom: 20px;
     }
 
-    /* Forms & Inputs */
+    /* Form & Fields */
     .form-grid {
       display: flex;
       flex-direction: column;
       gap: 12px;
       margin-bottom: 15px;
-      text-align: left;
+      text-align: right;
+      direction: rtl;
     }
 
     .field label {
@@ -223,7 +226,8 @@
       border-radius: 16px;
       padding: 20px;
       margin-top: 15px;
-      text-align: left;
+      text-align: right;
+      direction: rtl;
     }
     .profile-box h3 { color: var(--raspberry); margin: 0 0 8px; font-size: 18px; }
     .profile-box p { font-size: 13px; color: var(--muted); margin: 6px 0; }
@@ -232,7 +236,8 @@
       display: flex;
       flex-direction: column;
       gap: 15px;
-      text-align: left;
+      text-align: right;
+      direction: rtl;
       max-height: 400px;
       overflow-y: auto;
     }
@@ -279,15 +284,15 @@
       </div>
 
       <nav class="sidebar-nav">
-        <button type="button" class="nav-item active" id="navAuthBtn">
+        <button type="button" class="nav-item active" id="navAuthBtn" onclick="openSection('sectionAuth', this)">
           <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
           <span>Compte</span>
         </button>
-        <button type="button" class="nav-item" id="navResBtn">
+        <button type="button" class="nav-item" id="navResBtn" onclick="openSection('sectionRes', this)">
           <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zm0-12H5V6h14v2z"/></svg>
           <span>Réserver</span>
         </button>
-        <button type="button" class="nav-item" id="navOffersBtn">
+        <button type="button" class="nav-item" id="navOffersBtn" onclick="openSection('sectionOffers', this); loadOffers();">
           <svg viewBox="0 0 24 24"><path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/></svg>
           <span>Offres</span>
         </button>
@@ -308,14 +313,14 @@
           <h1>عسلامة بيك في Flamingo ♡</h1>
           <p class="subtitle">ادخل لحسابك ولا اعمل حساب جديد باش تكتشف العروض وتحجز طاولتك.</p>
 
-          <!-- Choix (Boutons principaux) -->
+          <!-- Boutons d'accueil (Bascule directe garantie par onclick) -->
           <div id="authChoice">
-            <button type="button" class="btn-action btn-raspberry" id="showLoginBtn">ندخل لحسابي ➔</button>
-            <button type="button" class="btn-action btn-outline-raspberry" id="showSignupBtn">نعمل حساب جديد ➔</button>
+            <button type="button" class="btn-action btn-raspberry" onclick="showForm('loginForm')">ندخل لحسابي ➔</button>
+            <button type="button" class="btn-action btn-outline-raspberry" onclick="showForm('signupForm')">نعمل حساب جديد ➔</button>
           </div>
 
           <!-- Login Form -->
-          <form id="loginForm" class="hidden">
+          <form id="loginForm" class="hidden" onsubmit="handleLogin(event)">
             <div class="form-grid">
               <div class="field">
                 <label>البريد الإلكتروني (Email)</label>
@@ -327,11 +332,11 @@
               </div>
             </div>
             <button type="submit" class="btn-action btn-raspberry">تسجيل الدخول</button>
-            <button type="button" class="btn-action btn-outline-raspberry backToChoice" style="margin-top:8px;">رجوع</button>
+            <button type="button" class="btn-action btn-outline-raspberry" onclick="showChoice()" style="margin-top:8px;">رجوع</button>
           </form>
 
           <!-- Signup Form -->
-          <form id="signupForm" class="hidden">
+          <form id="signupForm" class="hidden" onsubmit="handleSignup(event)">
             <div class="form-grid">
               <div class="field">
                 <label>الاسم الكامل</label>
@@ -351,7 +356,7 @@
               </div>
             </div>
             <button type="submit" class="btn-action btn-raspberry">إنشاء الحساب</button>
-            <button type="button" class="btn-action btn-outline-raspberry backToChoice" style="margin-top:8px;">رجوع</button>
+            <button type="button" class="btn-action btn-outline-raspberry" onclick="showChoice()" style="margin-top:8px;">رجوع</button>
           </form>
 
           <!-- Espace Client Connecté -->
@@ -362,7 +367,7 @@
               <p id="userPhone"></p>
               <p id="userPoints" style="color:var(--gold); font-weight:bold; margin-top:10px;"></p>
             </div>
-            <button type="button" class="btn-action btn-outline-raspberry" id="logoutBtn" style="margin-top: 15px;">تسجيل الخروج</button>
+            <button type="button" class="btn-action btn-outline-raspberry" onclick="handleLogout()" style="margin-top: 15px;">تسجيل الخروج</button>
           </div>
 
           <div id="authStatus" class="status"></div>
@@ -373,7 +378,7 @@
           <h1>حجز طاولة ♡</h1>
           <p class="subtitle">عمر المعطيات باش تبعث طلب الحجز بتاعك مباشرة.</p>
 
-          <form id="reservationForm">
+          <form id="reservationForm" onsubmit="handleReservation(event)">
             <div class="form-grid">
               <div class="field">
                 <label>الاسم الكامل</label>
@@ -425,12 +430,11 @@
     </main>
   </div>
 
-  <script type="module">
-    import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-
+  <script>
+    // Initialisation Supabase globale
     const SUPABASE_URL = 'https://dnbcanwxikpysscslotn.supabase.co';
     const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_7jY0-exkRXZ4SqdFrSxPnQ_86QgmRfT';
-    const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
     const $ = (id) => document.getElementById(id);
 
@@ -440,52 +444,35 @@
       el.className = `status ${type}`;
     }
 
-    // Navigation Sidebar
-    const switchSection = (activeSec, activeBtn) => {
-      $('sectionAuth').classList.add('hidden');
-      $('sectionRes').classList.add('hidden');$('sectionOffers').classList.add('hidden');
-      activeSec.classList.remove('hidden');
+    // Navigation de la sidebar
+    window.openSection = function(sectionId, btn) {
+      $('sectionAuth').classList.add('hidden');$('sectionRes').classList.add('hidden');
+      $('sectionOffers').classList.add('hidden');$(sectionId).classList.remove('hidden');
 
-      $('navAuthBtn').classList.remove('active');
-      $('navResBtn').classList.remove('active');$('navOffersBtn').classList.remove('active');
-      activeBtn.classList.add('active');
+      document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
     };
 
-    $('navAuthBtn').addEventListener('click', () => switchSection($('sectionAuth'), $('navAuthBtn')));$('navResBtn').addEventListener('click', () => {
-      switchSection($('sectionRes'),$('navResBtn'));
-      fillReservationDefaults();
-    });
-    $('navOffersBtn').addEventListener('click', () => {
-      switchSection($('sectionOffers'),$('navOffersBtn'));
-      loadOffers();
-    });
+    // Fonctions de bascule d'écran
+    window.showForm = function(formId) {
+      $('authChoice').classList.add('hidden');$('loginForm').classList.add('hidden');
+      $('signupForm').classList.add('hidden');$(formId).classList.remove('hidden');
+      if ($('authStatus'))$('authStatus').className = 'status';
+    };
 
-    // Bascule explicite et directe vers les formulaires de connexion / inscription
-    $('showLoginBtn').addEventListener('click', () => {$('authChoice').classList.add('hidden');
-      $('loginForm').classList.remove('hidden');$('signupForm').classList.add('hidden');
-      if($('authStatus'))$('authStatus').className = 'status';
-    });
+    window.showChoice = function() {
+      $('loginForm').classList.add('hidden');
+      $('signupForm').classList.add('hidden');$('authChoice').classList.remove('hidden');
+      if ($('authStatus'))$('authStatus').className = 'status';
+    };
 
-    $('showSignupBtn').addEventListener('click', () => {$('authChoice').classList.add('hidden');
-      $('signupForm').classList.remove('hidden');$('loginForm').classList.add('hidden');
-      if($('authStatus'))$('authStatus').className = 'status';
-    });
-
-    document.querySelectorAll('.backToChoice').forEach(btn => {
-      btn.addEventListener('click', () => {
-        $('loginForm').classList.add('hidden');
-        $('signupForm').classList.add('hidden');$('authChoice').classList.remove('hidden');
-        if($('authStatus'))$('authStatus').className = 'status';
-      });
-    });
-
-    // Connexion Supabase
-    $('loginForm').addEventListener('submit', async (e) => {
+    // Connexion
+    window.handleLogin = async function(e) {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري تسجيل الدخول...', 'info');
 
       try {
-        const { error } = await supabase.auth.signInWithPassword({
+        const { error } = await _supabase.auth.signInWithPassword({
           email: $('loginEmail').value.trim(),
           password: $('loginPassword').value
         });
@@ -494,20 +481,20 @@
           showStatus($('authStatus'), 'البريد أو كلمة السر خاطئة', 'error');
         } else {
           showStatus($('authStatus'), 'تم تسجيل الدخول بنجاح!', 'success');
-          await checkUserSession();
+          checkUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'حدث خطأ في الاتصال بقاعدة البيانات', 'error');
       }
-    });
+    };
 
-    // Inscription Supabase
-    $('signupForm').addEventListener('submit', async (e) => {
+    // Inscription
+    window.handleSignup = async function(e) {
       e.preventDefault();
       showStatus($('authStatus'), 'جاري إنشاء الحساب...', 'info');
 
       try {
-        const { error } = await supabase.auth.signUp({
+        const { error } = await _supabase.auth.signUp({
           email: $('signupEmail').value.trim(),
           password: $('signupPassword').value,
           options: {
@@ -522,24 +509,24 @@
           showStatus($('authStatus'), error.message, 'error');
         } else {
           showStatus($('authStatus'), 'تم إنشاء الحساب بنجاح!', 'success');
-          await checkUserSession();
+          checkUserSession();
         }
       } catch (err) {
         showStatus($('authStatus'), 'حدث خطأ في الاتصال بقاعدة البيانات', 'error');
       }
-    });
+    };
 
     // Déconnexion
-    $('logoutBtn').addEventListener('click', async () => {
-      await supabase.auth.signOut();
-      await checkUserSession();
+    window.handleLogout = async function() {
+      await _supabase.auth.signOut();
+      checkUserSession();
       showStatus($('authStatus'), 'تم تسجيل الخروج.', 'info');
-    });
+    };
 
     // Réservation
-    $('reservationForm').addEventListener('submit', async (e) => {
+    window.handleReservation = async function(e) {
       e.preventDefault();
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await _supabase.auth.getUser();
 
       if (!user) {
         showStatus($('resStatus'), 'يجب عليك تسجيل الدخول أولاً للقيام بالحجز', 'error');
@@ -548,7 +535,7 @@
 
       showStatus($('resStatus'), 'جاري إرسال طلب الحجز...', 'info');
 
-      const { error } = await supabase.from('reservations').insert([{
+      const { error } = await _supabase.from('reservations').insert([{
         user_id: user.id,
         full_name: $('resName').value.trim(),
         phone: $('resPhone').value.trim(),
@@ -565,18 +552,18 @@
         showStatus($('resStatus'), 'تم إرسال طلب الحجز بنجاح! سنتصل بك للتأكيد.', 'success');
         $('resNotes').value = '';
       }
-    });
+    };
 
     let currentProfile = null;
     let currentUser = null;
 
     async function checkUserSession() {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
+        const { data: { user } } = await _supabase.auth.getUser();
         currentUser = user;
 
         if (user) {
-          const { data: profile } = await supabase
+          const { data: profile } = await _supabase
             .from('profiles')
             .select('*')
             .eq('id', user.id)
@@ -595,6 +582,9 @@
           $('userEmail').textContent = `البريد: ${user.email}`;
           $('userPhone').textContent = `الهاتف: ${phone}`;
           $('userPoints').textContent = `✨ نقاط الوفاء: ${points} نقطة`;
+
+          $('resName').value = name;
+          $('resPhone').value = phone;
         } else {
           $('userProfile').classList.add('hidden');$('authChoice').classList.remove('hidden');
           $('loginForm').classList.add('hidden');$('signupForm').classList.add('hidden');
@@ -604,17 +594,11 @@
       }
     }
 
-    function fillReservationDefaults() {
-      if (currentProfile || currentUser) {
-        $('resName').value = currentProfile?.full_name \vert{}\vert{} currentUser?.user_metadata?.full_name \vert{}\vert{} '';$('resPhone').value = currentProfile?.phone || currentUser?.user_metadata?.phone || '';
-      }
-    }
-
-    async function loadOffers() {
+    window.loadOffers = async function() {
       const grid = $('offersGrid');
       grid.replaceChildren();
 
-      const { data, error } = await supabase
+      const { data, error } = await _supabase
         .from('offers')
         .select('*')
         .eq('active', true)
@@ -638,7 +622,7 @@
         `;
         grid.appendChild(item);
       });
-    }
+    };
 
     checkUserSession();
   </script>
